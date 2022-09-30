@@ -10,7 +10,11 @@ import {customElement} from 'lit/decorators';
 /** A chromeOS compliant button. */
 @customElement('cros-button')
 export class Button extends LitElement {
-  static override styles: CSSResultGroup = css``;
+  static override styles: CSSResultGroup = css`
+    button {
+      background: red;
+    } 
+  `;
 
   override render() {
     return html`<button></button>`;
