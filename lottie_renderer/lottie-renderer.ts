@@ -49,11 +49,13 @@ export class LottieRenderer extends LitElement {
   }
 
   override connectedCallback() {
+    super.connectedCallback();
     if (!this.currentAnimation) return;
     this.currentAnimation.stop();
   }
 
   override disconnectedCallback() {
+    super.disconnectedCallback()
     if (!this.currentAnimation) return;
     this.currentAnimation.stop();
   }
