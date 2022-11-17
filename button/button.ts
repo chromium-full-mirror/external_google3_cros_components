@@ -4,20 +4,28 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/button/filled-button.js';
+
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement} from 'lit/decorators';
+import {customElement, property} from 'lit/decorators';
 
 /** A chromeOS compliant button. */
 @customElement('cros-button')
 export class Button extends LitElement {
+  // TODO(b/241022309): Replace hardcoded colours with theme variables.
   static override styles: CSSResultGroup = css`
-    button {
-      background: red;
-    } 
+    md-filled-button {
+      --md-sys-color-primary: var(--cros-button-fill, #3F5AA9);
+    }
   `;
 
+  @property({type: String}) label = '';
+
   override render() {
-    return html`<button></button>`;
+    return html`
+        <md-filled-button label=${this.label}>
+        </md-filled-button>
+    `;
   }
 }
 
