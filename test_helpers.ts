@@ -46,3 +46,13 @@ export function setupScreenshotTests(scuba: Scuba) {
 
   return {state, diff};
 }
+
+/**
+ * Waits until a new task can start executing. This means that (at least) the
+ * pending microtasks have been flushed.
+ */
+ export async function completePendingMicrotasks() {
+  // The spec guarantees Promises to execute before timeouts.
+  // https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model
+  return new Promise(resolve => void setTimeout(resolve, 0));
+}

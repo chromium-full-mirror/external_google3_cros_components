@@ -20,10 +20,12 @@ export class Button extends LitElement {
   `;
 
   @property({type: String}) label = '';
+  @property({type: Boolean}) disabled = false;
 
   override render() {
     return html`
-        <md-filled-button label=${this.label}>
+        <md-filled-button label=${this.label}
+            ?disabled=${this.disabled}>
         </md-filled-button>
     `;
   }
