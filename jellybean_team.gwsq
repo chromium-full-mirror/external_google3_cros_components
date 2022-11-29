@@ -1,0 +1,7 @@
+send_cls_to('jellybean-team-reviews');
+
+define Main {
+  reassign_to_list(
+    from_owners_file('third_party/javascript/cros_components/OWNERS')
+  );
+}
