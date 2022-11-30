@@ -61,6 +61,7 @@ export class Textfield extends LitElement {
   @property({attribute: true, type: String}) label = '';
   @property({attribute: true, type: String}) suffix = '';
   @property({attribute: true, type: Boolean}) disabled = false;
+  @property({attribute: true, type: String}) hint = '';
 
   override render() {
     return html`
@@ -69,7 +70,8 @@ export class Textfield extends LitElement {
         ?disabled=${this.disabled}
         data-aria-label=${this.label}
         value=${this.value}
-        suffixtext=${this.suffix}>
+        suffixtext=${this.suffix}
+        supportingText=${this.hint}>
       </md-filled-text-field>
     `;
   }
