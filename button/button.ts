@@ -16,10 +16,22 @@ import {customElement, property} from 'lit/decorators';
  */
 @customElement('cros-button')
 export class Button extends LitElement {
-  // TODO(b/241022309): Replace hardcoded colours with theme variables.
+  // TODO(b/258982831): Centre icon. See spec.
   static override styles: CSSResultGroup = css`
     md-filled-button {
-      --md-sys-color-primary: var(--cros-button-fill, #3F5AA9);
+      max-width: 200px;
+      min-width: 64px;
+      --md-filled-button-container-height: 36px;
+      --md-filled-button-with-icon-icon-size: 20px;
+      --md-sys-color-primary: var(--cros-sys-primary);
+      --md-sys-color-on-primary: var(--cros-sys-on_primary);
+      --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary);
+      --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
+      --md-filled-button-pressed-state-layer-color: var(--cros-sys-hover_on_prominent);
+      --md-filled-button-focus-state-layler-color: var(--cros-sys-focus_ring);
+      --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
+      --md-filled-button-disabled-clabel-text-color: var(--cros-sys-disabled);
+      --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
     }
   `;
 
