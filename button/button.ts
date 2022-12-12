@@ -17,21 +17,38 @@ import {customElement, property} from 'lit/decorators';
 @customElement('cros-button')
 export class Button extends LitElement {
   // TODO(b/258982831): Centre icon. See spec.
+  // Note that theme colours have opacity defined in the colour, but default
+  // colours have opacities set separately. As a consequence, styles are broken
+  // unless a cros theme is present.
   static override styles: CSSResultGroup = css`
     md-filled-button {
       max-width: 200px;
       min-width: 64px;
+      --md-sys-color-secondary: var(--cros-sys-focus_ring);
       --md-filled-button-container-height: 36px;
       --md-filled-button-with-icon-icon-size: 20px;
+      --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
+      --md-filled-button-disabled-label-text-color: var(--cros-sys-disabled);
+      --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-button-focus-state-layer-opacity: 100%;
+      --md-filled-button-hover-state-layer-opacity: 100%;
+      --md-filled-button-pressed-state-layer-opacity: 100%;
+    }
+
+    md-filled-button.primary {
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-on-primary: var(--cros-sys-on_primary);
       --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary);
       --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-hover_on_prominent);
-      --md-filled-button-focus-state-layler-color: var(--cros-sys-focus_ring);
-      --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
-      --md-filled-button-disabled-clabel-text-color: var(--cros-sys-disabled);
-      --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+    }
+
+    md-filled-button.secondary {
+      --md-sys-color-primary: var(--cros-sys-primary_container);
+      --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
+      --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary_container);
+      --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
   `;
 
@@ -39,9 +56,14 @@ export class Button extends LitElement {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) trailingIcon = false;
 
+  /** How the button should be styled. One of {primary, secondary, text} */
+  @property({type: String})
+  buttonStyle: 'primary'|'secondary'|'text' = 'primary';
+
   override render() {
     return html`
-        <md-filled-button label=${this.label}
+        <md-filled-button class=${this.buttonStyle}
+            label=${this.label}
             ?disabled=${this.disabled}
             ?trailingIcon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
