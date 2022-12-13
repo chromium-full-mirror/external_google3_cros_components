@@ -5,9 +5,22 @@
  */
 
 import '@material/web/button/filled-button.js';
+import '@material/web/button/text-button.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators';
+import {html, literal} from 'lit/static-html.js';
+
+function getButtonImpl(style: string) {
+  switch (style) {
+    case 'text':
+      return literal`md-text-button`;
+    case 'primary':
+    case 'secondary':
+    default:
+      return literal`md-filled-button`;
+  }
+}
 
 /**
  * A chromeOS compliant button.
@@ -50,6 +63,23 @@ export class Button extends LitElement {
       --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
+
+    md-text-button {
+      max-width: 200px;
+      min-width: 64px;
+      --md-text-button-container-height: 36px;
+      --md-text-button-with-icon-icon-size: 20px;
+      --md-sys-color-primary: var(--cros-sys-primary);
+      --md-sys-color-secondary: var(--cros-sys-focus_ring);
+      --md-text-button-with-icon-icon-color: var(--cros-sys-primary);
+      --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-text-button-disabled-label-text-color: var(--cros-sys-disabled);
+      --md-text-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+      --md-text-button-focus-state-layer-opacity: 100%;
+      --md-text-button-hover-state-layer-opacity: 100%;
+      --md-text-button-pressed-state-layer-opacity: 100%;
+    }
   `;
 
   @property({type: String}) label = '';
@@ -61,13 +91,14 @@ export class Button extends LitElement {
   buttonStyle: 'primary'|'secondary'|'text' = 'primary';
 
   override render() {
+    const mdButtonTag = getButtonImpl(this.buttonStyle);
     return html`
-        <md-filled-button class=${this.buttonStyle}
+        <${mdButtonTag} class=${this.buttonStyle}
             label=${this.label}
             ?disabled=${this.disabled}
             ?trailingIcon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
-        </md-filled-button>
+        </${mdButtonTag}>
         `;
   }
 }
