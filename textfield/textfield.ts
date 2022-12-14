@@ -63,6 +63,12 @@ export class Textfield extends LitElement {
   @property({attribute: true, type: Boolean}) disabled = false;
   @property({attribute: true, type: String}) hint = '';
 
+  /**
+   * Max length of the textfield value. If set to -1 or less, md-textfield will
+   * ignore this value when restricting the length of the textfield, and also
+   * not render the charCounter.
+   */
+  @property({attribute: true, type: Number}) maxLength = -1;
   override render() {
     return html`
       <div id="visibleLabel">${this.label}</div>
@@ -71,6 +77,7 @@ export class Textfield extends LitElement {
         data-aria-label=${this.label}
         value=${this.value}
         suffixtext=${this.suffix}
+        maxLength=${this.maxLength}
         supportingText=${this.hint}>
       </md-filled-text-field>
     `;
