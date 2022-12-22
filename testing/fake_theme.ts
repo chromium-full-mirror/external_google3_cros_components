@@ -13,7 +13,7 @@ import {css} from 'lit';
 /** A fake ChromeOS theme for testing. */
 export function getThemeForTesting() {
   return css`
-  cros-button {
+  * {
     --cros-ref-primary0: #000000ff;
     --cros-ref-primary10: #041e49ff;
     --cros-ref-primary20: #062e6fff;
