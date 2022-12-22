@@ -6,8 +6,8 @@
 
 import '@material/web/textfield/filled-text-field';
 
-import {MdFilledTextField} from '@material/web/textfield/filled-text-field';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {MdFilledTextField, TextFieldType as MdTextfieldType} from '@material/web/textfield/filled-text-field';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {customElement, property, query} from 'lit/decorators';
 
 /**
@@ -17,39 +17,28 @@ import {customElement, property, query} from 'lit/decorators';
 @customElement('cros-textfield')
 export class Textfield extends LitElement {
   @query('md-filled-text-field') mdTextfield?: MdFilledTextField;
-  static override styles: CSSResultGroup = css`
+  @property({attribute: true, type: String}) type: MdTextfieldType = 'text';
+  @property({type: Boolean, reflect: true}) onShaded = false;
 
-    /* TODO(b:241483751): Use Jelly unified typography system. */
-    :host {
-      font-family: 'Roboto', 'Noto', sans-serif;
-      font-size: 10px;
-    }
+  @property({attribute: true, type: String})
+  get value() {
+    return this.mdTextfield?.value || '';
+  }
 
-    md-filled-text-field {
-      --md-filled-text-field-container-shape-start-start: 8px;
-      --md-filled-text-field-container-shape-start-end: 8px;
-      --md-filled-text-field-container-shape-end-start: 8px;
-      --md-filled-text-field-container-shape-end-end: 8px;
-      --md-filled-text-field-container-height: 36px;
-      --md-filled-text-field-active-indicator-height: 0;
-      --md-filled-text-field-disabled-active-indicator-height: 0;
-      --md-filled-text-field-hover-active-indicator-height: 0;
-      --md-filled-text-field-focus-active-indicator-height: 2px;
-      --md-filled-text-field-pressed-active-indicator-height: 2px;
-      --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
-      --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
-      --md-filled-text-field-input-text-prefix-color: var(--cros-sys-secondary);
-      --md-filled-text-field-disabled-input-text-color: var(--cros-sys-disabled);
-      --md-filled-text-field-hover-state-layer-opacity: 0;
-      --md-filled-text-field-error-hover-state-layer-opacity: 0;
-      width: 100%;
+  set value(value: string) {
+    // On first render the initial value is lost because mwcTextfield is not yet
+    // rendered. Store it in `valueInternal` and set it in firstUpdated().
+    this.valueInternal = value;
+    if (this.mdTextfield) {
+      this.mdTextfield.value = this.valueInternal;
     }
+  }
 
-    #visibleLabel {
-      color: var(--cros-sys-on-surface);
-      padding-bottom: 8px;
-    }
-  `;
+  /**
+   * The visible label above the textfield. This is also used as the aria-label
+   * for the internal md-textfield.
+   */
+  @property({attribute: true, type: String}) label = '';
 
   /**
    * Properties supported by the MD textfield that are surfaced to the
@@ -57,8 +46,6 @@ export class Textfield extends LitElement {
    * not a subclass. This is not an exhaustive list, and support should be
    * added by clients as needed.
    */
-  @property({attribute: true, type: String}) value = '';
-  @property({attribute: true, type: String}) label = '';
   @property({attribute: true, type: String}) suffix = '';
   @property({attribute: true, type: Boolean}) disabled = false;
   @property({attribute: true, type: String}) hint = '';
@@ -69,18 +56,108 @@ export class Textfield extends LitElement {
    * not render the charCounter.
    */
   @property({attribute: true, type: Number}) maxLength = -1;
+
+  private valueInternal = '';
+
+  static override styles: CSSResultGroup = css`
+
+    :host {
+      display: block;
+      /* TODO(b/241483751): Use Jelly unified typography system. */
+      font-family: 'Roboto', 'Noto', sans-serif;
+      font-size: 10px;
+    }
+
+    :host(.focused) {
+      outline: none;
+    }
+
+    :host(.focused) #visibleLabel {
+      color: var(--cros-sys-primary);
+    }
+
+    :host(.error) #visibleLabel {
+      color: var(--cros-sys-error)
+    }
+
+    :host([disabled]) #visibleLabel {
+      opacity: var(--cros-sys-opacity-disabled);
+    }
+
+    md-filled-text-field {
+      --md-filled-text-field-active-indicator-height: 0;
+      --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
+      --md-filled-text-field-container-color: var(--cros-sys-input_field_dark);
+      --md-filled-text-field-container-height: 36px;
+      --md-filled-text-field-container-shape-start-start: 8px;
+      --md-filled-text-field-container-shape-start-end: 8px;
+      --md-filled-text-field-container-shape-end-start: 8px;
+      --md-filled-text-field-container-shape-end-end: 8px;
+      --md-filled-text-field-disabled-active-indicator-height: 0;
+      --md-filled-text-field-disabled-input-text-color: var(--cros-sys-disabled);
+      --md-filled-text-field-error-supporting-text-color: var(--cros-sys-error);
+      --md-filled-text-field-error-hover-state-layer-opacity: 0;
+      --md-filled-text-field-focus-active-indicator-color: var(--cros-sys-primary);
+      --md-filled-text-field-focus-active-indicator-height: 2px;
+      --md-filled-text-field-hover-state-layer-opacity: 0;
+      --md-filled-text-field-hover-active-indicator-height: 0;
+      --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface_bodytext);
+      --md-filled-text-field-pressed-active-indicator-height: 2px;
+      --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
+      width: 100%;
+    }
+
+    #visibleLabel {
+      color: var(--cros-sys-on-surface);
+      padding-bottom: 8px;
+    }
+  `;
+
+  override async firstUpdated(changedProperties: PropertyValues<Textfield>) {
+    this.mdTextfield!.value = this.valueInternal;
+  }
+
+  override update(changedProperties: PropertyValues<Textfield>) {
+    // There is no corresponding 'valid' event to match md-textfield's
+    // 'invalid' event, so just check on every update to see if it's still
+    // invalid and remove the class if not. It's possible to also just
+    // toggleErrorStyle() on update exclusively, but listening for the invalid
+    // event allows us to sync the style update with MD's style update.
+    if (this.mdTextfield && this.classList.contains('error')) {
+      this.toggleErrorStyles(this.mdTextfield.error);
+    }
+    super.update(changedProperties);
+  }
+
   override render() {
     return html`
       <div id="visibleLabel">${this.label}</div>
       <md-filled-text-field
         ?disabled=${this.disabled}
+        type=${this.type}
         data-aria-label=${this.label}
         value=${this.value}
         suffixtext=${this.suffix}
         maxLength=${this.maxLength}
-        supportingText=${this.hint}>
+        supportingText=${this.hint}
+        @focus=${this.toggleFocusStyle}
+        @blur=${this.toggleFocusStyle}
+        @change=${this.checkAndUpdateValidity}
+        @invalid=${() => void this.toggleErrorStyles(true)}>
       </md-filled-text-field>
     `;
+  }
+
+  private checkAndUpdateValidity() {
+    const valid = this.mdTextfield!.reportValidity();
+    this.toggleErrorStyles(!valid);
+  }
+
+  private toggleErrorStyles(error: boolean) {
+    this.classList.toggle('error', error);
+  }
+  private toggleFocusStyle() {
+    this.classList.toggle('focused');
   }
 }
 
