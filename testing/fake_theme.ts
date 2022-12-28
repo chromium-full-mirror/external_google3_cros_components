@@ -218,6 +218,7 @@ export function getThemeForTesting() {
     --cros-sys-highlight_shape: #8ea8fd4c;
     --cros-sys-highlight_text: #8ea8fd99;
     --cros-sys-focus_ring: #3f5aa9ff;
+    --cros-sys-opacity-disabled: 0.38;
   }
   `;
 }

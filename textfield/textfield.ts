@@ -11,6 +11,18 @@ import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {customElement, property, query} from 'lit/decorators';
 
 /**
+ * Textfields have two variants that differ only by the container background,
+ * designed to improve contrast depending on the color of the surface behind it:
+ * 1) textfield-on-app-base (lighter background, app base)
+ * 2) textfield-on-shaded (darker background, shaded base)
+ *
+ * Consumers of the component can use the `shaded` property to ensure that it
+ * has the correct container color for their use case.
+ */
+const TEXTFIELD_CONTAINER_ON_BASE = css`var(--cros-sys-input_field_dark)`;
+const TEXTFIELD_CONTAINER_ON_SHADED = css`var(--cros-sys-input_field_light)`;
+
+/**
  * Textfield component. See the specs here:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3227%3A25882&t=50tDpMdSJky6eT9O-0
  */
@@ -18,7 +30,13 @@ import {customElement, property, query} from 'lit/decorators';
 export class Textfield extends LitElement {
   @query('md-filled-text-field') mdTextfield?: MdFilledTextField;
   @property({attribute: true, type: String}) type: MdTextfieldType = 'text';
-  @property({type: Boolean, reflect: true}) onShaded = false;
+
+  /**
+   * When false, will use the darker container designed to sit on app-base. When
+   * true, will use the lighter container colored designed for use with
+   * app-base-shaded. Purely a cosmetic difference to improve contrast.
+   */
+  @property({type: Boolean, reflect: true}) shaded = false;
 
   @property({attribute: true, type: String})
   get value() {
@@ -87,7 +105,7 @@ export class Textfield extends LitElement {
     md-filled-text-field {
       --md-filled-text-field-active-indicator-height: 0;
       --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
-      --md-filled-text-field-container-color: var(--cros-sys-input_field_dark);
+      --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_BASE};
       --md-filled-text-field-container-height: 36px;
       --md-filled-text-field-container-shape-start-start: 8px;
       --md-filled-text-field-container-shape-start-end: 8px;
@@ -105,6 +123,10 @@ export class Textfield extends LitElement {
       --md-filled-text-field-pressed-active-indicator-height: 2px;
       --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
       width: 100%;
+    }
+
+    :host([shaded]) md-filled-text-field {
+      --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_SHADED};
     }
 
     #visibleLabel {
