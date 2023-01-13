@@ -106,7 +106,7 @@ export class Textfield extends LitElement {
       --md-filled-text-field-active-indicator-height: 0;
       --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_BASE};
-      --md-filled-text-field-container-height: 36px;
+      --md-filled-text-field-container-padding-vertical: 6px;
       --md-filled-text-field-container-shape-start-start: 8px;
       --md-filled-text-field-container-shape-start-end: 8px;
       --md-filled-text-field-container-shape-end-start: 8px;
