@@ -221,12 +221,6 @@ export class SidenavItem extends LitElement {
       display: block;
     }
 
-    slot[name="trailingIcon"]::slotted(*) {
-      height: 20px;
-      margin: 0;
-      width: 20px;
-    }
-
     :host([selected]) .rename {
       outline: 2px solid var(--cros-sys-inverse_primary);
     }
@@ -364,7 +358,6 @@ export class SidenavItem extends LitElement {
             class="tree-label-icon"
           ></cros-icon>
           ${this.renderTreeLabel()}
-          <slot name="trailingIcon"></slot>
         </div>
         <ul
           class="tree-children"
