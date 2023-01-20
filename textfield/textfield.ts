@@ -115,13 +115,23 @@ export class Textfield extends LitElement {
       --md-filled-text-field-disabled-input-text-color: var(--cros-sys-disabled);
       --md-filled-text-field-error-supporting-text-color: var(--cros-sys-error);
       --md-filled-text-field-error-hover-state-layer-opacity: 0;
+      --md-filled-text-field-error-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-error-focus-active-indicator-color: var(--cros-sys-error);
+      --md-filled-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
       --md-filled-text-field-focus-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-focus-active-indicator-height: 2px;
       --md-filled-text-field-hover-state-layer-opacity: 0;
       --md-filled-text-field-hover-active-indicator-height: 0;
-      --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface_bodytext);
+      --md-filled-text-field-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-hover-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-pressed-active-indicator-height: 2px;
       --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
+      --md-filled-text-field-supporting-text-color: var(--cros-sys-on_surface);
       width: 100%;
     }
 
@@ -130,7 +140,7 @@ export class Textfield extends LitElement {
     }
 
     #visibleLabel {
-      color: var(--cros-sys-on-surface);
+      color: var(--cros-sys-on_surface);
       padding-bottom: 8px;
     }
   `;
