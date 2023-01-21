@@ -17,11 +17,14 @@ import {isSidenav, isSidenavItem} from './sidenav_util';
 /** The number of pixels to indent per level. */
 export const TREE_ITEM_INDENT = 20;
 
+/** The width and height of the expand and label icons. */
+const ICON_SIZE = css`20px`;
+
 /** An item for a ChromeOS compliant sidenav element. */
 @customElement('cros-sidenav-item')
 export class SidenavItem extends LitElement {
   /**
-   * The `separator` attribute will show a top border for the tree item. It's
+   * The ` separator` attribute will show a top border for the tree item. It's
    * mainly used to identify this tree item is a start of the new section.
    */
   @property({type: Boolean, reflect: true}) separator = false;
@@ -40,7 +43,7 @@ export class SidenavItem extends LitElement {
 
   /**
    * A tree item will have children if the child tree items have been inserted
-   * to its default slot. Only use `mayHaveChildren` if we want the tree item
+   * to its default slot. Only use ` mayHaveChildren` if we want the tree item
    * to appeared as having children even without the actual child tree items
    * (e.g. no DOM children). This is mainly used when we asynchronously loads
    * child tree items.
@@ -55,13 +58,13 @@ export class SidenavItem extends LitElement {
    * If the user navigates to this item, tabs away from the sidenav and then
    * tabs back into the sidenav, the item that receives focus should be the one
    * the had navigated to.
-   * `tabIndex` is forwarded to the `<li>` element.
+   * ` tabIndex` is forwarded to the ` < li > ` element.
    */
   @property({attribute: false}) override tabIndex: number = -1;
 
   /**
    * Indicate the level of this tree item, we use it to calculate the padding
-   * indentation. Note: "aria-level" can be calculated by DOM structure so
+   * indentation. Note: "aria-level" can be calcul20pxated by DOM structure so
    * no need to provide it explicitly.
    */
   @state() level = 1;
@@ -72,11 +75,11 @@ export class SidenavItem extends LitElement {
   private readonly childrenSlotElement!: HTMLSlotElement;
 
   static override styles: CSSResultGroup = css`
-    ul {
-      list-style: none;
-      margin: 0;
-      outline: none;
-      padding: 0;
+ul {
+  list - style: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
     }
 
     li {
@@ -149,12 +152,12 @@ export class SidenavItem extends LitElement {
       -webkit-mask-position: center;
       -webkit-mask-repeat: no-repeat;
       flex: none;
-      height: 20px;
+      width: ${ICON_SIZE};
+      height: ${ICON_SIZE};
       position: relative;
       transform: rotate(-90deg);
       transition: all 150ms;
       visibility: hidden;
-      width: 20px;
       margin-inline-start: 28px;
     }
 
@@ -170,18 +173,18 @@ export class SidenavItem extends LitElement {
       transform: rotate(0);
     }
 
-    .tree-label-icon {
-      flex: none;
-      color: var(--cros-sys-on_surface);
-      width: 20px;
-      height: 20px;
+    slot[name="icon"]::slotted(*){
+       flex: none;
+       color: var(--cros-sys-on_surface);
+       width: ${ICON_SIZE};
+       height: ${ICON_SIZE};
     }
 
-    :host([selected]) .tree-label-icon {
+    :host([selected]) slot[name="icon"]::slotted(*) {
       color: var(--cros-sys-on_primary)
     }
 
-    :host([disabled]) .tree-label-icon {
+    :host([disabled]) slot[name="icon"]::slotted(*) {
       color: var(--cros-sys-disabled);
     }
 
@@ -343,9 +346,8 @@ export class SidenavItem extends LitElement {
         aria-disabled=${this.disabled}
       >
         <div
-          class="tree-row"
-          style=${styleMap(treeRowStyles)}
-        >
+            class="tree-row"
+            style=${styleMap(treeRowStyles)}>
           <!-- TODO(b/262453851): Implement ripple -->
           <!-- TODO(b/262453851): Implement icon from spec -->
           <span class="expand-icon">
@@ -353,20 +355,16 @@ export class SidenavItem extends LitElement {
               <polyline points="6 8 10 12 14 8 6 8"/>
             </svg>
           </span>
-          <!-- TODO(b/262453851): slot this -->
-          <cros-icon
-            class="tree-label-icon"
-          ></cros-icon>
+          <slot name="icon"></slot>
           ${this.renderTreeLabel()}
         </div>
         <ul
-          class="tree-children"
-          role="group"
-        >
+            class="tree-children"
+            role="group">
           <slot @slotchange=${this.onSlotChanged}></slot>
         </ul>
-      </li>
-    `;
+       </li>
+     `;
   }
 
   private renderTreeLabel() {
