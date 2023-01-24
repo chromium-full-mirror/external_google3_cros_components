@@ -16,3 +16,8 @@ export function isSidenav(element: Element): element is Sidenav {
 export function isSidenavItem(element: Element): element is SidenavItem {
   return element.tagName === 'CROS-SIDENAV-ITEM';
 }
+
+/** True if the page is read right-to-left. */
+export function isRTL() {
+  return document.documentElement.dir === 'rtl';
+}
