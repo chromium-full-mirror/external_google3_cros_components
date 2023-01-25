@@ -29,25 +29,25 @@ declare interface ExtendedElement extends Element {
  *   <cros-sidenav-item></cros-sidenav-item>
  * </cros-sidenav>
  *
- * The selection and focus of <cros-sidenav-item> is controlled in
+ * The enabling and focus of <cros-sidenav-item> is controlled in
  * <cros-sidenav>, this is because we need to make sure only one item is being
- * selected or focused.
+ * enabled or focused.
  */
 @customElement('cros-sidenav')
 export class Sidenav extends LitElement {
   static get events() {
     return {
-      /** Triggers when a tree item has been selected. */
-      SIDENAV_SELECTION_CHANGED: 'tree_selection_changed',
+      /** Triggers when a tree item has been enabled. */
+      SIDENAV_ENABLED_CHANGED: 'sidenav_enabled_changed',
     } as const;
   }
 
-  /** Return the selected tree item, could be null. */
-  get selectedItem(): SidenavItem|null {
-    return this.selectedItemInternal;
+  /** Return the enabled tree item, could be null. */
+  get enabledItem(): SidenavItem|null {
+    return this.enabledItemInternal;
   }
-  set selectedItem(item: SidenavItem|null) {
-    this.selectItem(item);
+  set enabledItem(item: SidenavItem|null) {
+    this.enableItem(item);
   }
 
   /** The child tree items. */
@@ -73,9 +73,9 @@ export class Sidenav extends LitElement {
   private itemsInternal: SidenavItem[] = [];
   /**
    * Maintain these in the tree level so we can make sure at most one tree item
-   * can be selected/focused.
+   * can be enabled/focused.
    */
-  private selectedItemInternal: SidenavItem|null = null;
+  private enabledItemInternal: SidenavItem|null = null;
   private focusedItemInternal: SidenavItem|null = null;
 
   static override get styles() {
@@ -117,14 +117,14 @@ export class Sidenav extends LitElement {
         this.childrenSlot.assignedElements().filter(isSidenavItem);
     this.ariaSetSize = this.tabbableItems.length.toString();
 
-    if (this.selectedItemInternal) {
+    if (this.enabledItemInternal) {
       const newItems = new Set(this.itemsInternal);
-      if (oldItems.has(this.selectedItemInternal) &&
-          !newItems.has(this.selectedItemInternal)) {
-        // If the currently selected item exists in `oldItems` but not in
+      if (oldItems.has(this.enabledItemInternal) &&
+          !newItems.has(this.enabledItemInternal)) {
+        // If the currently enabled item exists in `oldItems` but not in
         // `newItems`, it means it's being removed from the children slot,
-        // we need to select the first .
-        this.selectedItem = this.tabbableItems[0];
+        // we need to enable the first .
+        this.enabledItem = this.tabbableItems[0];
       }
     }
   }
@@ -169,7 +169,7 @@ export class Sidenav extends LitElement {
     if (innerClickTarget.className === 'expand-icon') {
       treeItem.expanded = !treeItem.expanded;
     } else {
-      treeItem.selected = true;
+      treeItem.enabled = true;
     }
   }
 
@@ -217,7 +217,7 @@ export class Sidenav extends LitElement {
     switch (e.key) {
       case 'Enter':
       case 'Space':
-        this.selectItem(this.focusedItemInternal);
+        this.enableItem(this.focusedItemInternal);
         break;
       case 'ArrowUp':
         itemToFocus = this.getPreviousItem(this.focusedItemInternal);
@@ -317,39 +317,39 @@ export class Sidenav extends LitElement {
   }
 
   /**
-   * Make `itemToSelect` become the selected item in the tree, this will
-   * also unselect the previously selected tree item to make sure at most
-   * one tree item is selected in the tree.
+   * Make `itemToEnable` become the enabled item in the tree, this will
+   * also un-enable the previously enabled tree item to make sure at most
+   * one tree item is enabled in the tree.
    */
-  private selectItem(itemToSelect: SidenavItem|null) {
-    if (itemToSelect === this.selectedItemInternal) {
+  private enableItem(itemToEnable: SidenavItem|null) {
+    if (itemToEnable === this.enabledItemInternal) {
       return;
     }
-    const previousSelectedItem = this.selectedItemInternal;
-    if (previousSelectedItem) {
-      previousSelectedItem.selected = false;
+    const previousEnabledItem = this.enabledItemInternal;
+    if (previousEnabledItem) {
+      previousEnabledItem.enabled = false;
     }
-    this.selectedItemInternal = itemToSelect;
-    if (this.selectedItemInternal) {
-      this.selectedItemInternal.selected = true;
-      this.focusItem(this.selectedItemInternal);
-      (this.selectedItemInternal as unknown as ExtendedElement)
+    this.enabledItemInternal = itemToEnable;
+    if (this.enabledItemInternal) {
+      this.enabledItemInternal.enabled = true;
+      this.focusItem(this.enabledItemInternal);
+      (this.enabledItemInternal as unknown as ExtendedElement)
           .scrollIntoViewIfNeeded(false);
     }
-    const selectionChangeEvent: SidenavSelectedChangedEvent =
-        new CustomEvent(Sidenav.events.SIDENAV_SELECTION_CHANGED, {
+    const enabledChangeEvent: SidenavEnabledChangedEvent =
+        new CustomEvent(Sidenav.events.SIDENAV_ENABLED_CHANGED, {
           bubbles: true,
           composed: true,
           detail: {
-            previousSelectedItem,
-            selectedItem: this.selectedItem,
+            previousEnabledItem,
+            enabledItem: this.enabledItem,
           },
         });
-    this.dispatchEvent(selectionChangeEvent);
+    this.dispatchEvent(enabledChangeEvent);
   }
 
   /**
-   * Make `itemToSelect` become the focused item in the tree, this will
+   * Make `itemToEnable` become the focused item in the tree, this will
    * also unfocus the previously focused tree item to make sure at most
    * one tree item is selected in the tree. The focused item is the only
    * tabbable item, so that if the user tabs away and returns, they return to
@@ -367,17 +367,17 @@ export class Sidenav extends LitElement {
   }
 }
 
-/** Type of the tree item selection custom event. */
-export type SidenavSelectedChangedEvent = CustomEvent<{
-  /** The tree item which has been selected previously. */
-  previousSelectedItem: SidenavItem | null,
-  /** The tree item which has been selected now. */
-  selectedItem: SidenavItem | null,
+/** Type of the tree item enabling custom event. */
+export type SidenavEnabledChangedEvent = CustomEvent<{
+  /** The tree item which has been enabled previously. */
+  previousEnabledItem: SidenavItem | null,
+  /** The tree item which has been enabled now. */
+  enabledItem: SidenavItem | null,
 }>;
 
 declare global {
   interface HTMLElementEventMap {
-    [Sidenav.events.SIDENAV_SELECTION_CHANGED]: SidenavSelectedChangedEvent;
+    [Sidenav.events.SIDENAV_ENABLED_CHANGED]: SidenavEnabledChangedEvent;
   }
 
   interface HTMLElementTagNameMap {

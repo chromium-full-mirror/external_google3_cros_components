@@ -51,13 +51,13 @@ export class SidenavItem extends LitElement {
 
   /**
    * Indicate if a tree item is disabled or not. Disabled tree item will have
-   * a greyed out color, can't be selected, can't get focus. It can still have
+   * a greyed out color, can't be enabled, can't get focus. It can still have
    * children, but it can't be expanded, and the expand icon will be hidden.
    */
   @property({type: Boolean, reflect: true}) disabled = false;
 
-  /** Indicate if a tree item has been selected or not. */
-  @property({type: Boolean, reflect: true}) selected = false;
+  /** Indicate if a tree item has been enabled or not. */
+  @property({type: Boolean, reflect: true}) enabled = false;
 
   /** Indicate if a tree item has been expanded or not. */
   @property({type: Boolean, reflect: true}) expanded = false;
@@ -147,12 +147,12 @@ export class SidenavItem extends LitElement {
       color: var(--cros-sys-disabled);
     }
 
-    :host(:not([selected]):not([disabled]):not([editing]))
+    :host(:not([enabled]):not([disabled]):not([editing]))
         li:not(:focus-visible) .tree-row:hover {
       background-color: var(--cros-sys-hover_on_subtle);
     }
 
-    :host([selected]) .tree-row {
+    :host([enabled]) .tree-row {
       background-color: var(--cros-sys-primary);
       color: var(--cros-sys-on_primary);
     }
@@ -161,12 +161,12 @@ export class SidenavItem extends LitElement {
       cursor: default;
     }
 
-    :host-context(.pointer-active):host(:not([selected]):not([disabled]):not([editing]))
+    :host-context(.pointer-active):host(:not([enabled]):not([disabled]):not([editing]))
         li:not(:focus-visible) .tree-row:not(:active):hover {
       background-color: unset;
     }
 
-    :host-context(.pointer-active):host(:not([selected]):not([disabled]):not([editing]))
+    :host-context(.pointer-active):host(:not([enabled]):not([disabled]):not([editing]))
         li:not(:focus-visible) .tree-row:not(:hover):active {
       background-color: var(--cros-sys-hover_on_subtle);
     }
@@ -203,7 +203,7 @@ export class SidenavItem extends LitElement {
       width: ${ICON_SIZE};
     }
 
-    :host([selected]) slot[name="icon"]::slotted(*) {
+    :host([enabled]) slot[name="icon"]::slotted(*) {
       color: var(--cros-sys-on_primary)
     }
 
@@ -247,7 +247,7 @@ export class SidenavItem extends LitElement {
       display: block;
     }
 
-    :host([selected]) .rename {
+    :host([enabled]) .rename {
       outline: 2px solid var(--cros-sys-inverse_primary);
     }
 
@@ -338,7 +338,7 @@ export class SidenavItem extends LitElement {
         role="treeitem"
         tabindex=${this.tabIndex}
         aria-labelledby="tree-label"
-        aria-selected=${this.selected}
+        aria-selected=${this.enabled}
         aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
         aria-disabled=${this.disabled}
       >
@@ -381,8 +381,8 @@ export class SidenavItem extends LitElement {
     if (changedProperties.has('expanded')) {
       this.onExpandChanged();
     }
-    if (changedProperties.has('selected')) {
-      this.onSelectedChanged();
+    if (changedProperties.has('enabled')) {
+      this.onEnabledChanged();
     }
     if (changedProperties.has('editing')) {
       this.onEditingChanged();
@@ -434,14 +434,14 @@ export class SidenavItem extends LitElement {
       updateScheduled = true;
     }
 
-    if (this.tree?.selectedItem) {
+    if (this.tree?.enabledItem) {
       const newItems = new Set(this.items);
-      if (oldItems.has(this.tree.selectedItem) &&
-          !newItems.has(this.tree.selectedItem)) {
-        // If the currently selected item exists in `oldItems` but not in
+      if (oldItems.has(this.tree.enabledItem) &&
+          !newItems.has(this.tree.enabledItem)) {
+        // If the currently enabled item exists in `oldItems` but not in
         // `newItems`, it means it's being removed from the children slot,
-        // we need to select the parent node of the removed item (i.e. `this`).
-        this.selected = true;
+        // we need to enable the parent node of the removed item (i.e. `this`).
+        this.enabled = true;
         updateScheduled = true;
       }
     }
@@ -472,16 +472,16 @@ export class SidenavItem extends LitElement {
     }
   }
 
-  private onSelectedChanged() {
+  private onEnabledChanged() {
     const tree = this.tree;
-    if (this.selected) {
+    if (this.enabled) {
       this.reveal();
       if (tree) {
-        tree.selectedItem = this;
+        tree.enabledItem = this;
       }
     } else {
-      if (tree && tree.selectedItem === this) {
-        tree.selectedItem = null;
+      if (tree && tree.enabledItem === this) {
+        tree.enabledItem = null;
       }
     }
   }
