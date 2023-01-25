@@ -14,8 +14,28 @@ import {styleMap} from 'lit/directives/style-map';
 import {Sidenav} from './sidenav';
 import {isSidenav, isSidenavItem} from './sidenav_util';
 
+/** Type of the tree item expanded custom event. */
+export type TreeItemExpandedEvent = CustomEvent<{
+  /** The tree item which has been expanded. */
+  item: SidenavItem,
+}>;
+/** Type of the tree item collapsed custom event. */
+export type TreeItemCollapsedEvent = CustomEvent<{
+  /** The tree item which has been collapsed. */
+  item: SidenavItem,
+}>;
+/** Type of the tree item collapsed custom event. */
+export type TreeItemRenamedEvent = CustomEvent<{
+  /** The tree item which has been renamed. */
+  item: SidenavItem,
+  /** The label before rename. */
+  oldLabel: string,
+  /** The label after rename. */
+  newLabel: string,
+}>;
+
 /** The number of pixels to indent per level. */
-export const TREE_ITEM_INDENT = 20;
+export const TREE_ITEM_INDENT_PX = 20;
 
 /** The width and height of the expand and label icons. */
 const ICON_SIZE = css`20px`;
@@ -24,28 +44,32 @@ const ICON_SIZE = css`20px`;
 @customElement('cros-sidenav-item')
 export class SidenavItem extends LitElement {
   /**
-   * The ` separator` attribute will show a top border for the tree item. It's
+   * The `separator` attribute will show a top border for the tree item. It's
    * mainly used to identify this tree item is a start of the new section.
    */
   @property({type: Boolean, reflect: true}) separator = false;
+
   /**
    * Indicate if a tree item is disabled or not. Disabled tree item will have
    * a greyed out color, can't be selected, can't get focus. It can still have
    * children, but it can't be expanded, and the expand icon will be hidden.
    */
   @property({type: Boolean, reflect: true}) disabled = false;
+
   /** Indicate if a tree item has been selected or not. */
   @property({type: Boolean, reflect: true}) selected = false;
+
   /** Indicate if a tree item has been expanded or not. */
   @property({type: Boolean, reflect: true}) expanded = false;
+
   /** Indicate if a tree item is in editing mode (rename) or not. */
   @property({type: Boolean, reflect: true}) editing = false;
 
   /**
    * A tree item will have children if the child tree items have been inserted
-   * to its default slot. Only use ` mayHaveChildren` if we want the tree item
-   * to appeared as having children even without the actual child tree items
-   * (e.g. no DOM children). This is mainly used when we asynchronously loads
+   * into its default slot. Only use `mayHaveChildren` if we want the tree item
+   * to appear as having children even without the actual child tree items
+   * (e.g. no DOM children). This is mainly used when we asynchronously load
    * child tree items.
    */
   @property({type: Boolean, reflect: true, attribute: 'may-have-children'})
@@ -57,14 +81,13 @@ export class SidenavItem extends LitElement {
   /**
    * If the user navigates to this item, tabs away from the sidenav and then
    * tabs back into the sidenav, the item that receives focus should be the one
-   * the had navigated to.
-   * ` tabIndex` is forwarded to the ` < li > ` element.
+   * they had navigated to. `tabIndex` is forwarded to the ` < li > ` element.
    */
   @property({attribute: false}) override tabIndex: number = -1;
 
   /**
    * Indicate the level of this tree item, we use it to calculate the padding
-   * indentation. Note: "aria-level" can be calcul20pxated by DOM structure so
+   * indentation. Note: "aria-level" can be calculated by DOM structure so
    * no need to provide it explicitly.
    */
   @state() level = 1;
@@ -75,11 +98,11 @@ export class SidenavItem extends LitElement {
   private readonly childrenSlotElement!: HTMLSlotElement;
 
   static override styles: CSSResultGroup = css`
-ul {
-  list - style: none;
-  margin: 0;
-  outline: none;
-  padding: 0;
+    ul {
+      list-style: none;
+      margin: 0;
+      outline: none;
+      padding: 0;
     }
 
     li {
@@ -101,22 +124,22 @@ ul {
     .tree-row {
       align-items: center;
       border-inline-start-width: 0 !important;
+      border-radius: 20px;
       box-sizing: border-box;
+      color: var(--cros-sys-on_surface);
       cursor: pointer;
       display: flex;
+      height: 40px;
+      margin: 8px 0;
       position: relative;
       user-select: none;
       white-space: nowrap;
-      border-radius: 20px;
-      color: var(--cros-sys-on_surface);
-      height: 40px;
-      margin: 8px 0;
     }
 
     li:focus-visible .tree-row {
-      z-index: 2;
       outline: 2px solid var(--cros-sys-focus_ring);
       outline-offset: 2px;
+      z-index: 2;
     }
 
     :host([disabled]) .tree-row {
@@ -149,16 +172,16 @@ ul {
     }
 
     .expand-icon {
+      flex: none;
+      height: ${ICON_SIZE};
+      margin-inline-start: 28px;
       -webkit-mask-position: center;
       -webkit-mask-repeat: no-repeat;
-      flex: none;
-      width: ${ICON_SIZE};
-      height: ${ICON_SIZE};
       position: relative;
       transform: rotate(-90deg);
       transition: all 150ms;
       visibility: hidden;
-      margin-inline-start: 28px;
+      width: ${ICON_SIZE};
     }
 
     li[aria-expanded] .expand-icon {
@@ -174,10 +197,10 @@ ul {
     }
 
     slot[name="icon"]::slotted(*){
-       flex: none;
-       color: var(--cros-sys-on_surface);
-       width: ${ICON_SIZE};
-       height: ${ICON_SIZE};
+      color: var(--cros-sys-on_surface);
+      flex: none;
+      height: ${ICON_SIZE};
+      width: ${ICON_SIZE};
     }
 
     :host([selected]) slot[name="icon"]::slotted(*) {
@@ -192,22 +215,22 @@ ul {
       display: block;
       flex: auto;
       font-weight: 500;
+      margin-inline-start: 8px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: pre;
-      margin-inline-start: 8px;
     }
 
     .rename {
-      border: none;
-      margin: 0 10px;
-      overflow: hidden;
       background-color: var(--cros-sys-app_base);
+      border: none;
       border-radius: 4px;
       color: var(--cros-sys-on_surface);
       height: 20px;
-      padding: 1px 8px;
+      margin: 0 10px;
       outline: 2px solid var(--cros-sys-focus_ring);
+      overflow: hidden;
+      padding: 1px 8px;
     }
 
     /* We need to ensure that even empty labels take up space */
@@ -244,38 +267,12 @@ ul {
     } as const;
   }
 
-  /**
-   * We use `tabIndex` to ensure that if the user tabs away and the tabs back to
-   * the sidenav, this is the item that receives focus.
-   */
-  override focus() {
-    console.assert(
-        !this.disabled,
-        'Called focus() on a disabled SidenavItem isn\'t allowed');
-
-    super.focus();
-    this.tabIndex = 0;
-  }
-
-  /**
-   * We use `tabIndex` to ensure that if the user tabs away and the tabs back to
-   * the sidenav, this is not the item that receives focus.
-   */
-  override blur() {
-    console.assert(
-        !this.disabled,
-        'Called blur() on a disabled SidenavItem isn\'t allowed');
-
-    super.blur();
-    this.tabIndex = -1;
-  }
-
   static override shadowRootOptions = {
     ...LitElement.shadowRootOptions,
     delegatesFocus: true
   };
 
-  /** The child tree items which can be tabbed. */
+  /** The child tree items which can be tabbed to. */
   get tabbableItems(): SidenavItem[] {
     return this.items.filter(item => !item.disabled);
   }
@@ -285,8 +282,8 @@ ul {
   }
 
   /**
-   * Return the parent SidenavItem if there is one, for top level SidenavItem
-   * which doesn't have parent SidenavItem, return null.
+   * Return the parent SidenavItem, if there is one. For top level SidenavItems
+   * with no parent, return null.
    */
   get parentItem(): SidenavItem|null {
     let p = this.parentElement;
@@ -332,7 +329,7 @@ ul {
     const showExpandIcon = this.hasChildren() && !this.disabled;
     const treeRowStyles = {
       paddingInlineStart:
-          `max(0px, calc(${TREE_ITEM_INDENT} * ${this.level - 1}px))`,
+          `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.level - 1}px))`,
     };
 
     return html`
@@ -367,6 +364,31 @@ ul {
      `;
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    if (!this.tree) {
+      throw new Error(
+          '<cros-sidenav-item> can not be used without a parent <cros-sidenav>');
+    }
+  }
+
+  override firstUpdated() {
+    this.updateLevel();
+  }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('expanded')) {
+      this.onExpandChanged();
+    }
+    if (changedProperties.has('selected')) {
+      this.onSelectedChanged();
+    }
+    if (changedProperties.has('editing')) {
+      this.onEditingChanged();
+    }
+  }
+
   private renderTreeLabel() {
     if (this.editing) {
       // Stop propagation of some events to prevent them being captured by
@@ -394,14 +416,6 @@ ul {
       class="tree-label"
       id="tree-label"
     >${this.label || ''}</span>`;
-  }
-
-  override connectedCallback() {
-    super.connectedCallback();
-    if (!this.tree) {
-      throw new Error(
-          '<cros-sidenav-item> can not be used without a parent <cros-sidenav>');
-    }
   }
 
   // TODO(b/262453851): There's probably a nicer way to implement this.
@@ -432,26 +446,9 @@ ul {
       }
     }
 
+    // Explicitly trigger an update because render() relies on hasChildren().
     if (!updateScheduled) {
-      // Explicitly trigger an update because render() relies on hasChildren().
       this.requestUpdate();
-    }
-  }
-
-  override firstUpdated() {
-    this.updateLevel();
-  }
-
-  override updated(changedProperties: PropertyValues<this>) {
-    super.updated(changedProperties);
-    if (changedProperties.has('expanded')) {
-      this.onExpandChanged();
-    }
-    if (changedProperties.has('selected')) {
-      this.onSelectedChanged();
-    }
-    if (changedProperties.has('editing')) {
-      this.onEditingChanged();
     }
   }
 
@@ -504,7 +501,7 @@ ul {
       return;
     }
 
-    // Calling this.focus blurs the input which will make the tree item
+    // Calling this.focus() blurs the input which will make the tree item
     // non editable.
     switch (e.key) {
       case 'Escape':
@@ -564,26 +561,6 @@ ul {
     this.level = level;
   }
 }
-
-/** Type of the tree item expanded custom event. */
-export type TreeItemExpandedEvent = CustomEvent<{
-  /** The tree item which has been expanded. */
-  item: SidenavItem,
-}>;
-/** Type of the tree item collapsed custom event. */
-export type TreeItemCollapsedEvent = CustomEvent<{
-  /** The tree item which has been collapsed. */
-  item: SidenavItem,
-}>;
-/** Type of the tree item collapsed custom event. */
-export type TreeItemRenamedEvent = CustomEvent<{
-  /** The tree item which has been renamed. */
-  item: SidenavItem,
-  /** The label before rename. */
-  oldLabel: string,
-  /** The label after rename. */
-  newLabel: string,
-}>;
 
 declare global {
   interface HTMLElementEventMap {

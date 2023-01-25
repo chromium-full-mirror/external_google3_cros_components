@@ -351,15 +351,19 @@ export class Sidenav extends LitElement {
   /**
    * Make `itemToSelect` become the focused item in the tree, this will
    * also unfocus the previously focused tree item to make sure at most
-   * one tree item is selected in the tree.
+   * one tree item is selected in the tree. The focused item is the only
+   * tabbable item, so that if the user tabs away and returns, they return to
+   * the last focused item.
    */
   private focusItem(itemToFocus: SidenavItem) {
     const previousFocusedItem = this.focusedItemInternal;
     if (previousFocusedItem) {
       previousFocusedItem.blur();
+      previousFocusedItem.tabIndex = -1;
     }
     this.focusedItemInternal = itemToFocus;
     this.focusedItemInternal.focus();
+    this.focusedItemInternal.tabIndex = 0;
   }
 }
 
