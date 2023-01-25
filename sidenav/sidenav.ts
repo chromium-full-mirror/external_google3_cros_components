@@ -15,6 +15,8 @@ import {isRTL, isSidenavItem} from './sidenav_util';
  * go/typescript-reopening
  */
 declare interface ExtendedElement extends Element {
+  // TODO(b/262453851): Investigate if we can use a standard approved method
+  // instead of this. Perhaps a mix of intersection observer and scrollTo.
   scrollIntoViewIfNeeded: (centerIfNeeded: boolean) => void;
 }
 
@@ -109,6 +111,10 @@ export class Sidenav extends LitElement {
     `;
   }
 
+  // TODO(b/262453851): See if we can remove the internal copy of the dom we
+  // have (tabbleItems, itemInternals) and instead lazy query the DOM when we
+  // need items. This setup is more prone to weird lit bugs and the cost of
+  // querying the dom is low.
   private onSlotChanged() {
     const oldItems = new Set(this.itemsInternal);
     // Update `itemsInternal` every time when the children slot changes (e.g.
@@ -199,6 +205,9 @@ export class Sidenav extends LitElement {
   /**
    * Handle the keydown within the tree, this mainly handles the navigation
    * and the selection with the keyboard.
+   * TODO(b/262453851): Update this to just do a querySelectorAll for all items
+   * instead of using tabbleItems and then maybe just subtract / add index's
+   * instead of using this getPrevious/getNext linked list we have.
    */
   private onTreeKeyDown(e: KeyboardEvent) {
     if (e.ctrlKey || e.repeat) {
@@ -325,6 +334,9 @@ export class Sidenav extends LitElement {
     if (itemToEnable === this.enabledItemInternal) {
       return;
     }
+    // TODO(b/262453851): We can just "unselect" all items to avoid having to
+    // deal with selectedItemInternal here. Then maybe we can remove
+    // selectedItemInternal.
     const previousEnabledItem = this.enabledItemInternal;
     if (previousEnabledItem) {
       previousEnabledItem.enabled = false;
@@ -358,6 +370,8 @@ export class Sidenav extends LitElement {
   private focusItem(itemToFocus: SidenavItem) {
     const previousFocusedItem = this.focusedItemInternal;
     if (previousFocusedItem) {
+      // TODO(b/262453851): confirm this is needed. It should be implicit when
+      // you focus a new thing that the old thing gets blurred.
       previousFocusedItem.blur();
       previousFocusedItem.tabIndex = -1;
     }
@@ -369,7 +383,12 @@ export class Sidenav extends LitElement {
 
 /** Type of the tree item enabling custom event. */
 export type SidenavEnabledChangedEvent = CustomEvent<{
-  /** The tree item which has been enabled previously. */
+  /**
+   * The tree item which has been enabled previously.
+   * TODO(b/262453851): Figure out if we need this event at all, and if we do if
+   * we need the prev selected field. In files I don't think this is ever used:
+   * https://source.chromium.org/search?q=previousSelectedItem%20f:file_manager&sq=
+   */
   previousEnabledItem: SidenavItem | null,
   /** The tree item which has been enabled now. */
   enabledItem: SidenavItem | null,
