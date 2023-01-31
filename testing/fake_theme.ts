@@ -13,7 +13,7 @@ import {css} from 'lit';
 /** A fake ChromeOS theme for testing. */
 export function getThemeForTesting() {
   return css`
-  html {
+  * {
     --cros-ref-primary0: #000000ff;
     --cros-ref-primary10: #00174cff;
     --cros-ref-primary20: #022978ff;
@@ -148,7 +148,7 @@ export function getThemeForTesting() {
   }
 
   @media (prefers-color-scheme: light) {
-    html {
+    * {
       --cros-sys-primary-light: #3f5aa9ff;
       --cros-sys-primary-dark: #b4c5ffff;
       --cros-sys-primary: #3f5aa9ff;
@@ -230,7 +230,7 @@ export function getThemeForTesting() {
   }
 
   @media (prefers-color-scheme: dark) {
-    html {
+    * {
       --cros-sys-primary-light: #3f5aa9ff;
       --cros-sys-primary-dark: #b4c5ffff;
       --cros-sys-primary: #b4c5ffff;
