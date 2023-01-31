@@ -7,7 +7,7 @@
 import '@material/web/radio/radio.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement} from 'lit/decorators';
+import {customElement, property} from 'lit/decorators';
 
 /**
  * A chromeOS compliant radio button.
@@ -20,11 +20,20 @@ export class Radio extends LitElement {
     :host {
       display: inline-block;
     }
+    md-radio {
+      --md-sys-color-primary: var(--cros-sys-primary);
+      --md-sys-color-on-surface: var(--cros-sys-on_surface);
+      --md-ripple-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-ripple-pressed-state-layer-opacity: 32%;
+      --md-focus-ring-color: var(--cros-sys-primary);
+    }
   `;
+
+  @property({type: Boolean}) disabled = false;
 
   override render() {
     return html`
-      <md-radio></md-radio>
+      <md-radio ?disabled=${this.disabled}></md-radio>
     `;
   }
 }
