@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/radio/radio.js';
-
+import {MdRadio} from '@material/web/radio/radio.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators';
+import {customElement, property, query} from 'lit/decorators';
 
 /**
  * A chromeOS compliant radio button.
@@ -29,11 +28,26 @@ export class Radio extends LitElement {
     }
   `;
 
+  @query('md-radio') mdRadio?: MdRadio;
+
   @property({type: Boolean}) disabled = false;
+
+  @property({type: Boolean})
+  get checked() {
+    return this.mdRadio?.checked || false;
+  }
+
+  private checkedInternal = false;
+  set checked(value: boolean) {
+    // Store the value for `checked`, so that it is not lost if it is set before
+    // the first render.
+    this.checkedInternal = value;
+  }
 
   override render() {
     return html`
-      <md-radio ?disabled=${this.disabled}></md-radio>
+      <md-radio ?disabled=${this.disabled} ?checked=${
+        this.checkedInternal}></md-radio>
     `;
   }
 }
