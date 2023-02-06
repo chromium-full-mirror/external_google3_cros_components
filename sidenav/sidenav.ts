@@ -57,8 +57,8 @@ export class Sidenav extends LitElement {
     return this.itemsInternal;
   }
 
-  /** The child tree items which can be tabbed/focused into. */
-  get tabbableItems(): SidenavItem[] {
+  /** The child tree items which can be selected, e.g. using the arrow keys. */
+  get selectableItems(): SidenavItem[] {
     return this.itemsInternal.filter(item => !item.disabled);
   }
 
@@ -121,7 +121,7 @@ export class Sidenav extends LitElement {
     // add/remove).
     this.itemsInternal =
         this.childrenSlot.assignedElements().filter(isSidenavItem);
-    this.ariaSetSize = this.tabbableItems.length.toString();
+    this.ariaSetSize = this.selectableItems.length.toString();
 
     if (this.enabledItemInternal) {
       const newItems = new Set(this.itemsInternal);
@@ -130,7 +130,7 @@ export class Sidenav extends LitElement {
         // If the currently enabled item exists in `oldItems` but not in
         // `newItems`, it means it's being removed from the children slot,
         // we need to enable the first .
-        this.enabledItem = this.tabbableItems[0];
+        this.enabledItem = this.selectableItems[0];
       }
     }
   }
@@ -218,7 +218,7 @@ export class Sidenav extends LitElement {
       return;
     }
 
-    if (this.tabbableItems.length === 0) {
+    if (this.selectableItems.length === 0) {
       return;
     }
 
@@ -247,7 +247,7 @@ export class Sidenav extends LitElement {
               !this.focusedItemInternal.expanded) {
             this.focusedItemInternal.expanded = true;
           } else {
-            itemToFocus = this.focusedItemInternal.tabbableItems[0];
+            itemToFocus = this.focusedItemInternal.selectableItems[0];
           }
         } else {
           if (this.focusedItemInternal.expanded) {
@@ -258,10 +258,10 @@ export class Sidenav extends LitElement {
         }
         break;
       case 'Home':
-        itemToFocus = this.tabbableItems[0];
+        itemToFocus = this.selectableItems[0];
         break;
       case 'End':
-        itemToFocus = this.tabbableItems[this.tabbableItems.length - 1];
+        itemToFocus = this.selectableItems[this.selectableItems.length - 1];
         break;
       default:
         break;
@@ -273,16 +273,16 @@ export class Sidenav extends LitElement {
     }
   }
 
-  /** Helper function that returns the next tabbable tree item. */
+  /** Helper function that returns the next selectable tree item. */
   private getNextItem(item: SidenavItem): SidenavItem|null {
-    if (item.expanded && item.tabbableItems.length > 0) {
-      return item.tabbableItems[0];
+    if (item.expanded && item.selectableItems.length > 0) {
+      return item.selectableItems[0];
     }
 
     return this.getNextHelper(item);
   }
 
-  /** Another helper function that returns the next tabbable tree item. */
+  /** Another helper function that returns the next selectable tree item. */
   private getNextHelper(item: SidenavItem|null): SidenavItem|null {
     if (!item) {
       return null;
@@ -298,7 +298,7 @@ export class Sidenav extends LitElement {
     return this.getNextHelper(item.parentItem);
   }
 
-  /** Helper function that returns the previous tabbable tree item. */
+  /** Helper function that returns the previous selectable tree item. */
   private getPreviousItem(item: SidenavItem): SidenavItem|null {
     let previousSibling = item.previousElementSibling as SidenavItem | null;
     while (previousSibling && previousSibling.disabled) {
@@ -312,14 +312,14 @@ export class Sidenav extends LitElement {
   }
 
   /**
-   * Helper function that returns the last tabbable tree item in the subtree.
+   * Helper function that returns the last selectable tree item in the subtree.
    */
   private getLastHelper(item: SidenavItem|null): SidenavItem|null {
     if (!item) {
       return null;
     }
-    if (item.expanded && item.tabbableItems.length > 0) {
-      const lastChild = item.tabbableItems[item.tabbableItems.length - 1];
+    if (item.expanded && item.selectableItems.length > 0) {
+      const lastChild = item.selectableItems[item.selectableItems.length - 1];
       return this.getLastHelper(lastChild);
     }
     return item;

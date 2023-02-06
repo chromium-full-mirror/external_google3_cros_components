@@ -273,7 +273,7 @@ export class SidenavItem extends LitElement {
   };
 
   /** The child tree items which can be tabbed to. */
-  get tabbableItems(): SidenavItem[] {
+  get selectableItems(): SidenavItem[] {
     return this.items.filter(item => !item.disabled);
   }
 
