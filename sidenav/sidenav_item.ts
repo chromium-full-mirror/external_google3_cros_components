@@ -40,6 +40,22 @@ export const TREE_ITEM_INDENT_PX = 20;
 /** The width and height of the expand and label icons. */
 const ICON_SIZE = css`20px`;
 
+/**
+ * Spacing between items in the a row (in LTR):
+ *   1. [ICON_LEADING_MARGIN]<icon...>[ICON_LABEL_GAP]<label>[LABEL_ONLY_MARGIN]
+ *   2. [LABEL_ONLY_MARGIN]<label>[LABEL_ONLY_MARGIN]
+ *
+ *   1. With any icon:
+ *     * 28px from left
+ *     * 0px between icons
+ *     * 8px from icon to label
+ *   2. Without any icon:
+ *     * 24px from left
+ */
+const ICON_LABEL_GAP = css`8px`;
+const ICON_LEADING_MARGIN = css`28px`;
+const LABEL_ONLY_MARGIN = css`24px`;
+
 /** An item for a ChromeOS compliant sidenav element. */
 @customElement('cros-sidenav-item')
 export class SidenavItem extends LitElement {
@@ -173,19 +189,31 @@ export class SidenavItem extends LitElement {
 
     .expand-icon {
       flex: none;
-      height: ${ICON_SIZE};
-      margin-inline-start: 28px;
+      height: 0px;
+      margin-inline-start: calc(${LABEL_ONLY_MARGIN} - ${ICON_LABEL_GAP});
       -webkit-mask-position: center;
       -webkit-mask-repeat: no-repeat;
       position: relative;
       transform: rotate(-90deg);
       transition: all 150ms;
       visibility: hidden;
-      width: ${ICON_SIZE};
+      width: 0px;
     }
 
     li[aria-expanded] .expand-icon {
+      height: ${ICON_SIZE};
+      margin-inline-start: ${ICON_LEADING_MARGIN};
       visibility: visible;
+      width: ${ICON_SIZE};
+    }
+
+    .expand-icon + slot[name="icon"]::slotted(*) {
+      margin-inline-start: calc(${ICON_LEADING_MARGIN} - (${
+      LABEL_ONLY_MARGIN} - ${ICON_LABEL_GAP}));
+    }
+
+    li[aria-expanded] .expand-icon + slot[name="icon"]::slotted(*) {
+      margin-inline-start: 0px;
     }
 
     :host-context(html[dir=rtl]) .expand-icon {
@@ -196,7 +224,7 @@ export class SidenavItem extends LitElement {
       transform: rotate(0);
     }
 
-    slot[name="icon"]::slotted(*){
+    slot[name="icon"]::slotted(*) {
       color: var(--cros-sys-on_surface);
       flex: none;
       height: ${ICON_SIZE};
@@ -215,7 +243,8 @@ export class SidenavItem extends LitElement {
       display: block;
       flex: auto;
       font-weight: 500;
-      margin-inline-start: 8px;
+      margin-inline-end: ${LABEL_ONLY_MARGIN};
+      margin-inline-start: ${ICON_LABEL_GAP};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: pre;
