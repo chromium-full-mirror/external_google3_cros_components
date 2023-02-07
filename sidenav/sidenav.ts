@@ -73,12 +73,19 @@ export class Sidenav extends LitElement {
 
   /** The child tree items. */
   private itemsInternal: SidenavItem[] = [];
+
   /**
    * Maintain these in the tree level so we can make sure at most one tree item
-   * can be enabled/focused.
+   * can be enabled/selected.
    */
   private enabledItemInternal: SidenavItem|null = null;
-  private focusedItemInternal: SidenavItem|null = null;
+
+  /**
+   * Keep track of which item is selected, so that we know
+   *   1. where to move selection when the user navigates with the arrow keys.
+   *   2. where to forward focus when the sidenav receives focus.
+   */
+  private lastSelectedItemInternal: SidenavItem|null = null;
 
   static override get styles() {
     return css`
@@ -109,6 +116,25 @@ export class Sidenav extends LitElement {
         <slot @slotchange=${this.onSlotChanged}></slot>
       </ul>
     `;
+  }
+
+  /**
+   * If the sidenav receives focus, proxy focus down to the selected sidenav
+   * item.
+   */
+  override focus() {
+    // If the user was navigating the sidenav before, focus should return to the
+    // last item they selected. If it doesn't exist, fallback to the enabled
+    // item, then to the first selectable item.
+    if (this.lastSelectedItemInternal) {
+      this.lastSelectedItemInternal.focus();
+    } else if (this.enabledItem) {
+      this.enabledItem.focus();
+    } else if (this.selectableItems.length > 0) {
+      this.selectableItems[0].focus();
+    } else {
+      super.focus();
+    }
   }
 
   // TODO(b/262453851): See if we can remove the internal copy of the dom we
@@ -143,14 +169,14 @@ export class Sidenav extends LitElement {
 
   /** Handles the collapse event of the tree item. */
   private onSidenavItemCollapsed(e: TreeItemCollapsedEvent) {
-    const treeItem = e.detail.item;
-    // If the currently focused tree item (`oldFocusedItem`) is a descent of
+    const collapsedItem = e.detail.item;
+    // If the currently selected tree item (`oldSelectedItem`) is a descent of
     // another tree item (`treeItem`) which is going to be collapsed, we need to
-    // mark the ancestor tree item (`this`) as focused.
-    if (this.focusedItemInternal !== treeItem) {
-      const oldFocusedItem = this.focusedItemInternal;
-      if (oldFocusedItem && treeItem.contains(oldFocusedItem)) {
-        this.focusItem(treeItem);
+    // mark the ancestor tree item (`this`) as selected.
+    if (this.lastSelectedItemInternal !== collapsedItem) {
+      const oldSelectedItem = this.lastSelectedItemInternal;
+      if (oldSelectedItem && collapsedItem.contains(oldSelectedItem)) {
+        this.selectItem(collapsedItem);
       }
     }
   }
@@ -214,7 +240,7 @@ export class Sidenav extends LitElement {
       return;
     }
 
-    if (!this.focusedItemInternal) {
+    if (!this.lastSelectedItemInternal) {
       return;
     }
 
@@ -222,17 +248,17 @@ export class Sidenav extends LitElement {
       return;
     }
 
-    let itemToFocus: SidenavItem|null|undefined = null;
+    let itemToSelect: SidenavItem|null|undefined = null;
     switch (e.key) {
       case 'Enter':
       case 'Space':
-        this.enableItem(this.focusedItemInternal);
+        this.enableItem(this.lastSelectedItemInternal);
         break;
       case 'ArrowUp':
-        itemToFocus = this.getPreviousItem(this.focusedItemInternal);
+        itemToSelect = this.getPreviousItem(this.lastSelectedItemInternal);
         break;
       case 'ArrowDown':
-        itemToFocus = this.getNextItem(this.focusedItemInternal);
+        itemToSelect = this.getNextItem(this.lastSelectedItemInternal);
         break;
       case 'ArrowLeft':
       case 'ArrowRight':
@@ -243,32 +269,32 @@ export class Sidenav extends LitElement {
 
         const expandKey = isRTL() ? 'ArrowLeft' : 'ArrowRight';
         if (e.key === expandKey) {
-          if (this.focusedItemInternal.hasChildren() &&
-              !this.focusedItemInternal.expanded) {
-            this.focusedItemInternal.expanded = true;
+          if (this.lastSelectedItemInternal.hasChildren() &&
+              !this.lastSelectedItemInternal.expanded) {
+            this.lastSelectedItemInternal.expanded = true;
           } else {
-            itemToFocus = this.focusedItemInternal.selectableItems[0];
+            itemToSelect = this.lastSelectedItemInternal.selectableItems[0];
           }
         } else {
-          if (this.focusedItemInternal.expanded) {
-            this.focusedItemInternal.expanded = false;
+          if (this.lastSelectedItemInternal.expanded) {
+            this.lastSelectedItemInternal.expanded = false;
           } else {
-            itemToFocus = this.focusedItemInternal.parentItem;
+            itemToSelect = this.lastSelectedItemInternal.parentItem;
           }
         }
         break;
       case 'Home':
-        itemToFocus = this.selectableItems[0];
+        itemToSelect = this.selectableItems[0];
         break;
       case 'End':
-        itemToFocus = this.selectableItems[this.selectableItems.length - 1];
+        itemToSelect = this.selectableItems[this.selectableItems.length - 1];
         break;
       default:
         break;
     }
 
-    if (itemToFocus) {
-      this.focusItem(itemToFocus);
+    if (itemToSelect) {
+      this.selectItem(itemToSelect);
       e.preventDefault();
     }
   }
@@ -344,7 +370,7 @@ export class Sidenav extends LitElement {
     this.enabledItemInternal = itemToEnable;
     if (this.enabledItemInternal) {
       this.enabledItemInternal.enabled = true;
-      this.focusItem(this.enabledItemInternal);
+      this.selectItem(this.enabledItemInternal);
       (this.enabledItemInternal as unknown as ExtendedElement)
           .scrollIntoViewIfNeeded(false);
     }
@@ -361,23 +387,27 @@ export class Sidenav extends LitElement {
   }
 
   /**
-   * Make `itemToEnable` become the focused item in the tree, this will
-   * also unfocus the previously focused tree item to make sure at most
-   * one tree item is selected in the tree. The focused item is the only
-   * tabbable item, so that if the user tabs away and returns, they return to
-   * the last focused item.
+   * Make `itemToEnable` become the selected item in the tree. The previously
+   * selected item is unselected. The selected item is the only tabbable item,
+   * so that if the user tabs away and returns, they return to the last selected
+   * item.
    */
-  private focusItem(itemToFocus: SidenavItem) {
-    const previousFocusedItem = this.focusedItemInternal;
-    if (previousFocusedItem) {
-      // TODO(b/262453851): confirm this is needed. It should be implicit when
-      // you focus a new thing that the old thing gets blurred.
-      previousFocusedItem.blur();
-      previousFocusedItem.tabIndex = -1;
+  private selectItem(itemToSelect: SidenavItem) {
+    const oldSelectedItem = this.lastSelectedItemInternal;
+    // Store what is currently selected so we can restore focus  next time the
+    // user navigates to the sidenav.
+    this.lastSelectedItemInternal = itemToSelect;
+
+    if (oldSelectedItem) oldSelectedItem.tabIndex = -1;
+    this.lastSelectedItemInternal.tabIndex = 0;
+
+    // If the sidenav has focus, move focus to the newly selected item.
+    if (this.contains(document.activeElement)) {
+      // If `itemToSelect` is a parent of `oldSelectedItem`, we can't move focus
+      // without blurring `oldSelectedItem` first.
+      if (oldSelectedItem) oldSelectedItem.blur();
+      this.lastSelectedItemInternal.focus();
     }
-    this.focusedItemInternal = itemToFocus;
-    this.focusedItemInternal.focus();
-    this.focusedItemInternal.tabIndex = 0;
   }
 }
 
