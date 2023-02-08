@@ -42,6 +42,7 @@ export class Radio extends LitElement {
     // Store the value for `checked`, so that it is not lost if it is set before
     // the first render.
     this.checkedInternal = value;
+    this.requestUpdate();
   }
 
   override render() {
