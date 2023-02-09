@@ -54,6 +54,7 @@ export class Checkbox extends LitElement {
     // Store the value for `checked`, so that it is not lost if it is set before
     // the first render.
     this.checkedInternal = value;
+    this.requestUpdate();
   }
 
   @property({type: Boolean}) disabled = false;
