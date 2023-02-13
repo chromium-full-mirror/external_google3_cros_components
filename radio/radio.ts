@@ -22,8 +22,8 @@ export class Radio extends LitElement {
     md-radio {
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-on-surface: var(--cros-sys-on_surface);
-      --md-ripple-pressed-state-layer-color: var(--cros-sys-ripple_primary);
-      --md-ripple-pressed-state-layer-opacity: 32%;
+      --md-ripple-pressed-color: var(--cros-sys-ripple_primary);
+      --md-ripple-pressed-opacity: 32%;
       --md-focus-ring-color: var(--cros-sys-primary);
     }
   `;
