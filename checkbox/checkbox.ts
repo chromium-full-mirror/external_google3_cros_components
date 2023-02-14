@@ -17,8 +17,7 @@ import {customElement, property, query} from 'lit/decorators';
 export class Checkbox extends LitElement {
   static override styles: CSSResultGroup = css`
     md-checkbox {
-      --md-checkbox-container-height: 20px;
-      --md-checkbox-container-width: 20px;
+      --md-checkbox-container-size: 20px;
       --md-checkbox-icon-size: 20px;
       --md-checkbox-state-layer-size: 40px;
 
