@@ -357,7 +357,7 @@ export class SidenavItem extends LitElement {
   private shouldRenameOnBlur = true;
 
   override render() {
-    const showExpandIcon = this.hasChildren() && !this.disabled;
+    const showExpandIcon = this.hasChildren();
     const treeRowStyles = {
       paddingInlineStart:
           `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.level - 1}px))`,
