@@ -6,8 +6,10 @@
 
 import '../icon/icon';
 
+import {ripple} from '@material/web/ripple/directive.js';
+import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-import {customElement, property, query, state} from 'lit/decorators';
+import {customElement, property, query, queryAsync, state} from 'lit/decorators';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
 
@@ -112,6 +114,7 @@ export class SidenavItem extends LitElement {
   @query('.rename') private readonly renameInputElement?: HTMLInputElement;
   @query('slot:not([name])')
   private readonly childrenSlotElement!: HTMLSlotElement;
+  @queryAsync('md-ripple') protected ripple!: Promise<MdRipple|null>;
 
   static override styles: CSSResultGroup = css`
     ul {
@@ -137,7 +140,8 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    .tree-row {
+    .tree-row,
+    .md-ripple {
       align-items: center;
       border-inline-start-width: 0 !important;
       border-radius: 20px;
@@ -163,11 +167,6 @@ export class SidenavItem extends LitElement {
       color: var(--cros-sys-disabled);
     }
 
-    :host(:not([enabled]):not([disabled]):not([editing]))
-        li:not(:focus-visible) .tree-row:hover {
-      background-color: var(--cros-sys-hover_on_subtle);
-    }
-
     :host([enabled]) .tree-row {
       background-color: var(--cros-sys-primary);
       color: var(--cros-sys-on_primary);
@@ -177,17 +176,8 @@ export class SidenavItem extends LitElement {
       cursor: default;
     }
 
-    :host-context(.pointer-active):host(:not([enabled]):not([disabled]):not([editing]))
-        li:not(:focus-visible) .tree-row:not(:active):hover {
-      background-color: unset;
-    }
-
-    :host-context(.pointer-active):host(:not([enabled]):not([disabled]):not([editing]))
-        li:not(:focus-visible) .tree-row:not(:hover):active {
-      background-color: var(--cros-sys-hover_on_subtle);
-    }
-
     .expand-icon {
+      fill: currentcolor;
       flex: none;
       height: 0px;
       margin-inline-start: calc(${LABEL_ONLY_MARGIN} - ${ICON_LABEL_GAP});
@@ -283,6 +273,18 @@ export class SidenavItem extends LitElement {
     .rename::selection {
       background-color: var(--cros-sys-highlight_text)
     }
+
+    md-ripple {
+      border-radius: 20px;
+    }
+
+    :host(:not([editing])) md-ripple {
+      color: var(--cros-sys-ripple_primary);
+      --md-ripple-hover-color: var(--cros-sys-hover_on_subtle);
+      --md-ripple-hover-opacity: 100%;
+      --md-ripple-pressed-color: var(--cros-sys-ripple_primary);
+      --md-ripple-pressed-opacity: 100%;
+    }
   `;
 
   static get events() {
@@ -363,18 +365,18 @@ export class SidenavItem extends LitElement {
 
     return html`
       <li
-        class="tree-item"
-        role="treeitem"
-        tabindex=${this.tabIndex}
-        aria-labelledby="tree-label"
-        aria-selected=${this.enabled}
-        aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
-        aria-disabled=${this.disabled}
-      >
+          class="tree-item"
+          role="treeitem"
+          tabindex=${this.tabIndex}
+          aria-labelledby="tree-label"
+          aria-selected=${this.enabled}
+          aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
+          aria-disabled=${this.disabled}>
         <div
             class="tree-row"
-            style=${styleMap(treeRowStyles)}>
-          <!-- TODO(b/262453851): Implement ripple -->
+            style=${styleMap(treeRowStyles)}
+            ${ripple(this.ripple)}>
+          <md-ripple></md-ripple>
           <!-- TODO(b/262453851): Implement icon from spec -->
           <span class="expand-icon">
             <svg  xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
