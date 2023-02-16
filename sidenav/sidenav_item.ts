@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../icon/icon';
+import 'google3/third_party/javascript/cros_components/icon/icon';
 
 import {ripple} from '@material/web/ripple/directive.js';
 import {MdRipple} from '@material/web/ripple/ripple.js';
