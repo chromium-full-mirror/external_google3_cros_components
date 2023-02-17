@@ -9,7 +9,7 @@ import 'google3/third_party/javascript/cros_components/icon/icon';
 import {ripple} from '@material/web/ripple/directive.js';
 import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-import {customElement, property, query, queryAsync, state} from 'lit/decorators';
+import {customElement, property, query, queryAsync} from 'lit/decorators';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
 
@@ -104,11 +104,11 @@ export class SidenavItem extends LitElement {
   @property({attribute: false}) override tabIndex: number = -1;
 
   /**
-   * Indicate the level of this tree item, we use it to calculate the padding
+   * Indicate the depth of this tree item, we use it to calculate the padding
    * indentation. Note: "aria-level" can be calculated by DOM structure so
    * no need to provide it explicitly.
    */
-  @state() level = 1;
+  @property({type: Number, reflect: true}) layer = 0;
 
   @query('li') private readonly treeItemElement!: HTMLLIElement;
   @query('.rename') private readonly renameInputElement?: HTMLInputElement;
@@ -360,7 +360,7 @@ export class SidenavItem extends LitElement {
     const showExpandIcon = this.hasChildren();
     const treeRowStyles = {
       paddingInlineStart:
-          `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.level - 1}px))`,
+          `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.layer}px))`,
     };
 
     return html`
@@ -401,10 +401,6 @@ export class SidenavItem extends LitElement {
       throw new Error(
           '<cros-sidenav-item> can not be used without a parent <cros-sidenav>');
     }
-  }
-
-  override firstUpdated() {
-    this.updateLevel();
   }
 
   override updated(changedProperties: PropertyValues<this>) {
@@ -475,6 +471,10 @@ export class SidenavItem extends LitElement {
         this.enabled = true;
         updateScheduled = true;
       }
+    }
+
+    for (const item of this.items) {
+      item.layer = this.layer + 1;
     }
 
     // Explicitly trigger an update because render() relies on hasChildren().
@@ -578,18 +578,6 @@ export class SidenavItem extends LitElement {
           detail: {item: this, oldLabel, newLabel: newName},
         });
     this.dispatchEvent(renameEvent);
-  }
-
-  /** Update the level of the tree item by traversing upwards. */
-  private updateLevel() {
-    // Traverse upwards to determine the level.
-    let level = 0;
-    let current: SidenavItem|null = this;
-    while (current) {
-      current = current.parentItem;
-      level++;
-    }
-    this.level = level;
   }
 }
 
