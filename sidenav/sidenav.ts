@@ -54,12 +54,12 @@ export class Sidenav extends LitElement {
 
   /** The child tree items. */
   get items(): SidenavItem[] {
-    return this.itemsInternal;
+    return this.childrenSlot.assignedElements().filter(isSidenavItem);
   }
 
   /** The child tree items which can be selected, e.g. using the arrow keys. */
   get selectableItems(): SidenavItem[] {
-    return this.itemsInternal.filter(item => !item.disabled);
+    return this.items.filter(item => !item.disabled);
   }
 
   /** The default unnamed slot to let consumer pass children tree items. */
@@ -70,9 +70,6 @@ export class Sidenav extends LitElement {
    * items.
    */
   @state() override ariaSetSize = '0';
-
-  /** The child tree items. */
-  private itemsInternal: SidenavItem[] = [];
 
   /**
    * Maintain these in the tree level so we can make sure at most one tree item
@@ -137,27 +134,17 @@ export class Sidenav extends LitElement {
     }
   }
 
-  // TODO(b/262453851): See if we can remove the internal copy of the dom we
-  // have (tabbleItems, itemInternals) and instead lazy query the DOM when we
-  // need items. This setup is more prone to weird lit bugs and the cost of
-  // querying the dom is low.
+  /**
+   * When the children change, make sure the sidenav state is passed on to the
+   * new tree structure.
+   */
   private onSlotChanged() {
-    const oldItems = new Set(this.itemsInternal);
-    // Update `itemsInternal` every time when the children slot changes (e.g.
-    // add/remove).
-    this.itemsInternal =
-        this.childrenSlot.assignedElements().filter(isSidenavItem);
     this.ariaSetSize = this.selectableItems.length.toString();
 
-    if (this.enabledItemInternal) {
-      const newItems = new Set(this.itemsInternal);
-      if (oldItems.has(this.enabledItemInternal) &&
-          !newItems.has(this.enabledItemInternal)) {
-        // If the currently enabled item exists in `oldItems` but not in
-        // `newItems`, it means it's being removed from the children slot,
-        // we need to enable the first .
-        this.enabledItem = this.selectableItems[0];
-      }
+    // If we had an enabled item but it's not in the children anymore, enable
+    // another item.
+    if (this.enabledItemInternal && !this.items.some(item => item.enabled)) {
+      this.enabledItem = this.selectableItems[0];
     }
   }
 
