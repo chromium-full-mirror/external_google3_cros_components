@@ -7,7 +7,7 @@
 import {css, html, LitElement} from 'lit';
 import {customElement, query, state} from 'lit/decorators';
 
-import {SidenavItem, TreeItemCollapsedEvent, TreeItemExpandedEvent} from './sidenav_item';
+import {SidenavItem, TreeItemCollapsedEvent, TreeItemEnabledChangedEvent, TreeItemExpandedEvent} from './sidenav_item';
 import {isRTL, isSidenavItem} from './sidenav_util';
 
 /**
@@ -109,6 +109,7 @@ export class Sidenav extends LitElement {
         @keydown=${this.onTreeKeyDown}
         @sidenav_item_expanded=${this.onSidenavItemExpanded}
         @sidenav_item_collapsed=${this.onSidenavItemCollapsed}
+        @sidenav_item_enabled_changed=${this.onSidenavItemEnabledChanged}
       >
         <slot @slotchange=${this.onSlotChanged}></slot>
       </ul>
@@ -165,6 +166,18 @@ export class Sidenav extends LitElement {
       if (oldSelectedItem && collapsedItem.contains(oldSelectedItem)) {
         this.selectItem(collapsedItem);
       }
+    }
+  }
+
+  /** Handles when that enabled status of an item has changed. */
+  private onSidenavItemEnabledChanged(e: TreeItemEnabledChangedEvent) {
+    const item = e.detail.item;
+
+    if (item.enabled) {
+      item.reveal();
+      this.enabledItem = item;
+    } else if (this.enabledItem === item) {
+      this.enabledItem = null;
     }
   }
 
@@ -374,7 +387,7 @@ export class Sidenav extends LitElement {
   }
 
   /**
-   * Make `itemToEnable` become the selected item in the tree. The previously
+   * Make `itemToSelect` become the selected item in the tree. The previously
    * selected item is unselected. The selected item is the only tabbable item,
    * so that if the user tabs away and returns, they return to the last selected
    * item.

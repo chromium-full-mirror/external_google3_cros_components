@@ -13,7 +13,6 @@ import {customElement, property, query, queryAsync} from 'lit/decorators';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
 
-import {Sidenav} from './sidenav';
 import {isSidenav, isSidenavItem} from './sidenav_util';
 
 /** Type of the tree item expanded custom event. */
@@ -34,6 +33,13 @@ export type TreeItemRenamedEvent = CustomEvent<{
   oldLabel: string,
   /** The label after rename. */
   newLabel: string,
+}>;
+/** Type of the tree item enabled changed custom event. */
+export type TreeItemEnabledChangedEvent = CustomEvent<{
+  /** The tree item which has been (un)enabled. */
+  item: SidenavItem,
+  /** The new enabled value. */
+  enabled: boolean,
 }>;
 
 /** The number of pixels to indent per level. */
@@ -295,6 +301,8 @@ export class SidenavItem extends LitElement {
       SIDENAV_ITEM_COLLAPSED: 'sidenav_item_collapsed',
       /** Triggers when a sidenav item's label has been renamed. */
       SIDENAV_ITEM_RENAMED: 'sidenav_item_renamed',
+      /** Triggers when a sidenav item's changed status changed. */
+      SIDENAV_ITEM_ENABLED_CHANGED: 'sidenav_item_enabled_changed',
     } as const;
   }
 
@@ -328,14 +336,6 @@ export class SidenavItem extends LitElement {
       p = p.parentElement;
     }
     return p;
-  }
-
-  get tree(): Sidenav|null {
-    let t = this.parentElement;
-    while (t && !isSidenav(t)) {
-      t = t.parentElement;
-    }
-    return t;
   }
 
   /** Expands all parent items. */
@@ -395,14 +395,6 @@ export class SidenavItem extends LitElement {
      `;
   }
 
-  override connectedCallback() {
-    super.connectedCallback();
-    if (!this.tree) {
-      throw new Error(
-          '<cros-sidenav-item> can not be used without a parent <cros-sidenav>');
-    }
-  }
-
   override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
     if (changedProperties.has('expanded')) {
@@ -447,7 +439,9 @@ export class SidenavItem extends LitElement {
 
   // TODO(b/262453851): There's probably a nicer way to implement this.
   private onSlotChanged() {
-    const oldItems = new Set(this.items);
+    // Whether the old set of children contained the enabled item.
+    const oldItemsContainEnabledItem =
+        this.items.some((item: SidenavItem) => item.enabled);
     // Update `items` every time when the children slot changes (e.g.
     // add/remove).
     this.items =
@@ -461,16 +455,13 @@ export class SidenavItem extends LitElement {
       updateScheduled = true;
     }
 
-    if (this.tree?.enabledItem) {
-      const newItems = new Set(this.items);
-      if (oldItems.has(this.tree.enabledItem) &&
-          !newItems.has(this.tree.enabledItem)) {
-        // If the currently enabled item exists in `oldItems` but not in
-        // `newItems`, it means it's being removed from the children slot,
-        // we need to enable the parent node of the removed item (i.e. `this`).
-        this.enabled = true;
-        updateScheduled = true;
-      }
+    if (oldItemsContainEnabledItem &&
+        !this.items.some((item: SidenavItem) => item.enabled)) {
+      // If the currently enabled item was in the old set of children but not in
+      // the new set, it means it's being removed from the children slot. The
+      // parent becomes the enabled item.
+      this.enabled = true;
+      updateScheduled = true;
     }
 
     for (const item of this.items) {
@@ -504,17 +495,13 @@ export class SidenavItem extends LitElement {
   }
 
   private onEnabledChanged() {
-    const tree = this.tree;
-    if (this.enabled) {
-      this.reveal();
-      if (tree) {
-        tree.enabledItem = this;
-      }
-    } else {
-      if (tree && tree.enabledItem === this) {
-        tree.enabledItem = null;
-      }
-    }
+    const event: TreeItemEnabledChangedEvent =
+        new CustomEvent(SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED, {
+          bubbles: true,
+          composed: true,
+          detail: {item: this, enabled: this.enabled},
+        });
+    this.dispatchEvent(event);
   }
 
   private onEditingChanged() {
@@ -586,6 +573,8 @@ declare global {
     [SidenavItem.events.SIDENAV_ITEM_EXPANDED]: TreeItemExpandedEvent;
     [SidenavItem.events.SIDENAV_ITEM_COLLAPSED]: TreeItemCollapsedEvent;
     [SidenavItem.events.SIDENAV_ITEM_RENAMED]: TreeItemRenamedEvent;
+    [SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED]:
+        TreeItemEnabledChangedEvent;
   }
 
   interface HTMLElementTagNameMap {
