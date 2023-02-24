@@ -52,9 +52,17 @@ export class Sidenav extends LitElement {
     this.enableItem(item);
   }
 
-  /** The child tree items. */
+  /** Get all the SidenavItems in the Sidenav. */
   get items(): SidenavItem[] {
-    return this.childrenSlot.assignedElements().filter(isSidenavItem);
+    return this.childrenSlot.assignedElements()
+        .filter(isSidenavItem)
+        .flatMap(
+            // The Sidenav's slot contains the declarations of all SidenavItems,
+            // regardless of how nested. However, `assignedElements()` returns
+            // an array of the top elements, so we have to expand each one
+            // individually.
+            e => [e].concat(
+                Array.from(e.querySelectorAll('cros-sidenav-item'))));
   }
 
   /** The child tree items which can be selected, e.g. using the arrow keys. */
