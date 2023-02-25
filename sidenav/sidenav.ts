@@ -46,7 +46,7 @@ export class Sidenav extends LitElement {
 
   /** Return the enabled tree item, could be null. */
   get enabledItem(): SidenavItem|null {
-    return this.enabledItemInternal;
+    return this.items.find(item => item.enabled) || null;
   }
   set enabledItem(item: SidenavItem|null) {
     this.enableItem(item);
@@ -80,10 +80,11 @@ export class Sidenav extends LitElement {
   @state() override ariaSetSize = '0';
 
   /**
-   * Maintain these in the tree level so we can make sure at most one tree item
-   * can be enabled/selected.
+   * Keep track of whether there's an enabled item. If the children change, this
+   * will determine whether we should reset the enabled item.
+   * TODO(b/262453851): The sidenav should always have an enabled item.
    */
-  private enabledItemInternal: SidenavItem|null = null;
+  private hasEnabledItem = false;
 
   /**
    * The `selectedItem` is the item that the user navigated to. If the user
@@ -155,8 +156,8 @@ export class Sidenav extends LitElement {
 
     // If we had an enabled item but it's not in the children anymore, enable
     // another item.
-    if (this.enabledItemInternal && !this.items.some(item => item.enabled)) {
-      this.enabledItem = this.selectableItems[0];
+    if (this.hasEnabledItem && !this.items.some(item => item.enabled)) {
+      this.enableItem(this.selectableItems[0]);
     }
   }
 
@@ -369,30 +370,28 @@ export class Sidenav extends LitElement {
    * one tree item is enabled in the tree.
    */
   private enableItem(itemToEnable: SidenavItem|null) {
-    if (itemToEnable === this.enabledItemInternal) {
-      return;
-    }
-    // TODO(b/262453851): We can just "unselect" all items to avoid having to
-    // deal with selectedItemInternal here. Then maybe we can remove
-    // selectedItemInternal.
-    const previousEnabledItem = this.enabledItemInternal;
+    const previousEnabledItem =
+        this.items.find(item => item.enabled && item !== itemToEnable) || null;
+
     if (previousEnabledItem) {
       previousEnabledItem.enabled = false;
     }
-    this.enabledItemInternal = itemToEnable;
-    if (this.enabledItemInternal) {
-      this.enabledItemInternal.enabled = true;
-      this.selectItem(this.enabledItemInternal);
-      (this.enabledItemInternal as unknown as ExtendedElement)
+
+    this.hasEnabledItem = !!itemToEnable;
+    if (itemToEnable) {
+      itemToEnable.enabled = true;
+      this.selectItem(itemToEnable);
+      (itemToEnable as unknown as ExtendedElement)
           .scrollIntoViewIfNeeded(false);
     }
+
     const enabledChangeEvent: SidenavEnabledChangedEvent =
         new CustomEvent(Sidenav.events.SIDENAV_ENABLED_CHANGED, {
           bubbles: true,
           composed: true,
           detail: {
             previousEnabledItem,
-            enabledItem: this.enabledItem,
+            enabledItem: itemToEnable,
           },
         });
     this.dispatchEvent(enabledChangeEvent);
