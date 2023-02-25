@@ -86,11 +86,14 @@ export class Sidenav extends LitElement {
   private enabledItemInternal: SidenavItem|null = null;
 
   /**
-   * Keep track of which item is selected, so that we know
-   *   1. where to move selection when the user navigates with the arrow keys.
-   *   2. where to forward focus when the sidenav receives focus.
+   * The `selectedItem` is the item that the user navigated to. If the user
+   * hasn't navigated, this is the enabled item. The `selectedItem` is the item
+   * that should receive focus when the sidenav receives focus. There should
+   * always be an item to focus, unless there are no items.
    */
-  private lastSelectedItemInternal: SidenavItem|null = null;
+  private get selectedItem(): SidenavItem|null {
+    return this.items.find(item => item.tabIndex === 0) || null;
+  }
 
   static override get styles() {
     return css`
@@ -132,8 +135,8 @@ export class Sidenav extends LitElement {
     // If the user was navigating the sidenav before, focus should return to the
     // last item they selected. If it doesn't exist, fallback to the enabled
     // item, then to the first selectable item.
-    if (this.lastSelectedItemInternal) {
-      this.lastSelectedItemInternal.focus();
+    if (this.selectedItem) {
+      this.selectedItem.focus();
     } else if (this.enabledItem) {
       this.enabledItem.focus();
     } else if (this.selectableItems.length > 0) {
@@ -169,8 +172,8 @@ export class Sidenav extends LitElement {
     // If the currently selected tree item (`oldSelectedItem`) is a descent of
     // another tree item (`treeItem`) which is going to be collapsed, we need to
     // mark the ancestor tree item (`this`) as selected.
-    if (this.lastSelectedItemInternal !== collapsedItem) {
-      const oldSelectedItem = this.lastSelectedItemInternal;
+    if (this.selectedItem !== collapsedItem) {
+      const oldSelectedItem = this.selectedItem;
       if (oldSelectedItem && collapsedItem.contains(oldSelectedItem)) {
         this.selectItem(collapsedItem);
       }
@@ -244,11 +247,13 @@ export class Sidenav extends LitElement {
    * instead of using this getPrevious/getNext linked list we have.
    */
   private onTreeKeyDown(e: KeyboardEvent) {
+    const selectedItem = this.selectedItem;
+
     if (e.ctrlKey || e.repeat) {
       return;
     }
 
-    if (!this.lastSelectedItemInternal) {
+    if (!selectedItem) {
       return;
     }
 
@@ -260,13 +265,13 @@ export class Sidenav extends LitElement {
     switch (e.key) {
       case 'Enter':
       case 'Space':
-        this.enableItem(this.lastSelectedItemInternal);
+        this.enableItem(selectedItem);
         break;
       case 'ArrowUp':
-        itemToSelect = this.getPreviousItem(this.lastSelectedItemInternal);
+        itemToSelect = this.getPreviousItem(selectedItem);
         break;
       case 'ArrowDown':
-        itemToSelect = this.getNextItem(this.lastSelectedItemInternal);
+        itemToSelect = this.getNextItem(selectedItem);
         break;
       case 'ArrowLeft':
       case 'ArrowRight':
@@ -277,17 +282,16 @@ export class Sidenav extends LitElement {
 
         const expandKey = isRTL() ? 'ArrowLeft' : 'ArrowRight';
         if (e.key === expandKey) {
-          if (this.lastSelectedItemInternal.hasChildren() &&
-              !this.lastSelectedItemInternal.expanded) {
-            this.lastSelectedItemInternal.expanded = true;
+          if (selectedItem.hasChildren() && !selectedItem.expanded) {
+            selectedItem.expanded = true;
           } else {
-            itemToSelect = this.lastSelectedItemInternal.selectableItems[0];
+            itemToSelect = selectedItem.selectableItems[0];
           }
         } else {
-          if (this.lastSelectedItemInternal.expanded) {
-            this.lastSelectedItemInternal.expanded = false;
+          if (selectedItem.expanded) {
+            selectedItem.expanded = false;
           } else {
-            itemToSelect = this.lastSelectedItemInternal.parentItem;
+            itemToSelect = selectedItem.parentItem;
           }
         }
         break;
@@ -401,20 +405,18 @@ export class Sidenav extends LitElement {
    * item.
    */
   private selectItem(itemToSelect: SidenavItem) {
-    const oldSelectedItem = this.lastSelectedItemInternal;
-    // Store what is currently selected so we can restore focus  next time the
-    // user navigates to the sidenav.
-    this.lastSelectedItemInternal = itemToSelect;
+    const oldSelectedItem =
+        this.items.find(item => item.tabIndex === 0 && item !== itemToSelect);
 
     if (oldSelectedItem) oldSelectedItem.tabIndex = -1;
-    this.lastSelectedItemInternal.tabIndex = 0;
+    itemToSelect.tabIndex = 0;
 
     // If the sidenav has focus, move focus to the newly selected item.
     if (this.contains(document.activeElement)) {
       // If `itemToSelect` is a parent of `oldSelectedItem`, we can't move focus
       // without blurring `oldSelectedItem` first.
       if (oldSelectedItem) oldSelectedItem.blur();
-      this.lastSelectedItemInternal.focus();
+      itemToSelect.focus();
     }
   }
 }
