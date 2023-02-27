@@ -44,12 +44,16 @@ export class Sidenav extends LitElement {
     } as const;
   }
 
-  /** Return the enabled tree item, could be null. */
+  /**
+   * Return the enabled tree item. If there are items, an enabled item always
+   * exists.
+   */
   get enabledItem(): SidenavItem|null {
     return this.items.find(item => item.enabled) || null;
   }
+  /** Setting this to null is a noop. */
   set enabledItem(item: SidenavItem|null) {
-    this.enableItem(item);
+    if (item) this.enableItem(item);
   }
 
   /** Get all the SidenavItems in the Sidenav. */
@@ -78,13 +82,6 @@ export class Sidenav extends LitElement {
    * items.
    */
   @state() override ariaSetSize = '0';
-
-  /**
-   * Keep track of whether there's an enabled item. If the children change, this
-   * will determine whether we should reset the enabled item.
-   * TODO(b/262453851): The sidenav should always have an enabled item.
-   */
-  private hasEnabledItem = false;
 
   /**
    * The `selectedItem` is the item that the user navigated to. If the user
@@ -133,17 +130,9 @@ export class Sidenav extends LitElement {
    * item.
    */
   override focus() {
-    // If the user was navigating the sidenav before, focus should return to the
-    // last item they selected. If it doesn't exist, fallback to the enabled
-    // item, then to the first selectable item.
+    // If there are items, there's always a selected item.
     if (this.selectedItem) {
       this.selectedItem.focus();
-    } else if (this.enabledItem) {
-      this.enabledItem.focus();
-    } else if (this.selectableItems.length > 0) {
-      this.selectableItems[0].focus();
-    } else {
-      super.focus();
     }
   }
 
@@ -154,9 +143,10 @@ export class Sidenav extends LitElement {
   private onSlotChanged() {
     this.ariaSetSize = this.selectableItems.length.toString();
 
-    // If we had an enabled item but it's not in the children anymore, enable
-    // another item.
-    if (this.hasEnabledItem && !this.items.some(item => item.enabled)) {
+    // The sidenav must always have an enabled item. This also ensures that it
+    // has a selected/tabbable item.
+    if (!this.items.some(item => item.enabled) &&
+        this.selectableItems.length > 0) {
       this.enableItem(this.selectableItems[0]);
     }
   }
@@ -187,9 +177,7 @@ export class Sidenav extends LitElement {
 
     if (item.enabled) {
       item.reveal();
-      this.enabledItem = item;
-    } else if (this.enabledItem === item) {
-      this.enabledItem = null;
+      this.enableItem(item);
     }
   }
 
@@ -369,7 +357,7 @@ export class Sidenav extends LitElement {
    * also un-enable the previously enabled tree item to make sure at most
    * one tree item is enabled in the tree.
    */
-  private enableItem(itemToEnable: SidenavItem|null) {
+  private enableItem(itemToEnable: SidenavItem) {
     const previousEnabledItem =
         this.items.find(item => item.enabled && item !== itemToEnable) || null;
 
@@ -377,13 +365,9 @@ export class Sidenav extends LitElement {
       previousEnabledItem.enabled = false;
     }
 
-    this.hasEnabledItem = !!itemToEnable;
-    if (itemToEnable) {
-      itemToEnable.enabled = true;
-      this.selectItem(itemToEnable);
-      (itemToEnable as unknown as ExtendedElement)
-          .scrollIntoViewIfNeeded(false);
-    }
+    itemToEnable.enabled = true;
+    this.selectItem(itemToEnable);
+    (itemToEnable as unknown as ExtendedElement).scrollIntoViewIfNeeded(false);
 
     const enabledChangeEvent: SidenavEnabledChangedEvent =
         new CustomEvent(Sidenav.events.SIDENAV_ENABLED_CHANGED, {
@@ -412,10 +396,12 @@ export class Sidenav extends LitElement {
 
     // If the sidenav has focus, move focus to the newly selected item.
     if (this.contains(document.activeElement)) {
-      // If `itemToSelect` is a parent of `oldSelectedItem`, we can't move focus
-      // without blurring `oldSelectedItem` first.
       if (oldSelectedItem) oldSelectedItem.blur();
-      itemToSelect.focus();
+      // Schedule the focusing, because we may need to wait for the item to
+      // become visible, so that it can receive focus.
+      itemToSelect.updateComplete.then(() => {
+        itemToSelect.focus();
+      });
     }
   }
 }
