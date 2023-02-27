@@ -126,6 +126,7 @@ export class Textfield extends LitElement {
       --md-filled-text-field-hover-active-indicator-height: 0;
       --md-filled-text-field-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-hover-input-text-color: var(--cros-sys-on_surface);
       --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-focus-input-text-color: var(--cros-sys-on_surface);
