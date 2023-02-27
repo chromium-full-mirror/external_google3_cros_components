@@ -7,20 +7,8 @@
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
 
-import {css, CSSResultGroup, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators';
-import {html, literal} from 'lit/static-html.js';
-
-function getButtonImpl(style: string) {
-  switch (style) {
-    case 'text':
-      return literal`md-text-button`;
-    case 'primary':
-    case 'secondary':
-    default:
-      return literal`md-filled-button`;
-  }
-}
 
 /**
  * A chromeOS compliant button.
@@ -91,14 +79,24 @@ export class Button extends LitElement {
   buttonStyle: 'primary'|'secondary'|'text' = 'primary';
 
   override render() {
-    const mdButtonTag = getButtonImpl(this.buttonStyle);
-    return html`
-        <${mdButtonTag} class=${this.buttonStyle}
+    if (this.buttonStyle === 'text') {
+      return html`
+        <md-text-button class=${this.buttonStyle}
             label=${this.label}
             ?disabled=${this.disabled}
             ?trailingIcon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
-        </${mdButtonTag}>
+        </md-text-button>
+        `;
+    }
+
+    return html`
+        <md-filled-button class=${this.buttonStyle}
+            label=${this.label}
+            ?disabled=${this.disabled}
+            ?trailingIcon=${this.trailingIcon}>
+          <slot slot="icon" name="icon"></slot>
+        </md-filled-button>
         `;
   }
 }
