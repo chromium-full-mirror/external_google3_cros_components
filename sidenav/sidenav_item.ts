@@ -89,6 +89,9 @@ export class SidenavItem extends LitElement {
   /** Indicate if a tree item is in editing mode (rename) or not. */
   @property({type: Boolean, reflect: true}) editing = false;
 
+  /** Indicate the item contains an error. */
+  @property({type: Boolean, reflect: true}) error = false;
+
   /**
    * A tree item will have children if the child tree items have been inserted
    * into its default slot. Only use `mayHaveChildren` if we want the tree item
@@ -182,6 +185,11 @@ export class SidenavItem extends LitElement {
       color: var(--cros-sys-on_primary);
     }
 
+    :host([error]) .tree-row {
+      background-color: var(--cros-sys-error_container);
+      color: var(--cros-sys-on_error_container);
+    }
+
     :host-context(.pointer-active) .tree-row:not(:active) {
       cursor: default;
     }
@@ -237,6 +245,10 @@ export class SidenavItem extends LitElement {
 
     :host([disabled]) slot[name="icon"]::slotted(*) {
       color: var(--cros-sys-disabled);
+    }
+
+    :host([error]) slot[name="icon"]::slotted(*) {
+      color: var(--cros-sys-on_error_container);
     }
 
     .tree-label {
