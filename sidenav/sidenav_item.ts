@@ -86,8 +86,8 @@ export class SidenavItem extends LitElement {
   /** Indicate if a tree item has been expanded or not. */
   @property({type: Boolean, reflect: true}) expanded = false;
 
-  /** Indicate if a tree item is in editing mode (rename) or not. */
-  @property({type: Boolean, reflect: true}) editing = false;
+  /** Indicate if a tree item is in renaming mode or not. */
+  @property({type: Boolean, reflect: true}) renaming = false;
 
   /** Indicate the item contains an error. */
   @property({type: Boolean, reflect: true}) error = false;
@@ -300,7 +300,7 @@ export class SidenavItem extends LitElement {
       border-radius: 20px;
     }
 
-    :host(:not([editing])) md-ripple {
+    :host(:not([renaming])) md-ripple {
       color: var(--cros-sys-ripple_primary);
       --md-ripple-hover-color: var(--cros-sys-hover_on_subtle);
       --md-ripple-hover-opacity: 100%;
@@ -419,15 +419,15 @@ export class SidenavItem extends LitElement {
     if (changedProperties.has('enabled')) {
       this.onEnabledChanged();
     }
-    if (changedProperties.has('editing')) {
-      this.onEditingChanged();
+    if (changedProperties.has('renaming')) {
+      this.onRenamingChanged();
     }
   }
 
   private renderTreeLabel() {
-    if (this.editing) {
+    if (this.renaming) {
       // Stop propagation of some events to prevent them being captured by
-      // tree when the tree item is in editing mode.
+      // tree when the tree item is in renaming mode.
       const interceptPropagation = (e: MouseEvent) => {
         e.stopPropagation();
       };
@@ -520,8 +520,8 @@ export class SidenavItem extends LitElement {
     this.dispatchEvent(event);
   }
 
-  private onEditingChanged() {
-    if (this.editing) {
+  private onRenamingChanged() {
+    if (this.renaming) {
       this.renameInputElement?.focus();
       this.renameInputElement?.select();
     }
@@ -558,7 +558,7 @@ export class SidenavItem extends LitElement {
   }
 
   private onRenameInputBlur() {
-    this.editing = false;
+    this.renaming = false;
     if (this.shouldRenameOnBlur) {
       this.commitRename(this.renameInputElement?.value || '');
     } else {
