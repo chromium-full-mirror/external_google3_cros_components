@@ -123,6 +123,10 @@ export class SidenavItem extends LitElement {
   @queryAsync('md-ripple') protected ripple!: Promise<MdRipple|null>;
 
   static override styles: CSSResultGroup = css`
+    :host {
+      display: block;
+    }
+
     ul {
       list-style: none;
       margin: 0;
