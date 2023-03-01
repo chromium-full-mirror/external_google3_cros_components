@@ -4,8 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '../icon/icon';
+import '@material/web/iconbutton/filled-tonal-icon-button.js';
+import '@material/web/iconbutton/standard-icon-button.js';
+
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement} from 'lit/decorators';
+import {customElement, property} from 'lit/decorators';
 
 /**
  * A cros compliant icon-button component.
@@ -20,8 +24,20 @@ export class IconButton extends LitElement {
     }
   `;
 
+  @property({type: String})
+  iconButtonStyle: 'filled'|'floating'|'onImage' = 'filled';
+
   override render() {
-    return html``;
+    if (this.iconButtonStyle === 'floating') {
+      return html`<md-standard-icon-button>
+        <slot name="icon"></slot>
+      </md-standard-icon-button>`;
+    } else {
+      // Both filled & onImage use the md-filled-tonal-icon-button.
+      return html`<md-filled-tonal-icon-button>
+        <slot name="icon"></slot>
+      </md-filled-tonal-icon-button>`;
+    }
   }
 }
 

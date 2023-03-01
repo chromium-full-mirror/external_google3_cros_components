@@ -13,6 +13,7 @@ export class Icon extends LitElement {
   static override styles: CSSResultGroup = css`
       :host {
         background-color: currentcolor;
+        display: inline-block;
       }
     `;
 
