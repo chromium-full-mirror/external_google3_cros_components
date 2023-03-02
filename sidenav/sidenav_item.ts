@@ -268,10 +268,10 @@ export class SidenavItem extends LitElement {
       border-radius: 4px;
       color: var(--cros-sys-on_surface);
       height: 20px;
-      margin: 0 10px;
+      margin-inline-end: ${LABEL_ONLY_MARGIN};
+      margin-inline-start: ${ICON_LABEL_GAP};
       outline: 2px solid var(--cros-sys-focus_ring);
       overflow: hidden;
-      padding: 1px 8px;
     }
 
     /* We need to ensure that even empty labels take up space */
