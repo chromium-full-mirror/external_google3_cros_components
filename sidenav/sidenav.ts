@@ -21,6 +21,21 @@ declare interface ExtendedElement extends Element {
 }
 
 /**
+ * True iff `item` is not disabled and every parent of it allows children to be
+ * selected.
+ */
+function isSelectable(item: SidenavItem): boolean {
+  if (item.disabled) return false;
+
+  let parent = item.parentItem;
+  while (parent) {
+    if (!parent.expanded || parent.disabled) return false;
+    parent = parent.parentItem;
+  }
+  return true;
+}
+
+/**
  * <cros-sidenav> is the container of the <cros-sidenav-item> elements. An
  * example DOM structure is like this:
  *
@@ -71,7 +86,7 @@ export class Sidenav extends LitElement {
 
   /** The child tree items which can be selected, e.g. using the arrow keys. */
   get selectableItems(): SidenavItem[] {
-    return this.items.filter(item => !item.disabled);
+    return this.items.filter(isSelectable);
   }
 
   /** The default unnamed slot to let consumer pass children tree items. */
@@ -231,22 +246,17 @@ export class Sidenav extends LitElement {
   /**
    * Handle the keydown within the tree, this mainly handles the navigation
    * and the selection with the keyboard.
-   * TODO(b/262453851): Update this to just do a querySelectorAll for all items
-   * instead of using tabbleItems and then maybe just subtract / add index's
-   * instead of using this getPrevious/getNext linked list we have.
    */
   private onTreeKeyDown(e: KeyboardEvent) {
     const selectedItem = this.selectedItem;
+    const selectableItems = this.selectableItems;
+    const currentIndex = selectableItems.findIndex(i => i === selectedItem);
 
     if (e.ctrlKey || e.repeat) {
       return;
     }
 
-    if (!selectedItem) {
-      return;
-    }
-
-    if (this.selectableItems.length === 0) {
+    if (!selectedItem || currentIndex === -1) {
       return;
     }
 
@@ -257,10 +267,14 @@ export class Sidenav extends LitElement {
         this.enableItem(selectedItem);
         break;
       case 'ArrowUp':
-        itemToSelect = this.getPreviousItem(selectedItem);
+        if (currentIndex > 0) {
+          itemToSelect = selectableItems[currentIndex - 1];
+        }
         break;
       case 'ArrowDown':
-        itemToSelect = this.getNextItem(selectedItem);
+        if (currentIndex < selectableItems.length - 1) {
+          itemToSelect = selectableItems[currentIndex + 1];
+        }
         break;
       case 'ArrowLeft':
       case 'ArrowRight':
@@ -298,58 +312,6 @@ export class Sidenav extends LitElement {
       this.selectItem(itemToSelect);
       e.preventDefault();
     }
-  }
-
-  /** Helper function that returns the next selectable tree item. */
-  private getNextItem(item: SidenavItem): SidenavItem|null {
-    if (item.expanded && item.selectableItems.length > 0) {
-      return item.selectableItems[0];
-    }
-
-    return this.getNextHelper(item);
-  }
-
-  /** Another helper function that returns the next selectable tree item. */
-  private getNextHelper(item: SidenavItem|null): SidenavItem|null {
-    if (!item) {
-      return null;
-    }
-
-    const nextSibling = item.nextElementSibling as SidenavItem | null;
-    if (nextSibling) {
-      if (nextSibling.disabled) {
-        return this.getNextHelper(nextSibling);
-      }
-      return nextSibling;
-    }
-    return this.getNextHelper(item.parentItem);
-  }
-
-  /** Helper function that returns the previous selectable tree item. */
-  private getPreviousItem(item: SidenavItem): SidenavItem|null {
-    let previousSibling = item.previousElementSibling as SidenavItem | null;
-    while (previousSibling && previousSibling.disabled) {
-      previousSibling =
-          previousSibling.previousElementSibling as SidenavItem | null;
-    }
-    if (previousSibling) {
-      return this.getLastHelper(previousSibling);
-    }
-    return item.parentItem;
-  }
-
-  /**
-   * Helper function that returns the last selectable tree item in the subtree.
-   */
-  private getLastHelper(item: SidenavItem|null): SidenavItem|null {
-    if (!item) {
-      return null;
-    }
-    if (item.expanded && item.selectableItems.length > 0) {
-      const lastChild = item.selectableItems[item.selectableItems.length - 1];
-      return this.getLastHelper(lastChild);
-    }
-    return item;
   }
 
   /**
