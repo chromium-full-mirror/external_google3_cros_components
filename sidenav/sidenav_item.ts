@@ -64,6 +64,8 @@ const ICON_LABEL_GAP = css`8px`;
 const ICON_LEADING_MARGIN = css`28px`;
 const LABEL_ONLY_MARGIN = css`24px`;
 
+const ITEM_GAP = css`8px`;
+
 /** An item for a ChromeOS compliant sidenav element. */
 @customElement('cros-sidenav-item')
 export class SidenavItem extends LitElement {
@@ -130,13 +132,6 @@ export class SidenavItem extends LitElement {
       display: block;
     }
 
-    ul {
-      list-style: none;
-      margin: 0;
-      outline: none;
-      padding: 0;
-    }
-
     li {
       display: block;
     }
@@ -149,7 +144,7 @@ export class SidenavItem extends LitElement {
       border-bottom: 1px solid var(--cros-separator-color);
       content: '';
       display: block;
-      margin: 8px 0;
+      margin: ${ITEM_GAP} 0;
       width: 100%;
     }
 
@@ -163,7 +158,7 @@ export class SidenavItem extends LitElement {
       cursor: pointer;
       display: flex;
       height: 40px;
-      margin: 8px 0;
+      margin-top: ${ITEM_GAP};
       position: relative;
       user-select: none;
       white-space: nowrap;
@@ -280,12 +275,20 @@ export class SidenavItem extends LitElement {
       white-space: pre;
     }
 
-    .tree-children {
-      display: none;
+    ul.tree-children {
+      height: 0px;
+      list-style: none;
+      margin: 0 0 ${ITEM_GAP} 0;
+      outline: none;
+      overflow: hidden;
+      padding: 0;
     }
 
-    :host([expanded]) .tree-children {
+    :host([expanded]) ul.tree-children {
       display: block;
+      height: auto;
+      margin: 0;
+      overflow: visible;
     }
 
     :host([enabled]) .rename {
