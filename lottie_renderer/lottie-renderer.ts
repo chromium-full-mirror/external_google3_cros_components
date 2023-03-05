@@ -1,12 +1,31 @@
 /**
  * @license
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {html, LitElement, PropertyValues} from 'lit';
+import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
+import {html, LitElement} from 'lit';
 import {customElement, property, query} from 'lit/decorators';
-import * as lottie from 'lottie_full';  // from //third_party/javascript/lottie:lottie_full
+import {trustedResourceUrl} from 'safevalues';
+import {safeWorker} from 'safevalues/dom';
+
+const WORKER_BINARY = trustedResourceUrl`/js/lottie_worker.js`;
+
+interface MessageData {
+  animationData: JSON;
+  drawSize: {width: number, height: number};
+  params: {loop: boolean, autoplay: boolean};
+  canvas?: OffscreenCanvas;
+}
+
+/** The CustomEvent names that LottieRenderer can fire. */
+export enum CrosLottieEvent {
+  INITIALIZED = `cros-lottie-initialized`,
+  PAUSED = `cros-lottie-paused`,
+  PLAYING = `cros-lottie-playing`,
+  STOPPED = `cros-lottie-stopped`,
+}
 
 /**
  * Lottie renderer with correct hooks to handle dynamic color. This component
@@ -17,66 +36,171 @@ import * as lottie from 'lottie_full';  // from //third_party/javascript/lottie:
 export class LottieRenderer extends LitElement {
   /** The path to the lottie asset JSON file. */
   @property({attribute: true}) assetUrl!: string;
-
   /** When true, animation will begin to play as soon as it's loaded. */
-  @property({attribute: true, type: Boolean}) autoplay: boolean = false;
+  @property({attribute: true, type: Boolean}) autoplay = true;
 
   /** When true, animation will loop continuously. */
-  @property({attribute: true, type: Boolean}) loop: boolean = false;
+  @property({attribute: true, type: Boolean}) loop = true;
+
+  /** The onscreen canvas controlled by lottie_worker.js. */
+  @query('#onscreen-canvas') onscreenCanvas!: HTMLCanvasElement;
+
+  /** The worker thread running the lottie library. */
+  private readonly worker = safeWorker.create(WORKER_BINARY);
+  private offscreenCanvas: OffscreenCanvas|null = null;
+
+  /** If the offscreen canvas has been transferred to the Worker thread. */
+  private hasTransferredCanvas = false;
 
   /**
-   * When true, this indicates that the lottie file is animated, and hence
-   * should use the offscreen canvas, rather than the SVGRenderer.
+   * Animations are loaded asynchronously, the worker will send an event when
+   * it has finished loading.
    */
-  @property({attribute: true, type: Boolean}) animated: boolean = false;
+  private animationIsLoaded = false;
 
-  /** The container that lottie attaches an illustration to. */
-  @query('#animation-container') animationContainer!: HTMLElement;
+  /**
+   * If there is a control command (play, pause, stop) before the animation has
+   * finished initializing, it should be queued and completed after successful
+   * initializaton.
+   */
+  private workerNeedsControlUpdate = false;
+  private playStateInternal = false;
 
-  /** The currently loaded lottie animation. */
-  private currentAnimation: LottieAnimationItem|null = null;
-
-  override render() {
-    return html`
-      <div id="animation-container">
-        ${this.animated ? html`<canvas id="onscreen-canvas"></canvas>` : html``}
-      </div>`;
-  }
-
-  override firstUpdated(changedProperties: PropertyValues) {
-    super.firstUpdated(changedProperties);
+  override firstUpdated() {
+    this.worker.onmessage = (e) => void this.onMessage(e);
+    this.offscreenCanvas = this.onscreenCanvas.transferControlToOffscreen();
     this.initAnimation();
   }
 
-  override connectedCallback() {
-    super.connectedCallback();
-    if (!this.currentAnimation) return;
-    this.currentAnimation.stop();
-  }
 
-  override disconnectedCallback() {
-    super.disconnectedCallback()
-    if (!this.currentAnimation) return;
-    this.currentAnimation.stop();
+  override render() {
+    return html`
+        <canvas id='onscreen-canvas'></canvas>
+      `;
   }
 
   /**
-   * Initializes Lottie with animation at `this.assetURL`. For static
-   * illustrations we use the SVGRenderer.
-   * TODO(b/236660267): Add canvas rendering web worker for animations.
+   * Play the current animation, and wait for a successful response from the
+   * worker thread. This promise will also wait until animation initialization
+   * has completed before resolving.
    */
-  private initAnimation() {
-    if (!this.animationContainer) return;
-    if (this.animated) {
-      throw new Error('Animations not yet implemented.');
-    }
-    this.currentAnimation = lottie.loadAnimation({
-      container: this.animationContainer,
-      renderer: 'svg',
-      loop: this.loop,
-      autoplay: this.autoplay,
-      path: this.assetUrl,
+  async play(): Promise<Event> {
+    return this.setPlayState(true, CrosLottieEvent.PLAYING);
+  }
+
+  /**
+   * Pause the current animation, and wait for a successful response from the
+   * worker thread. This promise will also wait until animation initialization
+   * has completed before resolving.
+   */
+  async pause(): Promise<Event> {
+    return this.setPlayState(false, CrosLottieEvent.PAUSED);
+  }
+
+  /**
+   * Stop the current animation, and wait for a successful response from the
+   * worker thread. Stopping the animation resets it to it's first frame, and
+   * pauses it, so there's no need to wait for initialization.
+   */
+  async stop(): Promise<Event> {
+    this.worker.postMessage({control: {stop: true}});
+    return waitForEvent(this, CrosLottieEvent.STOPPED);
+  }
+
+  private async initAnimation() {
+    const animationData = await fetch(this.assetUrl).then(r => r.json());
+    const animationConfig: MessageData = ({
+      animationData,
+      drawSize: this.getCanvasDrawBufferSize(),
+      params: {
+        loop: this.loop,
+        autoplay: this.autoplay,
+      },
     });
+
+    // The offscreen canvas can only be transferred across to the WebWorker
+    // once, when we first initialize an animation. On subsequent
+    // initializations (such as when the asset URL has changed), we avoid
+    // re-transferring the canvas and just send across the animation data.
+    // TODO(b/268419751): Add hooks for updating when the animation URL has
+    // changed.
+    if (this.hasTransferredCanvas) {
+      this.worker.postMessage(animationConfig);
+      return;
+    }
+
+    this.worker.postMessage(
+        {...animationConfig, canvas: this.offscreenCanvas},
+        [this.offscreenCanvas as unknown as Transferable]);
+    this.hasTransferredCanvas = true;
+  }
+
+  /**
+   * Computes the draw buffer size for the canvas. This ensures that the
+   * rasterization is crisp and sharp rather than blurry.
+   */
+  private getCanvasDrawBufferSize() {
+    const canvasElement = this.onscreenCanvas;
+    const devicePixelRatio = window.devicePixelRatio;
+    const clientRect = canvasElement.getBoundingClientRect();
+    const drawSize = {
+      width: clientRect.width * devicePixelRatio,
+      height: clientRect.height * devicePixelRatio,
+    };
+    return drawSize;
+  }
+
+  private setPlayState(play: boolean, expectedEvent: CrosLottieEvent) {
+    this.playStateInternal = play;
+    if (!this.animationIsLoaded) {
+      this.workerNeedsControlUpdate = true;
+    } else {
+      this.sendPlayControlToWorker();
+    }
+    return waitForEvent(this, expectedEvent);
+  }
+
+  private sendPlayControlToWorker() {
+    this.worker.postMessage({control: {play: this.playStateInternal}});
+  }
+
+  private onMessage(event: MessageEvent) {
+    const message = event.data.name;
+    switch (message) {
+      case 'initialized':
+        this.animationIsLoaded = true;
+        this.fire(CrosLottieEvent.INITIALIZED);
+        this.sendPendingInfo();
+        break;
+      case 'playing':
+        this.fire(CrosLottieEvent.PLAYING);
+        break;
+      case 'paused':
+        this.fire(CrosLottieEvent.PAUSED);
+        break;
+      case 'stopped':
+        this.fire(CrosLottieEvent.STOPPED);
+        break;
+      default:
+        console.log(`unknown message type received: ${message}`);
+        break;
+    }
+  }
+
+  private fire(event: CrosLottieEvent) {
+    this.dispatchEvent(new CustomEvent(event, {bubbles: true, composed: true}));
+  }
+
+  /**
+   * Called once the animation is fully loaded into the worker. Sends any
+   * size or control information that may have arrived while the animation
+   * was not yet fully loaded.
+   */
+  private sendPendingInfo() {
+    if (this.workerNeedsControlUpdate) {
+      this.workerNeedsControlUpdate = false;
+      this.sendPlayControlToWorker();
+    }
   }
 }
 

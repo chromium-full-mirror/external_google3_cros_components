@@ -13,6 +13,14 @@ import {Scuba} from 'google3/testing/karma/karma_scuba_framework';
 import {cleanState} from 'google3/testing/web/jasmine/state/clean_state';
 
 /**
+ * Interface for helper functions to accept elements that may have a pending
+ * Lit render.
+ */
+export interface MaybeHasUpdateComplete extends HTMLElement {
+  updateComplete?: Promise<unknown>;
+}
+
+/**
  * Creates a container element for elements to be screenshot in and append it
  * to the dom. Returns a clean state instance with a reference to this container
  * and a diff function which automatically checks this container element against
@@ -80,4 +88,50 @@ export function nonceInitDeflaker() {
     initDeflaker(deflakerSettings);
     deflakerInited = true;
   }
+}
+
+/**
+ * Use this to wait until the element and all its descendants have finished
+ * updating.
+ *
+ * TODO(b/139310294) replace this when the Polymer API becomes available.
+ */
+export async function deepUpdateComplete(element: MaybeHasUpdateComplete) {
+  // TODO(b/139310294): Replace these await statements with Polymer API to
+  // blocks until descendants have loaded (when it becomes available).
+  await element.updateComplete;
+  // Wait for nested LitElements to finish rendering. Assumes that all nested
+  // elements' render() complete in microtasks.
+  await completePendingMicrotasks();
+}
+
+/**
+ * Appends an HTMLElement to the given `parentElement` element and waits until
+ * the element and all its descendants have finished rendering.
+ *
+ * The passed element must have a updateComplete property (e.g., a LitElement).
+ * Elements without updateComplete don't need to use this method and may be
+ * appended/removed using Element.append/ChildNode.remove.
+ *
+ * This will not work when descendants defer their update (should be fixed by
+ * b/139310294).
+ *
+ * Each call to appendElementForTest should have a corresponding call to
+ * removeElementForTest.
+ */
+export async function appendElementForTest(
+    element: MaybeHasUpdateComplete, parentElement = document.body) {
+  parentElement.append(element);
+  await deepUpdateComplete(element);
+}
+
+/** Removes an HTMLElement from the DOM. Counterpart to appendElementForTest */
+export async function removeElementForTest(element: MaybeHasUpdateComplete) {
+  // Complete pending tasks before removing from the DOM. The ResizeObserver
+  // machinery assumes that "loop limit exceeded" is a useful error if it ever
+  // "skips" an observation. But it seems that can also happen simply because
+  // the objects being observed are gone, so give it a chance to send out
+  // notifications.
+  await completePendingMicrotasks();
+  element.remove();
 }
