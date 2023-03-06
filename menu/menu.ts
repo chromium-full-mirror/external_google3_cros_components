@@ -27,13 +27,18 @@ export class Menu extends LitElement {
 
   override render() {
     return html`
-      <md-menu .anchor=${this.anchor || null} ?open=${this.open}> <slot></slot>
+      <md-menu .anchor=${this.anchor} ?open=${this.open} @closed=${
+        this.hide}> <slot></slot>
       </md-menu>
     `;
   }
 
   show() {
     this.open = true;
+  }
+
+  hide() {
+    this.open = false;
   }
 }
 
