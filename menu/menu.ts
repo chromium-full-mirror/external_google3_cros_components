@@ -20,6 +20,12 @@ export class Menu extends LitElement {
     :host {
       display: inline-block;
     }
+    md-menu {
+      --md-list-container-color: var(--cros-sys-on_primary);
+      --md-menu-container-surface-tint-layer-color: white;
+      --md-menu-container-shape: 8px;
+      --md-list-list-item-one-line-container-height: 36px;
+    }
   `;
 
   @property({attribute: false}) anchor: HTMLElement|null = null;
