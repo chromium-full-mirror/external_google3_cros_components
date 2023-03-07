@@ -22,6 +22,8 @@ export class MenuItem extends LitElement {
   @property({type: String}) itemStart: 'icon'|'' = '';
   @property({type: String}) itemEnd: 'shortcut'|'icon'|'switch'|null = null;
 
+  // TODO(b/198759625): Remove negative margin-inline-end when mwc token
+  // available (padding 16px)
   static override styles: CSSResultGroup = css`
     :host {
       display: inline block;
@@ -34,6 +36,9 @@ export class MenuItem extends LitElement {
       width: 32px;
       height: 18px;
     }
+    .slot-end {
+      margin-inline-end: -8px;
+    }
   `;
 
   override render() {
@@ -41,13 +46,13 @@ export class MenuItem extends LitElement {
     switch (this.itemEnd) {
       case 'shortcut':
         // TODO(heidichan): expose shortcut text.
-        slotEnd = html`<span>Shortcut</span>`;
+        slotEnd = html`<span class="slot-end">Shortcut</span>`;
         break;
       case 'icon':
-        slotEnd = html`<cros-icon></cros-icon>`;
+        slotEnd = html`<cros-icon class="slot-end"></cros-icon>`;
         break;
       case 'switch':
-        slotEnd = html`<cros-switch></cros-switch>`;
+        slotEnd = html`<cros-switch class="slot-end"></cros-switch>`;
         break;
       default:
         slotEnd = null;
