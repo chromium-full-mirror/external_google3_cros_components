@@ -8,7 +8,7 @@ import {css, html, LitElement} from 'lit';
 import {customElement, query, state} from 'lit/decorators';
 
 import {SidenavItem, TreeItemCollapsedEvent, TreeItemEnabledChangedEvent, TreeItemExpandedEvent} from './sidenav_item';
-import {isRTL, isSidenavItem} from './sidenav_util';
+import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
 
 /**
  * Allow calling `scrollIntoViewIfNeeded`.
@@ -357,7 +357,7 @@ export class Sidenav extends LitElement {
     itemToSelect.tabIndex = 0;
 
     // If the sidenav has focus, move focus to the newly selected item.
-    if (this.contains(document.activeElement)) {
+    if (this.contains(shadowPiercingActiveItem())) {
       if (oldSelectedItem) oldSelectedItem.blur();
       // Schedule the focusing, because we may need to wait for the item to
       // become visible, so that it can receive focus.

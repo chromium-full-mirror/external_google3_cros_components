@@ -21,3 +21,14 @@ export function isSidenavItem(element: Element): element is SidenavItem {
 export function isRTL() {
   return document.documentElement.dir === 'rtl';
 }
+
+/** Returns the active element, if it's a SidenavItem, or null. */
+export function shadowPiercingActiveItem(): Element|null {
+  let activeElement = document.activeElement;
+  while (activeElement && !isSidenavItem(activeElement)) {
+    activeElement = activeElement.shadowRoot ?
+        activeElement.shadowRoot.activeElement :
+        null;
+  }
+  return activeElement;
+}
