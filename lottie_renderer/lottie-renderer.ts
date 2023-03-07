@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {assertExists} from 'google3/javascript/common/asserts/asserts';
 import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
 import {html, LitElement} from 'lit';
 import {customElement, property, query} from 'lit/decorators';
@@ -46,7 +47,7 @@ export class LottieRenderer extends LitElement {
   @query('#onscreen-canvas') onscreenCanvas!: HTMLCanvasElement;
 
   /** The worker thread running the lottie library. */
-  private readonly worker = safeWorker.create(WORKER_BINARY);
+  private worker: Worker|null = null;
   private offscreenCanvas: OffscreenCanvas|null = null;
 
   /** If the offscreen canvas has been transferred to the Worker thread. */
@@ -66,10 +67,26 @@ export class LottieRenderer extends LitElement {
   private workerNeedsControlUpdate = false;
   private playStateInternal = false;
 
+  override connectedCallback() {
+    super.connectedCallback();
+    if (!this.worker) {
+      this.worker = safeWorker.create(WORKER_BINARY);
+      this.worker.onmessage = (e) => void this.onMessage(e);
+    }
+  }
+
   override firstUpdated() {
-    this.worker.onmessage = (e) => void this.onMessage(e);
+    assertExists(this.onscreenCanvas);
     this.offscreenCanvas = this.onscreenCanvas.transferControlToOffscreen();
     this.initAnimation();
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
   }
 
 
@@ -103,11 +120,13 @@ export class LottieRenderer extends LitElement {
    * pauses it, so there's no need to wait for initialization.
    */
   async stop(): Promise<Event> {
+    assertExists(this.worker);
     this.worker.postMessage({control: {stop: true}});
     return waitForEvent(this, CrosLottieEvent.STOPPED);
   }
 
   private async initAnimation() {
+    assertExists(this.worker);
     const animationData = await fetch(this.assetUrl).then(r => r.json());
     const animationConfig: MessageData = ({
       animationData,
@@ -161,6 +180,7 @@ export class LottieRenderer extends LitElement {
   }
 
   private sendPlayControlToWorker() {
+    assertExists(this.worker);
     this.worker.postMessage({control: {play: this.playStateInternal}});
   }
 
