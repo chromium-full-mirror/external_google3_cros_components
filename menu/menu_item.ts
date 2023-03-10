@@ -36,9 +36,6 @@ export class MenuItem extends LitElement {
       width: 32px;
       height: 18px;
     }
-    .slot-end {
-      margin-inline-end: -8px;
-    }
   `;
 
   override render() {
@@ -46,16 +43,20 @@ export class MenuItem extends LitElement {
     switch (this.itemEnd) {
       case 'shortcut':
         // TODO(heidichan): expose shortcut text.
-        slotEnd = html`<span class="slot-end">Shortcut</span>`;
+        slotEnd = html`<span slot="end" class="slot-end">Shortcut</span>`;
         break;
       case 'icon':
-        slotEnd = html`<cros-icon class="slot-end"></cros-icon>`;
+        slotEnd = html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
         break;
       case 'switch':
-        slotEnd = html`<cros-switch class="slot-end"></cros-switch>`;
+        slotEnd = html`<cros-switch slot="end" class="slot-end"></cros-switch>`;
         break;
       default:
-        slotEnd = null;
+        // md-list-item has a ::slotted(*) selector which will never select the
+        // children of a <slot> or a <slot> itself which is why default content
+        // is not set as children of slot.
+        // i.e. <slot slot="end">${slotEnd}</slot>
+        slotEnd = html`<slot slot="end"></slot>`;
         break;
     }
 
@@ -63,16 +64,14 @@ export class MenuItem extends LitElement {
     let startItem = null;
     if (this.itemStart === 'icon') {
       startItem =
-          html`<cros-icon slot="start" style="margin-left: 16px;"></cros-icon>`;
+          html`<cros-icon slot="start" data-variant="icon"></cros-icon>`;
     }
     // keep-open property needs to be true in switch case so cros-switch can be
     // selected/unselected without menu closing.
     return html`
       <md-menu-item headline=${this.headline} ?keep-open=${keepOpen}>
         ${startItem}
-        <slot slot="end">
-          ${slotEnd}
-        </slot>
+        ${slotEnd}
       </md-menu-item>
       `;
   }
