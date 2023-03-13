@@ -9,6 +9,11 @@
  */
 
 import {css} from 'lit';
+import {TrustedResourceUrl, trustedResourceUrl} from 'safevalues';
+import {safeLinkEl} from 'safevalues/dom';
+
+const GOOGLE_SANS_FONT_URL =
+    trustedResourceUrl`https://fonts.googleapis.com/css2?family=Google+Sans:opsz,wght@17..18,400;17..18,500;17..18,700&display=swap`;
 
 /** A fake ChromeOS theme for testing. */
 export function getThemeForTesting() {
@@ -311,4 +316,31 @@ export function getThemeForTesting() {
     }
   }
   `;
+}
+
+/** Function for installing ChromeOS fonts */
+export function installFonts(
+    url: TrustedResourceUrl = GOOGLE_SANS_FONT_URL,
+    parent: Element = document.head) {
+  return new Promise<void>((resolve, reject) => {
+    for (const otherLink of parent.querySelectorAll('link')) {
+      if (otherLink.href === url.toString()) {
+        // Font is already loaded
+        resolve();
+        return;
+      }
+    }
+
+    const link = document.createElement('link');
+    safeLinkEl.setHrefAndRel(link, url, 'stylesheet');
+    link.onload = () => {
+      resolve();
+    };
+
+    link.onerror = () => {
+      reject(new Error(`Failed to load CSS stylesheet: ${url}`));
+    };
+
+    parent.appendChild(link);
+  });
 }
