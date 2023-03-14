@@ -14,6 +14,8 @@ import {safeLinkEl} from 'safevalues/dom';
 
 const GOOGLE_SANS_FONT_URL =
     trustedResourceUrl`https://fonts.googleapis.com/css2?family=Google+Sans:opsz,wght@17..18,400;17..18,500;17..18,700&display=swap`;
+const GOOGLE_SANS_TEXT_FONT_URL =
+    trustedResourceUrl`https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@500&display=swap`;
 
 /** A fake ChromeOS theme for testing. */
 export function getThemeForTesting() {
@@ -150,6 +152,27 @@ export function getThemeForTesting() {
     --cros-ref-green99: #f8ffecff;
     --cros-ref-green100: #ffffffff;
     --cros-sys-opacity-disabled: 0.38;
+    --cros-typography-display0:	400 57px/64px "Google Sans";
+    --cros-typography-display1: 500 44px/52px "Google Sans";
+    --cros-typography-display2: 500 36px/44px "Google Sans";
+    --cros-typography-display3: 500 32px/40px "Google Sans";
+    --cros-typography-display3-regular: 400 32px/40px "Google Sans";
+    --cros-typography-display4: 500 28px/36px "Google Sans";
+    --cros-typography-display5: 500 24px/32px "Google Sans";
+    --cros-typography-display6: 500 22px/28px "Google Sans";
+    --cros-typography-display6-regular: 400 22px/28px "Google Sans";
+    --cros-typography-display7: 500 18px/24px "Google Sans" ;
+    --cros-typography-title1: 500 16px/24px "Google Sans";
+    --cros-typography-headline1: 500 15px/22px "Google Sans Text";
+    --cros-typography-button1: 500 14px/20px "Google Sans Text";
+    --cros-typography-button2: 500 13px/20px "Google Sans Text";
+    --cros-typography-body0: 500 16px/24px "Google Sans Text";
+    --cros-typography-body1: 500 14px/20px "Google Sans Text";
+    --cros-typography-body2: 500 13px/20px "Google Sans Text";
+    --cros-typography-annotation1: 500 12px/18px "Google Sans Text";
+    --cros-typography-annotation2: 500 11px/16px "Google Sans Text";
+    --cros-typography-label1: 500 10px/10px "Google Sans Text";
+    --cros-typography-label2: 500 10px/10px "Google Sans Text";
   }
 
   @media (prefers-color-scheme: light) {
@@ -318,10 +341,7 @@ export function getThemeForTesting() {
   `;
 }
 
-/** Function for installing ChromeOS fonts */
-export function installFonts(
-    url: TrustedResourceUrl = GOOGLE_SANS_FONT_URL,
-    parent: Element = document.head) {
+function installFont(url: TrustedResourceUrl, parent: Element = document.head) {
   return new Promise<void>((resolve, reject) => {
     for (const otherLink of parent.querySelectorAll('link')) {
       if (otherLink.href === url.toString()) {
@@ -343,4 +363,10 @@ export function installFonts(
 
     parent.appendChild(link);
   });
+}
+
+/** Function for installing ChromeOS fonts */
+export function installFonts() {
+  installFont(GOOGLE_SANS_FONT_URL);
+  installFont(GOOGLE_SANS_TEXT_FONT_URL);
 }
