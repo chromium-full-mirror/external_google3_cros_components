@@ -10,6 +10,13 @@ import '@material/web/button/text-button.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators';
 
+const PADDING = css`16px`;
+const PADDING_ICON_SIDE = css`12px`;
+const CONTAINER_HEIGHT = css`36px`;
+const ICON_SIZE = css`20px`;
+const MAX_WIDTH = css`200px`;
+const MIN_WIDTH = css`64px`;
+
 /**
  * A chromeOS compliant button.
  * See spec
@@ -23,17 +30,25 @@ export class Button extends LitElement {
   // unless a cros theme is present.
   static override styles: CSSResultGroup = css`
     md-filled-button {
-      max-width: 200px;
-      min-width: 64px;
-      --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-filled-button-container-height: 36px;
-      --md-filled-button-with-icon-icon-size: 20px;
+      max-width: ${MAX_WIDTH};
+      min-width: ${MIN_WIDTH};
+      --md-filled-button-container-height: ${CONTAINER_HEIGHT};
       --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-button-disabled-label-text-color: var(--cros-sys-disabled);
-      --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
       --md-filled-button-focus-state-layer-opacity: 100%;
+      --md-filled-button-hover-container-elevation: 0;
       --md-filled-button-hover-state-layer-opacity: 100%;
       --md-filled-button-pressed-state-layer-opacity: 100%;
+      --md-filled-button-spacing-leading: ${PADDING};
+      --md-filled-button-spacing-trailing: ${PADDING};
+      --md-filled-button-with-icon-icon-size: ${ICON_SIZE};
+      --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
+      --md-filled-button-with-icon-spacing-trailing: ${PADDING};
+      --md-filled-button-with-trailing-icon-spacing-leading: ${PADDING};
+      --md-filled-button-with-trailing-icon-spacing-trailing: ${
+      PADDING_ICON_SIDE};
+      --md-sys-color-secondary: var(--cros-sys-focus_ring);
     }
 
     md-filled-button.primary {
@@ -53,20 +68,27 @@ export class Button extends LitElement {
     }
 
     md-text-button {
-      max-width: 200px;
-      min-width: 64px;
-      --md-text-button-container-height: 36px;
-      --md-text-button-with-icon-icon-size: 20px;
+      max-width: ${MAX_WIDTH};
+      min-width: ${MIN_WIDTH};
+      --md-text-button-container-height: ${CONTAINER_HEIGHT};
+      --md-text-button-disabled-label-text-color: var(--cros-sys-disabled);
+      --md-text-button-focus-state-layer-opacity: 100%;
+      --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-text-button-hover-state-layer-opacity: 100%;
+      --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-text-button-pressed-state-layer-opacity: 100%;
+      --md-text-button-spacing-leading: ${PADDING};
+      --md-text-button-spacing-trailing: ${PADDING};
+      --md-text-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+      --md-text-button-with-icon-icon-size: ${ICON_SIZE};
+      --md-text-button-with-icon-icon-color: var(--cros-sys-primary);
+      --md-text-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
+      --md-text-button-with-icon-spacing-trailing: ${PADDING};
+      --md-text-button-with-trailing-icon-spacing-leading: ${PADDING};
+      --md-text-button-with-trailing-icon-spacing-trailing: ${
+      PADDING_ICON_SIDE};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-text-button-with-icon-icon-color: var(--cros-sys-primary);
-      --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
-      --md-text-button-disabled-label-text-color: var(--cros-sys-disabled);
-      --md-text-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
-      --md-text-button-focus-state-layer-opacity: 100%;
-      --md-text-button-hover-state-layer-opacity: 100%;
-      --md-text-button-pressed-state-layer-opacity: 100%;
     }
   `;
 
