@@ -338,6 +338,17 @@ export function getThemeForTesting() {
       --cros-sys-pressed_on_subtle: #efecf03d;
     }
   }
+
+  /**
+   * Ensure components are rendered on the correct background color and visible
+   * text that changes with light/dark mode.
+   * TODO(b/273482767): Remove this in favour of cros_components boilerplate.
+   */
+  #storyWrapper {
+    background: var(--cros-sys-app_base);
+    color: var(--cros-sys-primary);
+    padding: 20px;
+  }
   `;
 }
 
