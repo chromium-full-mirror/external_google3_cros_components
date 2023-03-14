@@ -8,7 +8,6 @@ import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators';
 
 const PADDING = css`16px`;
 const PADDING_ICON_SIDE = css`12px`;
@@ -22,7 +21,6 @@ const MIN_WIDTH = css`64px`;
  * See spec
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2116%3A4082&t=kbaCFk5KdayGTyuL-0
  */
-@customElement('cros-button')
 export class Button extends LitElement {
   // TODO(b/258982831): Centre icon. See spec.
   // Note that theme colours have opacity defined in the colour, but default
@@ -92,13 +90,25 @@ export class Button extends LitElement {
     }
   `;
 
-  @property({type: String}) label = '';
-  @property({type: Boolean}) disabled = false;
-  @property({type: Boolean}) trailingIcon = false;
-
+  label: string;
+  disabled: boolean;
+  trailingIcon: boolean;
   /** How the button should be styled. One of {primary, secondary, text} */
-  @property({type: String})
   buttonStyle: 'primary'|'secondary'|'text' = 'primary';
+
+  static override properties = {
+    label: {type: String},
+    disabled: {type: Boolean},
+    trailingIcon: {type: Boolean},
+    buttonStyle: {type: String},
+  };
+
+  constructor() {
+    super();
+    this.label = '';
+    this.disabled = false;
+    this.trailingIcon = false;
+  }
 
   override render() {
     if (this.buttonStyle === 'text') {
@@ -122,6 +132,8 @@ export class Button extends LitElement {
         `;
   }
 }
+
+customElements.define('cros-button', Button);
 
 declare global {
   interface HTMLElementTagNameMap {
