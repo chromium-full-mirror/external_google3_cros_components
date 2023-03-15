@@ -134,6 +134,9 @@ export class Textfield extends LitElement {
       --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-supporting-text-color: var(--cros-sys-on_surface);
       width: 100%;
+      --md-filled-text-field-input-text-type: var(--cros-typography-body2);
+      --md-filled-text-field-label-text-type: var(--cros-typography-body2);
+      --md-filled-field-supporting-text-type: var(--cros-typography-label2);
     }
 
     :host([shaded]) md-filled-text-field {
@@ -143,6 +146,7 @@ export class Textfield extends LitElement {
     #visibleLabel {
       color: var(--cros-sys-on_surface);
       padding-bottom: 8px;
+      font: var(--cros-typography-label1);
     }
   `;
 
