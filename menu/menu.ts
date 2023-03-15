@@ -25,6 +25,7 @@ export class Menu extends LitElement {
       --md-menu-container-surface-tint-layer-color: white;
       --md-menu-container-shape: 8px;
       --md-list-list-item-one-line-container-height: 36px;
+      --md-list-list-item-label-text-type: var(--cros-typography-body2);
     }
   `;
 

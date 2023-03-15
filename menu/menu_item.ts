@@ -25,6 +25,9 @@ export class MenuItem extends LitElement {
   // TODO(b/198759625): Remove negative margin-inline-end when mwc token
   // available (padding 16px)
   static override styles: CSSResultGroup = css`
+    md-menu-item {
+      --md-list-list-item-label-text-type: var(--cros-typography-body2);
+    }
     :host {
       display: inline block;
     }
@@ -35,6 +38,9 @@ export class MenuItem extends LitElement {
     cros-switch {
       width: 32px;
       height: 18px;
+    }
+    .slot-end {
+      font: var(--cros-typography-body2);
     }
   `;
 
