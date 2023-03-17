@@ -6,14 +6,12 @@
 
 import {MdCheckbox} from '@material/web/checkbox/checkbox.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators';
 
 /**
  * A ChromeOS compliant checkbox.
  * See spec
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2796%3A12821&t=yiSJIVSrbtOP4ZCo-0
  */
-@customElement('cros-checkbox')
 export class Checkbox extends LitElement {
   static override styles: CSSResultGroup = css`
     md-checkbox {
@@ -41,11 +39,18 @@ export class Checkbox extends LitElement {
       --md-checkbox-selected-disabled-container-opacity: 38%;
     }
   `;
+  static override properties = {
+    checked: {type: Boolean, reflect: true},
+    disabled: {type: Boolean},
+  };
 
-  @query('md-checkbox') mdCheckbox?: MdCheckbox;
+  checkedInternal: boolean;
+  disabled: boolean;
 
-  checkedInternal: boolean = false;
-  @property({type: Boolean, reflect: true})
+  get mdCheckbox(): MdCheckbox {
+    return this.renderRoot.querySelector('md-checkbox') as MdCheckbox;
+  }
+
   get checked() {
     return this.mdCheckbox?.checked || false;
   }
@@ -56,7 +61,11 @@ export class Checkbox extends LitElement {
     this.requestUpdate();
   }
 
-  @property({type: Boolean}) disabled = false;
+  constructor() {
+    super();
+    this.disabled = false;
+    this.checkedInternal = false;
+  }
 
   override render() {
     return html`
@@ -65,6 +74,8 @@ export class Checkbox extends LitElement {
     `;
   }
 }
+
+customElements.define('cros-checkbox', Checkbox);
 
 declare global {
   interface HTMLElementTagNameMap {
