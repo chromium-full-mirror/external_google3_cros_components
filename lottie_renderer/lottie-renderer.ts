@@ -6,7 +6,7 @@
 
 import {assertExists} from 'google3/javascript/common/asserts/asserts';
 import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
-import {html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, query} from 'lit/decorators';
 import {trustedResourceUrl} from 'safevalues';
 import {safeWorker} from 'safevalues/dom';
@@ -25,7 +25,13 @@ export enum CrosLottieEvent {
   INITIALIZED = `cros-lottie-initialized`,
   PAUSED = `cros-lottie-paused`,
   PLAYING = `cros-lottie-playing`,
+  RESIZED = `cros-lottie-resized`,
   STOPPED = `cros-lottie-stopped`,
+}
+
+interface ResizeDetail {
+  width: number;
+  height: number;
 }
 
 /**
@@ -60,12 +66,23 @@ export class LottieRenderer extends LitElement {
   private animationIsLoaded = false;
 
   /**
+   * If the canvas is resized before an animation has finished initializing,
+   * we wait and send the size once it's loaded fully into the worker.
+   */
+  private workerNeedsSizeUpdate = false;
+
+  /**
    * If there is a control command (play, pause, stop) before the animation has
    * finished initializing, it should be queued and completed after successful
    * initializaton.
    */
   private workerNeedsControlUpdate = false;
   private playStateInternal = false;
+
+  /**
+   * Propagates resize events from the onscreen canvas to the offscreen one.
+   */
+  private resizeObserver: ResizeObserver|null = null;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -77,6 +94,9 @@ export class LottieRenderer extends LitElement {
 
   override firstUpdated() {
     assertExists(this.onscreenCanvas);
+    this.resizeObserver =
+        new ResizeObserver(this.onCanvasElementResized.bind(this));
+    this.resizeObserver.observe(this.onscreenCanvas);
     this.offscreenCanvas = this.onscreenCanvas.transferControlToOffscreen();
     this.initAnimation();
   }
@@ -87,8 +107,21 @@ export class LottieRenderer extends LitElement {
       this.worker.terminate();
       this.worker = null;
     }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 
+  static override styles: CSSResultGroup = css`
+    :host {
+      display: inline-block;
+    }
+
+    canvas {
+      height: 100%;
+      width: 100%;
+    }
+  `;
 
   override render() {
     return html`
@@ -169,6 +202,23 @@ export class LottieRenderer extends LitElement {
     return drawSize;
   }
 
+  /**
+   * Handles the canvas element resize event. If the animation isn't fully
+   * loaded, the canvas size is sent later, once the loading is done.
+   */
+  private onCanvasElementResized() {
+    if (!this.animationIsLoaded) {
+      this.workerNeedsSizeUpdate = true;
+      return;
+    }
+    this.sendCanvasSizeToWorker();
+  }
+
+  private sendCanvasSizeToWorker() {
+    assertExists(this.worker);
+    this.worker.postMessage({drawSize: this.getCanvasDrawBufferSize()});
+  }
+
   private setPlayState(play: boolean, expectedEvent: CrosLottieEvent) {
     this.playStateInternal = play;
     if (!this.animationIsLoaded) {
@@ -201,14 +251,18 @@ export class LottieRenderer extends LitElement {
       case 'stopped':
         this.fire(CrosLottieEvent.STOPPED);
         break;
+      case 'resized':
+        this.fire(CrosLottieEvent.RESIZED, event.data.size);
+        break;
       default:
         console.log(`unknown message type received: ${message}`);
         break;
     }
   }
 
-  private fire(event: CrosLottieEvent) {
-    this.dispatchEvent(new CustomEvent(event, {bubbles: true, composed: true}));
+  private fire(event: CrosLottieEvent, detail: ResizeDetail|null = null) {
+    this.dispatchEvent(
+        new CustomEvent(event, {bubbles: true, composed: true, detail}));
   }
 
   /**
@@ -217,6 +271,10 @@ export class LottieRenderer extends LitElement {
    * was not yet fully loaded.
    */
   private sendPendingInfo() {
+    if (this.workerNeedsSizeUpdate) {
+      this.workerNeedsSizeUpdate = false;
+      this.sendCanvasSizeToWorker();
+    }
     if (this.workerNeedsControlUpdate) {
       this.workerNeedsControlUpdate = false;
       this.sendPlayControlToWorker();
