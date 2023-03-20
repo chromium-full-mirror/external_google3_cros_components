@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/menu/menu.js';
-
+import {Corner} from '@material/web/menu/menu.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators';
 
@@ -29,13 +28,21 @@ export class Menu extends LitElement {
     }
   `;
 
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
   @property({attribute: false}) anchor: HTMLElement|null = null;
+  @property({attribute: 'anchor-corner'}) anchorCorner: Corner = 'END_START';
   @state() open = false;
+  @property({type: Boolean, attribute: 'has-overflow'}) hasOverflow = false;
 
   override render() {
     return html`
       <md-menu .anchor=${this.anchor} ?open=${this.open} @closed=${
-        this.hide}> <slot></slot>
+        this.close} ?has-overflow=${this.hasOverflow} anchor-corner=${
+        this.anchorCorner} delegatesFocus> <slot></slot>
       </md-menu>
     `;
   }
@@ -44,7 +51,7 @@ export class Menu extends LitElement {
     this.open = true;
   }
 
-  hide() {
+  close() {
     this.open = false;
   }
 }
