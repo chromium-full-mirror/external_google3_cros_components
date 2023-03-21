@@ -32,7 +32,9 @@ export class Button extends LitElement {
       min-width: ${MIN_WIDTH};
       --md-filled-button-container-height: ${CONTAINER_HEIGHT};
       --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
+      --md-filled-button-disabled-container-opacity: 100%;
       --md-filled-button-disabled-label-text-color: var(--cros-sys-disabled);
+      --md-filled-button-disabled-label-text-opacity: 100%;
       --md-filled-button-focus-state-layer-opacity: 100%;
       --md-filled-button-hover-container-elevation: 0;
       --md-filled-button-hover-state-layer-opacity: 100%;
@@ -41,6 +43,7 @@ export class Button extends LitElement {
       --md-filled-button-spacing-trailing: ${PADDING};
       --md-filled-button-with-icon-icon-size: ${ICON_SIZE};
       --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-button-with-icon-disabled-icon-opacity: 100%;
       --md-filled-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
       --md-filled-button-with-icon-spacing-trailing: ${PADDING};
       --md-filled-button-with-trailing-icon-spacing-leading: ${PADDING};
@@ -71,6 +74,7 @@ export class Button extends LitElement {
       min-width: ${MIN_WIDTH};
       --md-text-button-container-height: ${CONTAINER_HEIGHT};
       --md-text-button-disabled-label-text-color: var(--cros-sys-disabled);
+      --md-text-button-disabled-label-text-opacity: 100%;
       --md-text-button-focus-state-layer-opacity: 100%;
       --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-text-button-hover-state-layer-opacity: 100%;
@@ -79,6 +83,7 @@ export class Button extends LitElement {
       --md-text-button-spacing-leading: ${PADDING};
       --md-text-button-spacing-trailing: ${PADDING};
       --md-text-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
+      --md-text-button-with-icon-disabled-icon-opacity: 100%;
       --md-text-button-with-icon-icon-size: ${ICON_SIZE};
       --md-text-button-with-icon-icon-color: var(--cros-sys-primary);
       --md-text-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
