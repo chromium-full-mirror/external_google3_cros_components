@@ -103,40 +103,45 @@ export class Textfield extends LitElement {
     }
 
     md-filled-text-field {
-      --md-filled-text-field-active-indicator-height: 0;
+      --md-filled-field-container-padding-vertical: 8px;
+      --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
+      --md-filled-field-supporting-text-type: var(--cros-typography-label2);
+      --md-filled-field-supporting-text-padding: 0px;
+      --md-filled-field-supporting-text-padding-top: 8px;;
       --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
+      --md-filled-text-field-active-indicator-height: 0;
       --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_BASE};
       --md-filled-text-field-container-padding-vertical: 6px;
-      --md-filled-text-field-container-shape-start-start: 8px;
-      --md-filled-text-field-container-shape-start-end: 8px;
-      --md-filled-text-field-container-shape-end-start: 8px;
       --md-filled-text-field-container-shape-end-end: 8px;
+      --md-filled-text-field-container-shape-end-start: 8px;
+      --md-filled-text-field-container-shape-start-end: 8px;
+      --md-filled-text-field-container-shape-start-start: 8px;
       --md-filled-text-field-disabled-active-indicator-height: 0;
       --md-filled-text-field-disabled-input-text-color: var(--cros-sys-disabled);
-      --md-filled-text-field-error-supporting-text-color: var(--cros-sys-error);
-      --md-filled-text-field-error-hover-state-layer-opacity: 0;
-      --md-filled-text-field-error-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-error-focus-active-indicator-color: var(--cros-sys-error);
+      --md-filled-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-error-hover-state-layer-opacity: 0;
       --md-filled-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
+      --md-filled-text-field-error-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-error-supporting-text-color: var(--cros-sys-error);
       --md-filled-text-field-focus-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-focus-active-indicator-height: 2px;
-      --md-filled-text-field-hover-state-layer-opacity: 0;
-      --md-filled-text-field-hover-active-indicator-height: 0;
+      --md-filled-text-field-focus-caret-color: var(--cros-sys-primary);
+      --md-filled-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-input-text-suffix-padding: 16px;
+      --md-filled-text-field-input-text-type: var(--cros-typography-body2);
+      --md-filled-text-field-hover-active-indicator-height: 0;
       --md-filled-text-field-hover-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-focus-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-hover-state-layer-opacity: 0;
+      --md-filled-text-field-label-text-type: var(--cros-typography-body2);
       --md-filled-text-field-pressed-active-indicator-height: 2px;
       --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-supporting-text-color: var(--cros-sys-on_surface);
       width: 100%;
-      --md-filled-text-field-input-text-type: var(--cros-typography-body2);
-      --md-filled-text-field-label-text-type: var(--cros-typography-body2);
-      --md-filled-field-supporting-text-type: var(--cros-typography-label2);
     }
 
     :host([shaded]) md-filled-text-field {
