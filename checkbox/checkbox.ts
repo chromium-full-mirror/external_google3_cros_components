@@ -13,6 +13,7 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2796%3A12821&t=yiSJIVSrbtOP4ZCo-0
  */
 export class Checkbox extends LitElement {
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-checkbox {
       --md-checkbox-container-size: 20px;
@@ -39,6 +40,7 @@ export class Checkbox extends LitElement {
       --md-checkbox-selected-disabled-container-opacity: 38%;
     }
   `;
+  /** @nocollapse */
   static override properties = {
     checked: {type: Boolean, reflect: true},
     disabled: {type: Boolean},

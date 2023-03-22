@@ -26,6 +26,7 @@ export class Button extends LitElement {
   // Note that theme colours have opacity defined in the colour, but default
   // colours have opacities set separately. As a consequence, styles are broken
   // unless a cros theme is present.
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-filled-button {
       max-width: ${MAX_WIDTH};
@@ -103,6 +104,7 @@ export class Button extends LitElement {
   /** How the button should be styled. One of {primary, secondary, text} */
   buttonStyle: 'primary'|'secondary'|'text' = 'primary';
 
+  /** @nocollapse */
   static override properties = {
     label: {type: String},
     disabled: {type: Boolean},
