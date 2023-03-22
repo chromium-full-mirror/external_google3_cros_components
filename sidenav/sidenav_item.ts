@@ -5,6 +5,7 @@
  */
 
 import 'google3/third_party/javascript/cros_components/icon/icon';
+import '@material/web/ripple/ripple.js';
 
 import {ripple} from '@material/web/ripple/directive.js';
 import {MdRipple} from '@material/web/ripple/ripple.js';
