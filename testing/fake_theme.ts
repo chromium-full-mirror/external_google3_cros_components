@@ -391,6 +391,16 @@ export function getThemeForTesting() {
       --cros-sys-shadow: #46464aff;
       --cros-sys-pressed_on_prominent: #a19fa33d;
       --cros-sys-pressed_on_subtle: #1b1b1f2b;
+      --cros-sys-illo-color1: #aac7ffff;
+      --cros-sys-illo-color1-1: #565f71ff;
+      --cros-sys-illo-color1-2: #3e4759ff;
+      --cros-sys-illo-color2: #6cdba9ff;
+      --cros-sys-illo-color3: #ffb94fff;
+      --cros-sys-illo-color4: #ffb3b6ff;
+      --cros-sys-illo-color5: #705575ff;
+      --cros-sys-illo-color6: #6e778bff;
+      --cros-sys-illo-base: #000000ff;
+      --cros-sys-illo-secondary: #5b5e66ff;
     }
 
     .pink {
@@ -480,6 +490,16 @@ export function getThemeForTesting() {
       --cros-sys-shadow: #46474aff;
       --cros-sys-pressed_on_prominent: #a09fa33d;
       --cros-sys-pressed_on_subtle: #1a1b1e2b;
+      --cros-sys-illo-color1: #00458dff;
+      --cros-sys-illo-color1-1: #aac7ffff;
+      --cros-sys-illo-color1-2: #d6e3ffff;
+      --cros-sys-illo-color2: #00885eff;
+      --cros-sys-illo-color3: #624000ff;
+      --cros-sys-illo-color4: #e12e4dff;
+      --cros-sys-illo-color5: #c0a1c4ff;
+      --cros-sys-illo-color6: #dae2f9ff;
+      --cros-sys-illo-base: #ffffffff;
+      --cros-sys-illo-secondary: #e0e2ecff;
     }
   }
 
@@ -562,6 +582,16 @@ export function getThemeForTesting() {
       --cros-sys-shadow: #000000ff;
       --cros-sys-pressed_on_prominent: #1b1b1f22;
       --cros-sys-pressed_on_subtle: #efecf03d;
+      --cros-sys-illo-color1: #00458dff;
+      --cros-sys-illo-color1-1: #aac7ffff;
+      --cros-sys-illo-color1-2: #d6e3ffff;
+      --cros-sys-illo-color2: #00885eff;
+      --cros-sys-illo-color3: #624000ff;
+      --cros-sys-illo-color4: #e12e4dff;
+      --cros-sys-illo-color5: #c0a1c4ff;
+      --cros-sys-illo-color6: #dae2f9ff;
+      --cros-sys-illo-base: #ffffffff;
+      --cros-sys-illo-secondary: #e0e2ecff;
     }
 
     .pink {
@@ -651,6 +681,16 @@ export function getThemeForTesting() {
       --cros-sys-shadow: #000000ff;
       --cros-sys-pressed_on_prominent: #1a1b1e22;
       --cros-sys-pressed_on_subtle: #eeecf03d;
+      --cros-sys-illo-color1: #aac7ffff;
+      --cros-sys-illo-color1-1: #565f71ff;
+      --cros-sys-illo-color1-2: #3e4759ff;
+      --cros-sys-illo-color2: #6cdba9ff;
+      --cros-sys-illo-color3: #ffb94fff;
+      --cros-sys-illo-color4: #ffb3b6ff;
+      --cros-sys-illo-color5: #705575ff;
+      --cros-sys-illo-color6: #6e778bff;
+      --cros-sys-illo-base: #000000ff;
+      --cros-sys-illo-secondary: #5b5e66ff;
     }
   }
 
