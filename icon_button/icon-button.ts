@@ -12,45 +12,65 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators';
 
 /**
+ * Floating icon buttons have two variants that differ only by container
+ * background, designed to improve contrast depending on the color of the
+ * surface behind it:
+ * 1) on-selectable-prominent (darker background, light icon color)
+ * 2) on-selectable-subtle (lighter background, dark icon color)
+ */
+const ICON_ON_SELECTABLE_PROMINENT = css`var(--cros-sys-on_primary)`;
+const ICON_ON_SELECTABLE_SUBTLE = css`var(--cros-sys-on_primary_container)`;
+
+/**
  * A cros compliant icon-button component.
  * See spec:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2447%3A5928
  */
 @customElement('cros-icon-button')
 export class IconButton extends LitElement {
+  /**
+   * When false, uses lighter container and darker icon color. When true, uses
+   * darker container and lighter icon color.
+   */
+  @property({type: Boolean, reflect: true}) prominent = false;
+
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
     }
     md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-icon-size: 20px;
-      --md-filled-tonal-icon-button-container-size: 40px;
-      --md-filled-tonal-icon-button-container-shape: 12px;
       --md-filled-tonal-icon-button-container-color: var(--cros-sys-surface_variant);
-      --md-filled-tonal-icon-button-icon-color: var(--cros-sys-on_surface);
+      --md-filled-tonal-icon-button-container-shape: 12px;
+      --md-filled-tonal-icon-button-container-size: 40px;
       --md-filled-tonal-icon-button-focus-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-hover-icon-color: var(--cros-sys-on_surface);
+      --md-filled-tonal-icon-button-icon-color: var(--cros-sys-on_surface);
+      --md-filled-tonal-icon-button-icon-size: 20px;
       --md-filled-tonal-icon-button-pressed-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-selected-focus-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-selected-pressed-icon-color: var(--cros-sys-on_surface);
     }
     md-standard-icon-button {
       --md-icon-button-icon-size: 20px;
-      --md-icon-button-state-layer-size: 40px;
+      --md-icon-button-selected-focus-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-selected-hover-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-selected-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-selected-pressed-icon-color: ${
+      ICON_ON_SELECTABLE_SUBTLE};
       --md-icon-button-state-layer-shape: 12px;
-      --md-icon-button-unselected-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-selected-focus-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-selected-hover-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-selected-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-selected-pressed-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-unselected-pressed-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-unselected-focus-icon-color: var(--cros-sys-on_surface);
-      --md-icon-button-unselected-hover-icon-color: var(--cros-sys-on_surface);
+      --md-icon-button-state-layer-size: 40px;
+      --md-icon-button-unselected-focus-icon-color: ${
+      ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-unselected-hover-icon-color: ${
+      ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-unselected-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-unselected-pressed-icon-color: ${
+      ICON_ON_SELECTABLE_SUBTLE};
     }
     md-standard-icon-button.small {
       --md-icon-button-icon-size: 16px;
-      --md-icon-button-state-layer-size: 32px;
       --md-icon-button-state-layer-shape: 100%;
+      --md-icon-button-state-layer-size: 32px;
     }
     md-standard-icon-button.large {
       --md-icon-button-icon-size: 24px;
@@ -59,15 +79,31 @@ export class IconButton extends LitElement {
       width: 80px;
       margin: 0;
     }
+    :host([prominent]) md-standard-icon-button {
+      --md-icon-button-selected-focus-icon-color: ${
+      ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-selected-hover-icon-color: ${
+      ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-selected-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-selected-pressed-icon-color: ${
+      ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-unselected-focus-icon-color: ${
+      ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-unselected-hover-icon-color: ${
+      ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-unselected-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-unselected-pressed-icon-color: ${
+      ICON_ON_SELECTABLE_PROMINENT};
+    }
     md-filled-tonal-icon-button.small {
-      --md-filled-tonal-icon-button-icon-size: 16px;
-      --md-filled-tonal-icon-button-container-size: 32px;
       --md-filled-tonal-icon-button-container-shape: 100%;
+      --md-filled-tonal-icon-button-container-size: 32px;
+      --md-filled-tonal-icon-button-icon-size: 16px;
     }
     md-filled-tonal-icon-button.large {
-      --md-filled-tonal-icon-button-icon-size: 24px;
       --md-filled-tonal-icon-button-container-shape: 16px;
       --md-filled-tonal-icon-button-container-size: 80px;
+      --md-filled-tonal-icon-button-icon-size: 24px;
       width: 80px;
       height: 64px;
       margin: 0;
