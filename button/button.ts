@@ -51,7 +51,7 @@ export class Button extends LitElement {
       --md-filled-button-with-trailing-icon-spacing-trailing: ${
       PADDING_ICON_SIDE};
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-filled-button-label-text-type: var(--cros-typography-body2);
+      --md-filled-button-label-text-type: var(--cros-typography-button2);
     }
 
     md-filled-button.primary {
@@ -94,7 +94,7 @@ export class Button extends LitElement {
       PADDING_ICON_SIDE};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-text-button-label-text-type: var(--cros-typography-body2);
+      --md-text-button-label-text-type: var(--cros-typography-button2);
     }
   `;
 

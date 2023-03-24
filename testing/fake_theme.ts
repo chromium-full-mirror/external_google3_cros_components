@@ -15,7 +15,7 @@ import {safeLinkEl} from 'safevalues/dom';
 const GOOGLE_SANS_FONT_URL =
     trustedResourceUrl`https://fonts.googleapis.com/css2?family=Google+Sans:opsz,wght@17..18,400;17..18,500;17..18,700&display=swap`;
 const GOOGLE_SANS_TEXT_FONT_URL =
-    trustedResourceUrl`https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@500&display=swap`;
+    trustedResourceUrl`https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@400;500&display=swap`;
 
 /** A fake ChromeOS theme for testing. */
 export function getThemeForTesting() {
@@ -38,11 +38,11 @@ export function getThemeForTesting() {
     --cros-typography-button2: 500 13px/20px "Google Sans Text";
     --cros-typography-body0: 500 16px/24px "Google Sans Text";
     --cros-typography-body1: 500 14px/20px "Google Sans Text";
-    --cros-typography-body2: 500 13px/20px "Google Sans Text";
+    --cros-typography-body2: 400 13px/20px "Google Sans Text";
     --cros-typography-annotation1: 500 12px/18px "Google Sans Text";
     --cros-typography-annotation2: 500 11px/16px "Google Sans Text";
     --cros-typography-label1: 500 10px/10px "Google Sans Text";
-    --cros-typography-label2: 500 10px/10px "Google Sans Text";
+    --cros-typography-label2: 400 10px/10px "Google Sans Text";
   }
 
   * {

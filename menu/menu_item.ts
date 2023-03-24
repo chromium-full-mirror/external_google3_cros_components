@@ -26,7 +26,7 @@ export class MenuItem extends LitElement {
   // available (padding 16px)
   static override styles: CSSResultGroup = css`
     md-menu-item {
-      --md-list-list-item-label-text-type: var(--cros-typography-body2);
+      --md-list-list-item-label-text-type: var(--cros-typography-button2);
     }
     :host {
       display: inline block;
@@ -40,7 +40,7 @@ export class MenuItem extends LitElement {
       height: 18px;
     }
     .slot-end {
-      font: var(--cros-typography-body2);
+      font: var(--cros-typography-button2);
     }
   `;
 
