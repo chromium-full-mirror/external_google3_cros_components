@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/menu/menu.js';
 import {Corner} from '@material/web/menu/menu.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators';

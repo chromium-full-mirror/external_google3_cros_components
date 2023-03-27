@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/menu/menu.js';
 import '@material/web/menu/sub-menu-item';
 import '@material/web/menu/menu-item';
 import './menu_item';
@@ -27,6 +28,13 @@ export class SubMenuItem extends LitElement {
         <slot name="submenu" slot="submenu"></slot>
       </md-sub-menu-item>
     `;
+  }
+  show() {
+    if (this.renderRoot.querySelector('md-sub-menu-item') === null) {
+      throw new Error(
+          'Called show before menu has rendered, maybe try await updateComplete.');
+    }
+    this.renderRoot.querySelector('md-sub-menu-item')!.show();
   }
 }
 
