@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import './sidenav_item';
+
 import {css, html, LitElement} from 'lit';
 import {customElement, query, state} from 'lit/decorators';
 

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/switch/switch.js';
+
 import {MdSwitch} from '@material/web/switch/switch.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, query} from 'lit/decorators';

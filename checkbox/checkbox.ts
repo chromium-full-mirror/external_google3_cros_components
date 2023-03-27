@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/checkbox/checkbox.js';
+
 import {MdCheckbox} from '@material/web/checkbox/checkbox.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 

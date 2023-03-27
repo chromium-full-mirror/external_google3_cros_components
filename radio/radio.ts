@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/radio/radio.js';
+
 import {MdRadio} from '@material/web/radio/radio.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, query} from 'lit/decorators';
