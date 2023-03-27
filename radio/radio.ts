@@ -20,11 +20,12 @@ export class Radio extends LitElement {
       display: inline-block;
     }
     md-radio {
-      --md-sys-color-primary: var(--cros-sys-primary);
-      --md-sys-color-on-surface: var(--cros-sys-on_surface);
+      --md-focus-ring-color: var(--cros-sys-primary);
+      --md-radio-unselected-icon-color: var(--cros-sys-on_surface);
       --md-ripple-pressed-color: var(--cros-sys-ripple_primary);
       --md-ripple-pressed-opacity: 32%;
-      --md-focus-ring-color: var(--cros-sys-primary);
+      --md-sys-color-on-surface: var(--cros-sys-on_surface);
+      --md-sys-color-primary: var(--cros-sys-primary);
     }
   `;
 
