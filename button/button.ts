@@ -59,7 +59,7 @@ export class Button extends LitElement {
       --md-sys-color-on-primary: var(--cros-sys-on_primary);
       --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary);
       --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
-      --md-filled-button-pressed-state-layer-color: var(--cros-sys-hover_on_prominent);
+      --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
 
     md-filled-button.secondary {
