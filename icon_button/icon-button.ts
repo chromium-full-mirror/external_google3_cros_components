@@ -9,7 +9,6 @@ import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '@material/web/iconbutton/standard-icon-button.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators';
 
 /**
  * Floating icon buttons have two variants that differ only by container
@@ -26,14 +25,16 @@ const ICON_ON_SELECTABLE_SUBTLE = css`var(--cros-sys-on_primary_container)`;
  * See spec:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2447%3A5928
  */
-@customElement('cros-icon-button')
 export class IconButton extends LitElement {
   /**
    * When false, uses lighter container and darker icon color. When true, uses
    * darker container and lighter icon color.
    */
-  @property({type: Boolean, reflect: true}) prominent = false;
+  prominent: boolean;
+  iconButtonStyle: 'filled'|'floating'|'onImage';
+  iconButtonSize: 'small'|'default'|'large';
 
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
@@ -110,10 +111,19 @@ export class IconButton extends LitElement {
     }
   `;
 
-  @property({type: String})
-  iconButtonStyle: 'filled'|'floating'|'onImage' = 'filled';
-  @property({type: String})
-  iconButtonSize: 'small'|'default'|'large' = 'default';
+  /** @nocollapse */
+  static override properties = {
+    prominent: {type: Boolean, reflect: true},
+    iconButtonStyle: {type: String},
+    iconButtonSize: {type: String},
+  };
+
+  constructor() {
+    super();
+    this.prominent = false;
+    this.iconButtonStyle = 'filled';
+    this.iconButtonSize = 'default';
+  }
 
   override render() {
     if (this.iconButtonStyle === 'floating') {
@@ -128,6 +138,8 @@ export class IconButton extends LitElement {
     }
   }
 }
+
+customElements.define('cros-icon-button', IconButton);
 
 declare global {
   interface HTMLElementTagNameMap {

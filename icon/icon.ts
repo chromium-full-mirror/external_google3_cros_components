@@ -10,6 +10,7 @@ import {customElement} from 'lit/decorators';
 /** A ChromeOS compliant icon. */
 @customElement('cros-icon')
 export class Icon extends LitElement {
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
       :host {
         background-color: currentcolor;

@@ -5,15 +5,15 @@
  */
 
 import {html, LitElement} from 'lit';
-import {customElement} from 'lit/decorators';
 
 /** A static illustration for SVG illustrations. */
-@customElement('cros-static-illustration')
 export class StaticIllustration extends LitElement {
   override render() {
     return html`TBD`;
   }
 }
+
+customElements.define('cros-static-illustration', StaticIllustration);
 
 declare global {
   interface HTMLElementTagNameMap {
