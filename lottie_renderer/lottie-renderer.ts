@@ -7,7 +7,6 @@
 import {assertExists} from 'google3/javascript/common/asserts/asserts';
 import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators';
 import {trustedResourceUrl} from 'safevalues';
 import {safeWorker} from 'safevalues/dom';
 
@@ -39,18 +38,20 @@ interface ResizeDetail {
  * currently only supports static illustrations, but will eventually support
  * animations via an offscreen canvas.
  */
-@customElement('cros-lottie-renderer')
 export class LottieRenderer extends LitElement {
   /** The path to the lottie asset JSON file. */
-  @property({attribute: true}) assetUrl!: string;
+  assetUrl!: string;
+
   /** When true, animation will begin to play as soon as it's loaded. */
-  @property({attribute: true, type: Boolean}) autoplay = true;
+  autoplay: boolean;
 
   /** When true, animation will loop continuously. */
-  @property({attribute: true, type: Boolean}) loop = true;
+  loop: boolean;
 
   /** The onscreen canvas controlled by lottie_worker.js. */
-  @query('#onscreen-canvas') onscreenCanvas!: HTMLCanvasElement;
+  get onscreenCanvas(): HTMLCanvasElement|null {
+    return this.renderRoot.querySelector('#onscreen-canvas');
+  }
 
   /** The worker thread running the lottie library. */
   private worker: Worker|null = null;
@@ -84,6 +85,31 @@ export class LottieRenderer extends LitElement {
    */
   private resizeObserver: ResizeObserver|null = null;
 
+  /** @nocollapse */
+  static override styles: CSSResultGroup = css`
+    :host {
+      display: inline-block;
+    }
+
+    canvas {
+      height: 100%;
+      width: 100%;
+    }
+  `;
+
+  /** @nocollapse */
+  static override properties = {
+    assetUrl: {type: String, attribute: 'asset-url'},
+    autoplay: {type: Boolean, attribute: true},
+    loop: {type: Boolean, attribute: true},
+  };
+
+  constructor() {
+    super();
+    this.autoplay = true;
+    this.loop = true;
+  }
+
   override connectedCallback() {
     super.connectedCallback();
     if (!this.worker) {
@@ -111,17 +137,6 @@ export class LottieRenderer extends LitElement {
       this.resizeObserver.disconnect();
     }
   }
-
-  static override styles: CSSResultGroup = css`
-    :host {
-      display: inline-block;
-    }
-
-    canvas {
-      height: 100%;
-      width: 100%;
-    }
-  `;
 
   override render() {
     return html`
@@ -192,9 +207,8 @@ export class LottieRenderer extends LitElement {
    * rasterization is crisp and sharp rather than blurry.
    */
   private getCanvasDrawBufferSize() {
-    const canvasElement = this.onscreenCanvas;
     const devicePixelRatio = window.devicePixelRatio;
-    const clientRect = canvasElement.getBoundingClientRect();
+    const clientRect = this.onscreenCanvas!.getBoundingClientRect();
     const drawSize = {
       width: clientRect.width * devicePixelRatio,
       height: clientRect.height * devicePixelRatio,
@@ -281,6 +295,8 @@ export class LottieRenderer extends LitElement {
     }
   }
 }
+
+customElements.define('cros-lottie-renderer', LottieRenderer);
 
 declare global {
   interface HTMLElementTagNameMap {
