@@ -9,21 +9,15 @@ import '../icon/icon';
 import '../switch/switch';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators';
 
 /**
  * A cros compliant menu-item component for use in cros-menu.
  */
-@customElement('cros-menu-item')
 export class MenuItem extends LitElement {
-  // Headline is the primary text of the list item, name follows from
-  // md-menu-item.
-  @property({type: String}) headline = '';
-  @property({type: String}) itemStart: 'icon'|'' = '';
-  @property({type: String}) itemEnd: 'shortcut'|'icon'|'switch'|null = null;
-
+  /** @nocollapse */
   // TODO(b/198759625): Remove negative margin-inline-end when mwc token
   // available (padding 16px)
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-menu-item {
       --md-list-list-item-label-text-type: var(--cros-typography-button2);
@@ -43,6 +37,28 @@ export class MenuItem extends LitElement {
       font: var(--cros-typography-button2);
     }
   `;
+  /** @nocollapse */
+  static override properties = {
+    headline: {type: String},
+    itemStart: {type: String},
+    itemEnd: {type: String},
+  };
+
+  /**
+   * Headline is the primary text of the list item, name follows from
+   * md-menu-item.
+   */
+  headline: string;
+  itemStart: 'icon'|'';
+  itemEnd: 'shortcut'|'icon'|'switch'|null;
+
+  constructor() {
+    super();
+
+    this.headline = '';
+    this.itemStart = '';
+    this.itemEnd = null;
+  }
 
   override render() {
     let slotEnd;
@@ -82,6 +98,8 @@ export class MenuItem extends LitElement {
       `;
   }
 }
+
+customElements.define('cros-menu-item', MenuItem);
 
 declare global {
   interface HTMLElementTagNameMap {

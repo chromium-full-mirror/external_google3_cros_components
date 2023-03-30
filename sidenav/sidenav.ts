@@ -6,8 +6,8 @@
 
 import './sidenav_item';
 
-import {css, html, LitElement} from 'lit';
-import {customElement, query, state} from 'lit/decorators';
+import {castExists} from 'google3/javascript/common/asserts/asserts';
+import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {SidenavItem, TreeItemCollapsedEvent, TreeItemEnabledChangedEvent, TreeItemExpandedEvent} from './sidenav_item';
 import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
@@ -52,8 +52,23 @@ function isSelectable(item: SidenavItem): boolean {
  * <cros-sidenav>, this is because we need to make sure only one item is being
  * enabled or focused.
  */
-@customElement('cros-sidenav')
 export class Sidenav extends LitElement {
+  /** @nocollapse */
+  static override styles: CSSResultGroup = css`
+      :host {
+        display: block;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+  `;
+  /** @nocollapse */
+  static override properties = {ariaSetSize: {type: String}};
+
+  /** @nocollapse */
   static get events() {
     return {
       /** Triggers when a tree item has been enabled. */
@@ -92,13 +107,15 @@ export class Sidenav extends LitElement {
   }
 
   /** The default unnamed slot to let consumer pass children tree items. */
-  @query('slot') private readonly childrenSlot!: HTMLSlotElement;
+  private get childrenSlot(): HTMLSlotElement {
+    return castExists(this.renderRoot.querySelector('slot'));
+  }
 
   /**
    * Value to set aria-setsize, which is the number of the top level child tree
    * items.
    */
-  @state() override ariaSetSize = '0';
+  override ariaSetSize = '0';
 
   /**
    * The `selectedItem` is the item that the user navigated to. If the user
@@ -108,20 +125,6 @@ export class Sidenav extends LitElement {
    */
   private get selectedItem(): SidenavItem|null {
     return this.items.find(item => item.tabIndex === 0) || null;
-  }
-
-  static override get styles() {
-    return css`
-      :host {
-        display: block;
-      }
-
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-    `;
   }
 
   override render() {
@@ -369,6 +372,8 @@ export class Sidenav extends LitElement {
     }
   }
 }
+
+customElements.define('cros-sidenav', Sidenav);
 
 /** Type of the tree item enabling custom event. */
 export type SidenavEnabledChangedEvent = CustomEvent<{

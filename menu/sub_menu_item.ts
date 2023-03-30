@@ -10,17 +10,28 @@ import '@material/web/menu/menu-item';
 import './menu_item';
 
 import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators';
 
 /**
  * ChromeOS menu item which represents an openable submenu.
  * Hovering or clicking element will open a second submenu.
  */
-@customElement('cros-sub-menu-item')
 export class SubMenuItem extends LitElement {
-  // Headline is the primary text of the list item, name follows from
-  // md-menu-item.
-  @property({type: String}) headline = '';
+  /** @nocollapse */
+  static override properties = {
+    headline: {type: String},
+  };
+
+  /**
+   * Headline is the primary text of the list item, name follows
+   * from md-menu-item.
+   */
+  headline: string;
+
+  constructor() {
+    super();
+
+    this.headline = '';
+  }
 
   override render() {
     return html`
@@ -29,6 +40,7 @@ export class SubMenuItem extends LitElement {
       </md-sub-menu-item>
     `;
   }
+
   show() {
     if (this.renderRoot.querySelector('md-sub-menu-item') === null) {
       throw new Error(
@@ -37,6 +49,8 @@ export class SubMenuItem extends LitElement {
     this.renderRoot.querySelector('md-sub-menu-item')!.show();
   }
 }
+
+customElements.define('cros-sub-menu-item', SubMenuItem);
 
 declare global {
   interface HTMLElementTagNameMap {

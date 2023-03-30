@@ -9,8 +9,8 @@ import '@material/web/ripple/ripple.js';
 
 import {ripple} from '@material/web/ripple/directive.js';
 import {MdRipple} from '@material/web/ripple/ripple.js';
+import {castExists} from 'google3/javascript/common/asserts/asserts';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-import {customElement, property, query, queryAsync} from 'lit/decorators';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
 
@@ -68,66 +68,8 @@ const LABEL_ONLY_MARGIN = css`24px`;
 const ITEM_GAP = css`8px`;
 
 /** An item for a ChromeOS compliant sidenav element. */
-@customElement('cros-sidenav-item')
 export class SidenavItem extends LitElement {
-  /**
-   * The `separator` attribute will show a top border for the tree item. It's
-   * mainly used to identify this tree item is a start of the new section.
-   */
-  @property({type: Boolean, reflect: true}) separator = false;
-
-  /**
-   * Indicate if a tree item is disabled or not. Disabled tree item will have
-   * a greyed out color, can't be enabled, can't get focus. It can still have
-   * children, but it can't be expanded, and the expand icon will be hidden.
-   */
-  @property({type: Boolean, reflect: true}) disabled = false;
-
-  /** Indicate if a tree item has been enabled or not. */
-  @property({type: Boolean, reflect: true}) enabled = false;
-
-  /** Indicate if a tree item has been expanded or not. */
-  @property({type: Boolean, reflect: true}) expanded = false;
-
-  /** Indicate if a tree item is in renaming mode or not. */
-  @property({type: Boolean, reflect: true}) renaming = false;
-
-  /** Indicate the item contains an error. */
-  @property({type: Boolean, reflect: true}) error = false;
-
-  /**
-   * A tree item will have children if the child tree items have been inserted
-   * into its default slot. Only use `mayHaveChildren` if we want the tree item
-   * to appear as having children even without the actual child tree items
-   * (e.g. no DOM children). This is mainly used when we asynchronously load
-   * child tree items.
-   */
-  @property({type: Boolean, reflect: true, attribute: 'may-have-children'})
-  mayHaveChildren = false;
-
-  /** The label text of the tree item. */
-  @property({type: String, reflect: true}) label = '';
-
-  /**
-   * If the user navigates to this item, tabs away from the sidenav and then
-   * tabs back into the sidenav, the item that receives focus should be the one
-   * they had navigated to. `tabIndex` is forwarded to the ` < li > ` element.
-   */
-  @property({attribute: false}) override tabIndex: number = -1;
-
-  /**
-   * Indicate the depth of this tree item, we use it to calculate the padding
-   * indentation. Note: "aria-level" can be calculated by DOM structure so
-   * no need to provide it explicitly.
-   */
-  @property({type: Number, reflect: true}) layer = 0;
-
-  @query('li') private readonly treeItemElement!: HTMLLIElement;
-  @query('.rename') private readonly renameInputElement?: HTMLInputElement;
-  @query('slot:not([name])')
-  private readonly childrenSlotElement!: HTMLSlotElement;
-  @queryAsync('md-ripple') protected ripple!: Promise<MdRipple|null>;
-
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
       display: block;
@@ -314,7 +256,27 @@ export class SidenavItem extends LitElement {
       --md-ripple-pressed-opacity: 100%;
     }
   `;
+  /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+  /** @nocollapse */
+  static override properties = {
+    separator: {type: Boolean, reflect: true},
+    disabled: {type: Boolean, reflect: true},
+    enabled: {type: Boolean, reflect: true},
+    expanded: {type: Boolean, reflect: true},
+    renaming: {type: Boolean, reflect: true},
+    error: {type: Boolean, reflect: true},
+    mayHaveChildren:
+        {type: Boolean, reflect: true, attribute: 'may-have-children'},
+    label: {type: String, reflect: true},
+    tabIndex: {attribute: false},
+    layer: {type: Number, reflect: true},
+  };
 
+  /** @nocollapse */
   static get events() {
     return {
       /** Triggers when a sidenav item has been expanded. */
@@ -328,10 +290,81 @@ export class SidenavItem extends LitElement {
     } as const;
   }
 
-  static override shadowRootOptions = {
-    ...LitElement.shadowRootOptions,
-    delegatesFocus: true
-  };
+  /**
+   * The `separator` attribute will show a top border for the tree item. It's
+   * mainly used to identify this tree item is a start of the new section.
+   */
+  separator: boolean;
+  /**
+   * Indicate if a tree item is disabled or not. Disabled tree item will have
+   * a greyed out color, can't be enabled, can't get focus. It can still have
+   * children, but it can't be expanded, and the expand icon will be hidden.
+   */
+  disabled: boolean;
+  /** Indicate if a tree item has been enabled or not. */
+  enabled: boolean;
+  /** Indicate if a tree item has been expanded or not. */
+  expanded: boolean;
+  /** Indicate if a tree item is in renaming mode or not. */
+  renaming: boolean;
+  /** Indicate the item contains an error. */
+  error: boolean;
+  /**
+   * A tree item will have children if the child tree items have been inserted
+   * into its default slot. Only use `mayHaveChildren` if we want the tree item
+   * to appear as having children even without the actual child tree items
+   * (e.g. no DOM children). This is mainly used when we asynchronously load
+   * child tree items.
+   */
+  mayHaveChildren: boolean;
+  /** The label text of the tree item. */
+  label: string;
+  /**
+   * If the user navigates to this item, tabs away from the sidenav and then
+   * tabs back into the sidenav, the item that receives focus should be the one
+   * they had navigated to. `tabIndex` is forwarded to the ` < li > ` element.
+   */
+  override tabIndex: number;
+  /**
+   * Indicate the depth of this tree item, we use it to calculate the padding
+   * indentation. Note: "aria-level" can be calculated by DOM structure so
+   * no need to provide it explicitly.
+   */
+  layer: number;
+
+  private get treeItemElement(): HTMLLIElement {
+    return castExists(this.renderRoot.querySelector('li'));
+  }
+
+  private get renameInputElement(): HTMLInputElement {
+    return castExists(this.renderRoot.querySelector('.rename'));
+  }
+
+  private get childrenSlotElement(): HTMLSlotElement {
+    return castExists(this.renderRoot.querySelector('slot:not([name])'));
+  }
+
+  protected get ripple(): Promise<MdRipple|null> {
+    // We can't use async / await here as js does not support async getters
+    // and setters.
+    return this.updateComplete.then(() => {
+      return this.renderRoot.querySelector('md-ripple');
+    });
+  }
+
+  constructor() {
+    super();
+    this.separator = false;
+    this.disabled = false;
+    this.enabled = false;
+    this.expanded = false;
+    this.renaming = false;
+    this.error = false;
+    this.mayHaveChildren = false;
+    this.label = '';
+    this.tabIndex = -1;
+    this.layer = 0;
+  }
 
   /** The child tree items which can be tabbed to. */
   get selectableItems(): SidenavItem[] {
@@ -589,6 +622,8 @@ export class SidenavItem extends LitElement {
     this.dispatchEvent(renameEvent);
   }
 }
+
+customElements.define('cros-sidenav-item', SidenavItem);
 
 declare global {
   interface HTMLElementEventMap {
