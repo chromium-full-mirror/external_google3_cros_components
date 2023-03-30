@@ -8,15 +8,14 @@ import '@material/web/radio/radio.js';
 
 import {MdRadio} from '@material/web/radio/radio.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators';
 
 /**
  * A chromeOS compliant radio button.
  * See spec
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2673%3A11119
  */
-@customElement('cros-radio')
 export class Radio extends LitElement {
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
@@ -30,22 +29,33 @@ export class Radio extends LitElement {
       --md-sys-color-primary: var(--cros-sys-primary);
     }
   `;
+  /** @nocollapse */
+  static override properties = {
+    checked: {type: Boolean},
+    disabled: {type: Boolean},
+  };
 
-  @query('md-radio') mdRadio?: MdRadio;
+  private checkedInternal = false;
 
-  @property({type: Boolean}) disabled = false;
+  disabled: boolean;
 
-  @property({type: Boolean})
+  get mdRadio(): MdRadio|undefined {
+    return this.renderRoot?.querySelector('md-radio') || undefined;
+  }
+
   get checked() {
     return this.mdRadio?.checked || false;
   }
-
-  private checkedInternal = false;
   set checked(value: boolean) {
     // Store the value for `checked`, so that it is not lost if it is set before
     // the first render.
     this.checkedInternal = value;
     this.requestUpdate();
+  }
+
+  constructor() {
+    super();
+    this.disabled = false;
   }
 
   override render() {
@@ -55,6 +65,8 @@ export class Radio extends LitElement {
     `;
   }
 }
+
+customElements.define('cros-radio', Radio);
 
 declare global {
   interface HTMLElementTagNameMap {

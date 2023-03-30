@@ -8,7 +8,6 @@ import '@material/web/textfield/filled-text-field';
 
 import {MdFilledTextField, TextFieldType as MdTextfieldType} from '@material/web/textfield/filled-text-field';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-import {customElement, property, query} from 'lit/decorators';
 
 /**
  * Textfields have two variants that differ only by the container background,
@@ -26,59 +25,9 @@ const TEXTFIELD_CONTAINER_ON_SHADED = css`var(--cros-sys-input_field_light)`;
  * Textfield component. See the specs here:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3227%3A25882&t=50tDpMdSJky6eT9O-0
  */
-@customElement('cros-textfield')
 export class Textfield extends LitElement {
-  @query('md-filled-text-field') mdTextfield?: MdFilledTextField;
-  @property({attribute: true, type: String}) type: MdTextfieldType = 'text';
-
-  /**
-   * When false, will use the darker container designed to sit on app-base. When
-   * true, will use the lighter container colored designed for use with
-   * app-base-shaded. Purely a cosmetic difference to improve contrast.
-   */
-  @property({type: Boolean, reflect: true}) shaded = false;
-
-  @property({attribute: true, type: String})
-  get value() {
-    return this.mdTextfield?.value || '';
-  }
-
-  set value(value: string) {
-    // On first render the initial value is lost because mwcTextfield is not yet
-    // rendered. Store it in `valueInternal` and set it in firstUpdated().
-    this.valueInternal = value;
-    if (this.mdTextfield) {
-      this.mdTextfield.value = this.valueInternal;
-    }
-  }
-
-  /**
-   * The visible label above the textfield. This is also used as the aria-label
-   * for the internal md-textfield.
-   */
-  @property({attribute: true, type: String}) label = '';
-
-  /**
-   * Properties supported by the MD textfield that are surfaced to the
-   * cros-textfield API. These are manually plumbed through as cros-textfield is
-   * not a subclass. This is not an exhaustive list, and support should be
-   * added by clients as needed.
-   */
-  @property({attribute: true, type: String}) suffix = '';
-  @property({attribute: true, type: Boolean}) disabled = false;
-  @property({attribute: true, type: String}) hint = '';
-
-  /**
-   * Max length of the textfield value. If set to -1 or less, md-textfield will
-   * ignore this value when restricting the length of the textfield, and also
-   * not render the charCounter.
-   */
-  @property({attribute: true, type: Number}) maxLength = -1;
-
-  private valueInternal = '';
-
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
-
     :host {
       display: block;
       /* TODO(b/241483751): Use Jelly unified typography system. */
@@ -155,6 +104,75 @@ export class Textfield extends LitElement {
     }
   `;
 
+  /** @nocollapse */
+  static override properties = {
+    type: {type: String, attribute: true},
+    shaded: {type: Boolean, reflect: true},
+    value: {type: String, attribute: true},
+    label: {type: String, attribute: true},
+    suffix: {type: String, attribute: true},
+    disabled: {type: Boolean, reflect: true},
+    hint: {type: String, attribute: true},
+    maxLength: {type: Number, attribute: true},
+  };
+
+  private valueInternal = '';
+
+
+  type: MdTextfieldType = 'text';
+  /**
+   * When false, will use the darker container designed to sit on app-base. When
+   * true, will use the lighter container colored designed for use with
+   * app-base-shaded. Purely a cosmetic difference to improve contrast.
+   */
+  shaded = false;
+
+  get value() {
+    return this.mdTextfield?.value || '';
+  }
+  set value(value: string) {
+    // On first render the initial value is lost because mwcTextfield is not yet
+    // rendered. Store it in `valueInternal` and set it in firstUpdated().
+    this.valueInternal = value;
+    if (this.mdTextfield) {
+      this.mdTextfield.value = this.valueInternal;
+    }
+  }
+
+  /**
+   * The visible label above the textfield. This is also used as the aria-label
+   * for the internal md-textfield.
+   */
+  label: string;
+  // Properties supported by the MD textfield that are surfaced to the
+  // cros-textfield API. These are manually plumbed through as cros-textfield is
+  // not a subclass. This is not an exhaustive list, and support should be
+  // added by clients as needed.
+  suffix: string;
+  disabled: boolean;
+  hint: string;
+  /**
+   * Max length of the textfield value. If set to -1 or less, md-textfield will
+   * ignore this value when restricting the length of the textfield, and also
+   * not render the charCounter.
+   */
+  maxLength = -1;
+
+  get mdTextfield(): MdFilledTextField|undefined {
+    return this.renderRoot?.querySelector('md-filled-text-field') || undefined;
+  }
+
+  constructor() {
+    super();
+    this.type = 'text';
+    this.shaded = false;
+    this.label = '';
+    this.suffix = '';
+    this.disabled = false;
+    this.hint = '';
+    this.maxLength = -1;
+  }
+
   override async firstUpdated(changedProperties: PropertyValues<Textfield>) {
     this.mdTextfield!.value = this.valueInternal;
   }
@@ -202,6 +220,8 @@ export class Textfield extends LitElement {
     this.classList.toggle('focused');
   }
 }
+
+customElements.define('cros-textfield', Textfield);
 
 declare global {
   interface HTMLElementTagNameMap {

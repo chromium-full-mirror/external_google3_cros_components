@@ -6,15 +6,11 @@
 
 import '@material/web/switch/switch.js';
 
-import {MdSwitch} from '@material/web/switch/switch.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators';
 
-/**
- * A chromeOS switch component.
- */
-@customElement('cros-switch')
+/** A chromeOS switch component. */
 export class Switch extends LitElement {
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
@@ -73,10 +69,20 @@ export class Switch extends LitElement {
     }
   `;
 
-  @query('md-switch') mdSwitch?: MdSwitch;
+  /** @nocollapse */
+  static override properties = {
+    selected: {type: Boolean},
+    disabled: {type: Boolean},
+  };
 
-  @property({type: Boolean}) disabled = false;
-  @property({type: Boolean}) selected = false;
+  disabled: boolean;
+  selected: boolean;
+
+  constructor() {
+    super();
+    this.disabled = false;
+    this.selected = false;
+  }
 
   override render() {
     return html`
@@ -85,6 +91,8 @@ export class Switch extends LitElement {
     `;
   }
 }
+
+customElements.define('cros-switch', Switch);
 
 declare global {
   interface HTMLElementTagNameMap {
