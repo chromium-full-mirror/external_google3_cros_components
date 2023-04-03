@@ -6,7 +6,7 @@
 
 import {assertExists} from 'google3/javascript/common/asserts/asserts';
 import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {PropertyValues, css, CSSResultGroup, html, LitElement} from 'lit';
 import {trustedResourceUrl} from 'safevalues';
 import {safeWorker} from 'safevalues/dom';
 
@@ -138,6 +138,14 @@ export class LottieRenderer extends LitElement {
     }
   }
 
+  override updated(changedProperties: PropertyValues<LottieRenderer>) {
+    super.updated(changedProperties);
+    const prop = changedProperties.get('assetUrl');
+    if (prop && prop !== undefined && this.worker) {
+      this.setAssetUrl(changedProperties.get('assetUrl'));
+    }
+  }
+
   override render() {
     return html`
         <canvas id='onscreen-canvas'></canvas>
@@ -189,8 +197,6 @@ export class LottieRenderer extends LitElement {
     // once, when we first initialize an animation. On subsequent
     // initializations (such as when the asset URL has changed), we avoid
     // re-transferring the canvas and just send across the animation data.
-    // TODO(b/268419751): Add hooks for updating when the animation URL has
-    // changed.
     if (this.hasTransferredCanvas) {
       this.worker.postMessage(animationConfig);
       return;
@@ -200,6 +206,17 @@ export class LottieRenderer extends LitElement {
         {...animationConfig, canvas: this.offscreenCanvas},
         [this.offscreenCanvas as unknown as Transferable]);
     this.hasTransferredCanvas = true;
+  }
+
+  private async setAssetUrl(url: string) {
+    assertExists(this.worker);
+
+    // If we have an already loaded animation, stop it from playing and
+    // reinitialize.
+    if (this.animationIsLoaded) {
+      await this.stop();
+    }
+    await this.initAnimation();
   }
 
   /**
