@@ -20,7 +20,13 @@ export class MenuItem extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-menu-item {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-list-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-list-list-item-hover-state-layer-opacity: 1;
       --md-list-list-item-label-text-type: var(--cros-typography-button2);
+      --md-list-list-item-leading-icon-color: var(--cros-sys-on_surface);
+      --md-list-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-list-list-item-pressed-state-layer-opacity: 1;
     }
     :host {
       display: inline block;
@@ -28,6 +34,7 @@ export class MenuItem extends LitElement {
     cros-icon {
       width: 20px;
       height: 20px;
+      color: var(--cros-sys-on_surface);
     }
     cros-switch {
       width: 32px;
@@ -35,6 +42,9 @@ export class MenuItem extends LitElement {
     }
     .slot-end {
       font: var(--cros-typography-button2);
+    }
+    #shortcut {
+      color: var(--cros-sys-secondary);
     }
   `;
   /** @nocollapse */
@@ -65,7 +75,8 @@ export class MenuItem extends LitElement {
     switch (this.itemEnd) {
       case 'shortcut':
         // TODO(heidichan): expose shortcut text.
-        slotEnd = html`<span slot="end" class="slot-end">Shortcut</span>`;
+        slotEnd =
+            html`<span slot="end" class="slot-end" id="shortcut">Shortcut</span>`;
         break;
       case 'icon':
         slotEnd = html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
