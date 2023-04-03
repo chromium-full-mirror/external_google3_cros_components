@@ -66,7 +66,11 @@ export class Sidenav extends LitElement {
       }
   `;
   /** @nocollapse */
-  static override properties = {ariaSetSize: {type: String}};
+  static override properties = {
+    ariaSetSize: {type: String},
+    doubleclickExpands:
+        {type: Boolean, reflect: true, attribute: 'doubleclick-expands'},
+  };
 
   /** @nocollapse */
   static get events() {
@@ -117,6 +121,9 @@ export class Sidenav extends LitElement {
    */
   override ariaSetSize = '0';
 
+  /** Whether double-clicking expands the tree. */
+  doubleclickExpands: boolean;
+
   /**
    * The `selectedItem` is the item that the user navigated to. If the user
    * hasn't navigated, this is the enabled item. The `selectedItem` is the item
@@ -125,6 +132,11 @@ export class Sidenav extends LitElement {
    */
   private get selectedItem(): SidenavItem|null {
     return this.items.find(item => item.tabIndex === 0) || null;
+  }
+
+  constructor() {
+    super();
+    this.doubleclickExpands = false;
   }
 
   override render() {
@@ -227,6 +239,8 @@ export class Sidenav extends LitElement {
 
   /** Called when the user double clicks on a tree item. */
   private async onTreeDblClicked(e: MouseEvent) {
+    if (!this.doubleclickExpands) return;
+
     // Stop if the the click target is not a tree item.
     const treeItem = e.target as SidenavItem;
     if (treeItem && !isSidenavItem(treeItem)) {
