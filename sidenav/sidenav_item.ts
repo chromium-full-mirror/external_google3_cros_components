@@ -55,14 +55,16 @@ const ICON_SIZE = css`20px`;
  *   2. [LABEL_ONLY_MARGIN]<label>[LABEL_ONLY_MARGIN]
  *
  *   1. With any icon:
- *     * 28px from left
+ *     * 8px from left
+ *     * If the expand icon is invisible but there is another icon, the expand
+ *       icon still takes space.
  *     * 0px between icons
  *     * 8px from icon to label
  *   2. Without any icon:
  *     * 24px from left
  */
 const ICON_LABEL_GAP = css`8px`;
-const ICON_LEADING_MARGIN = css`28px`;
+const ICON_LEADING_MARGIN = css`8px`;
 const LABEL_ONLY_MARGIN = css`24px`;
 
 const ITEM_GAP = css`8px`;
@@ -136,31 +138,19 @@ export class SidenavItem extends LitElement {
     .expand-icon {
       fill: currentcolor;
       flex: none;
-      height: 0px;
-      margin-inline-start: calc(${LABEL_ONLY_MARGIN} - ${ICON_LABEL_GAP});
+      height: ${ICON_SIZE};
+      margin-inline-start: ${ICON_LEADING_MARGIN};
       -webkit-mask-position: center;
       -webkit-mask-repeat: no-repeat;
       position: relative;
       transform: rotate(-90deg);
       transition: all 150ms;
       visibility: hidden;
-      width: 0px;
-    }
-
-    li[aria-expanded] .expand-icon {
-      height: ${ICON_SIZE};
-      margin-inline-start: ${ICON_LEADING_MARGIN};
-      visibility: visible;
       width: ${ICON_SIZE};
     }
 
-    .expand-icon + slot[name="icon"]::slotted(*) {
-      margin-inline-start: calc(${ICON_LEADING_MARGIN} - (${
-      LABEL_ONLY_MARGIN} - ${ICON_LABEL_GAP}));
-    }
-
-    li[aria-expanded] .expand-icon + slot[name="icon"]::slotted(*) {
-      margin-inline-start: 0px;
+    li[aria-expanded] .expand-icon {
+      visibility: visible;
     }
 
     :host-context(html[dir=rtl]) .expand-icon {
@@ -195,10 +185,16 @@ export class SidenavItem extends LitElement {
       flex: auto;
       font-weight: 500;
       margin-inline-end: ${LABEL_ONLY_MARGIN};
-      margin-inline-start: ${ICON_LABEL_GAP};
+      margin-inline-start: calc(${LABEL_ONLY_MARGIN} - ${ICON_SIZE} - ${
+      ICON_LEADING_MARGIN});
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: pre;
+    }
+
+    li[aria-expanded] .tree-label,
+    .has-icon + .tree-label {
+      margin-inline-start: ${ICON_LABEL_GAP};
     }
 
     .rename {
@@ -332,6 +328,12 @@ export class SidenavItem extends LitElement {
    */
   layer: number;
 
+  /**
+   * Whether an icon has been slotted. CSS cannot distinguish slots that have
+   * slotted items, so we check manually and set a class.
+   */
+  hasIcon: boolean;
+
   private get treeItemElement(): HTMLLIElement {
     return castExists(this.renderRoot.querySelector('li'));
   }
@@ -342,6 +344,10 @@ export class SidenavItem extends LitElement {
 
   private get childrenSlotElement(): HTMLSlotElement {
     return castExists(this.renderRoot.querySelector('slot:not([name])'));
+  }
+
+  private get iconSlotElement(): HTMLSlotElement {
+    return castExists(this.renderRoot.querySelector('slot[name="icon"]'));
   }
 
   protected get ripple(): Promise<MdRipple|null> {
@@ -364,6 +370,7 @@ export class SidenavItem extends LitElement {
     this.label = '';
     this.tabIndex = -1;
     this.layer = 0;
+    this.hasIcon = false;
   }
 
   /** The child tree items which can be tabbed to. */
@@ -438,7 +445,11 @@ export class SidenavItem extends LitElement {
               <polyline points="6 8 10 12 14 8 6 8"/>
             </svg>
           </span>
-          <slot name="icon"></slot>
+          <slot
+              name="icon"
+              class=${this.hasIcon ? 'has-icon' : ''}
+              @slotchange=${this.onIconSlotChanged}>
+          </slot>
           ${this.renderTreeLabel()}
         </div>
         <ul
@@ -490,6 +501,10 @@ export class SidenavItem extends LitElement {
       class="tree-label"
       id="tree-label"
     >${this.label || ''}</span>`;
+  }
+
+  private onIconSlotChanged() {
+    this.hasIcon = this.iconSlotElement.assignedElements().length > 0;
   }
 
   // TODO(b/262453851): There's probably a nicer way to implement this.
