@@ -4,19 +4,73 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {assertExists} from 'google3/javascript/common/asserts/asserts';
+import {assertExists, castExists} from 'google3/javascript/common/asserts/asserts';
+import {hexToRgb} from 'google3/third_party/javascript/closure/color/color';
 import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
-import {PropertyValues, css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {trustedResourceUrl} from 'safevalues';
 import {safeWorker} from 'safevalues/dom';
 
 const WORKER_BINARY = trustedResourceUrl`/js/lottie_worker.js`;
+
+/**
+ * The list of tokens that are used to identify shapes and colors in Lottie
+ * animation data. If token names change, we will need to update this set.
+ * Existing token names are very unlikely to change, it's more likely that new
+ * tokens may be added if illustration palettes become more complex. There
+ * is currently no easy way to generate this list in Google3, and as a small
+ * set it can be manually maintained, but in future a more robust solution may
+ * be needed. See go/cros-tokens (internal).
+ */
+const CROS_TOKENS = new Set<string>([
+  'cros.sys.illo.color1',
+  'cros.sys.illo.color1.1',
+  'cros.sys.illo.color1.2',
+  'cros.sys.illo.color2',
+  'cros.sys.illo.color3',
+  'cros.sys.illo.color4',
+  'cros.sys.illo.color5',
+  'cros.sys.illo.color6',
+  'cros.sys.illo.base',
+  'cros.sys.illo.secondary',
+]);
 
 interface MessageData {
   animationData: JSON;
   drawSize: {width: number, height: number};
   params: {loop: boolean, autoplay: boolean};
   canvas?: OffscreenCanvas;
+}
+
+/**
+ * This definition of this type is taken from
+ * https://lottiefiles.github.io/lottie-docs/concepts/#colors
+ */
+interface LottieShape {
+  /**
+   * The name of a shape. For Material3 compliant animations, this will be the
+   * token name of the color to apply.
+   */
+  nm: string;
+  /**
+   * Colors are represented as arrays with values between 0 and 1 for the
+   * RGB components, with the 4th entry being the alpha value.
+   */
+  c: {k: number[]};
+}
+
+/** String variant of the name field used for comparison during parsing. */
+const LOTTIE_NAME_KEY = 'nm';
+
+/**
+ * A type for storing a css variable and a list of known shapes within the
+ * currently loaded animation that have the css variable color applied. There
+ * will be one of these structures per token in CROS_TOKENS that appears in the
+ * animation data.
+ */
+interface TokenColor {
+  cssVar: string;
+  locations: LottieShape[];
 }
 
 /** The CustomEvent names that LottieRenderer can fire. */
@@ -34,9 +88,61 @@ interface ResizeDetail {
 }
 
 /**
+ * Helper function for converting between the hexadecimal RGBA string we get
+ * from the computed style to the format that lottie expects, which is an array
+ * of four floats. Since these come directly from the computed style and color
+ * pipeline, we can be confident that we are only going to be parsing 8 digit
+ * hexadecimal strings.
+ */
+function convertHexToLottieRGBA(hexString: string): number[] {
+  const hexRgb = hexString.slice(0, -2);
+  const alphaString = hexString.slice(-2);
+  const [r, g, b] = hexToRgb(hexRgb);
+
+  const alpha = Number(`0x${alphaString}`);
+  return [r / 255, g / 255, b / 255, alpha / 255];
+}
+
+/**
+ * Takes in a cros token and returns the corresponding css variable.
+ * Eg: cros.sys.illo.base -> --cros-sys-illo-base.
+ */
+function convertTokenToCssVariable(token: string) {
+  return `--${(token).replaceAll('.', '-')}`;
+}
+
+/**
+ * Traverses through a jsonObject, looking for known keys and tokens, and
+ * saving them in the `shapes` map.
+ */
+function traverse(jsonObj: object, shapes: Map<string, TokenColor>) {
+  if (jsonObj === null || typeof jsonObj !== 'object') return;
+
+  for (const [key, value] of Object.entries(jsonObj)) {
+    // If we are looking at something that contains a "nm" field that is set to
+    // one of the known illustration tokens, this is a LottieShape that needs to
+    // have its color value set.
+    if (key === LOTTIE_NAME_KEY && CROS_TOKENS.has(value)) {
+      const tokenName = value as string;
+      if (!shapes.has(tokenName)) {
+        shapes.set(
+            tokenName,
+            {cssVar: convertTokenToCssVariable(tokenName), locations: []});
+      }
+      const color = castExists(shapes.get(tokenName));
+      const shape = jsonObj as LottieShape;
+      color.locations.push(shape);
+    }
+
+    traverse(value, shapes);
+  }
+}
+
+/**
  * Lottie renderer with correct hooks to handle dynamic color. This component
- * currently only supports static illustrations, but will eventually support
- * animations via an offscreen canvas.
+ * should only be used for dynamic illustrations, as it involves spinning up an
+ * instance of the Lottie library on a worker thread. For static illustrations,
+ * it is more performant to use <cros-static-illustration>.
  */
 export class LottieRenderer extends LitElement {
   /** The path to the lottie asset JSON file. */
@@ -88,7 +194,7 @@ export class LottieRenderer extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
-      display: inline-block;
+      display: block;
     }
 
     canvas {
@@ -109,6 +215,20 @@ export class LottieRenderer extends LitElement {
     this.autoplay = true;
     this.loop = true;
   }
+
+  /**
+   * A copy of this.assetUrl that has the color token CSS variables replaced
+   * with the hardcoded color strings based on the current color scheme.
+   */
+  private animationData: JSON|null = null;
+
+  /**
+   * Map from token name to a TokenColor. The TokenColor contains the CSS
+   * variable name for the token, as well as a list of references to Lottie
+   * animation sub objects, which need to be updated every time the color scheme
+   * changes to avoid retraversing the JSON.
+   */
+  private readonly colors = new Map<string, TokenColor>();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -181,9 +301,27 @@ export class LottieRenderer extends LitElement {
     return waitForEvent(this, CrosLottieEvent.STOPPED);
   }
 
-  private async initAnimation() {
+  /**
+   * Temporary public API to ensure component color resolution works.
+   * TODO(b/276079531): Remove, bind refreshAnimColors to color change event.
+   */
+  onColorSchemeChanged() {
+    this.refreshAnimationColors();
+  }
+
+  private async refreshAnimationColors() {
+    // We must await update here to ensure the computed style will be up to date
+    // with the new color scheme.
+    // TODO(b/276079531): Investigate if this can be removed when using events.
+    this.requestUpdate();
+    await this.updateComplete;
+    const animationData = castExists(this.animationData);
+    this.updateColorsInAnimationData(animationData);
+    this.sendAnimationToWorker(animationData);
+  }
+
+  private sendAnimationToWorker(animationData: JSON) {
     assertExists(this.worker);
-    const animationData = await fetch(this.assetUrl).then(r => r.json());
     const animationConfig: MessageData = ({
       animationData,
       drawSize: this.getCanvasDrawBufferSize(),
@@ -197,6 +335,8 @@ export class LottieRenderer extends LitElement {
     // once, when we first initialize an animation. On subsequent
     // initializations (such as when the asset URL has changed), we avoid
     // re-transferring the canvas and just send across the animation data.
+    // TODO(b/268419751): Add hooks for updating when the animation URL has
+    // changed.
     if (this.hasTransferredCanvas) {
       this.worker.postMessage(animationConfig);
       return;
@@ -206,6 +346,52 @@ export class LottieRenderer extends LitElement {
         {...animationConfig, canvas: this.offscreenCanvas},
         [this.offscreenCanvas as unknown as Transferable]);
     this.hasTransferredCanvas = true;
+  }
+
+  /**
+   * Load the animation data from `assetUrl` and begin the color token
+   * resolution work.
+   */
+  private async initAnimation() {
+    try {
+      const data = await fetch(this.assetUrl);
+      this.animationData = await data.json();
+    } catch (error) {
+      console.log(`Unable to load JSON from ${this.assetUrl}`, error);
+    }
+    const animationData = castExists(this.animationData);
+
+    // When the animation is first loaded, it needs to be traversed via DFS to
+    // find all shapes that are mapped to tokens, as these will need to receive
+    // color updates. `colors` is the internal list of all known shapes, and
+    // will be modified by this function.
+    traverse(animationData, this.colors);
+
+    if (this.colors.size === 0) {
+      throw new Error(
+          `Unable to find cros.sys.illo tokens in ${this.assetUrl}. Please ` +
+          `ensure this animation file has been run through the VisD token ` +
+          `resolution script.`);
+    }
+
+    this.updateColorsInAnimationData(animationData);
+    this.sendAnimationToWorker(animationData);
+  }
+
+  /**
+   * Go through the known list of shapes in the animation data that need to have
+   * their colors updated, and use the current computed style to ensure they
+   * match the current color scheme.
+   */
+  private updateColorsInAnimationData(json: JSON) {
+    const computedStyle = getComputedStyle(this);
+    for (const color of this.colors.values()) {
+      const computedColor = computedStyle.getPropertyValue(color.cssVar).trim();
+      const colorArray = convertHexToLottieRGBA(computedColor);
+      for (const location of color.locations) {
+        location.c.k = colorArray;
+      }
+    }
   }
 
   private async setAssetUrl(url: string) {
