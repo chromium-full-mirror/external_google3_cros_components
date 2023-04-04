@@ -4,14 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {assertExists, castExists} from 'google3/javascript/common/asserts/asserts';
-import {hexToRgb} from 'google3/third_party/javascript/closure/color/color';
-import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-import {trustedResourceUrl} from 'safevalues';
-import {safeWorker} from 'safevalues/dom';
 
-const WORKER_BINARY = trustedResourceUrl`/js/lottie_worker.js`;
+import {waitForEvent} from '../async_helpers/async_helpers';
+import {assertExists, castExists, hexToRgb} from '../helpers/helpers';
+
+import {getWorker} from './worker';
 
 /**
  * The list of tokens that are used to identify shapes and colors in Lottie
@@ -129,7 +127,7 @@ function traverse(jsonObj: object, shapes: Map<string, TokenColor>) {
             tokenName,
             {cssVar: convertTokenToCssVariable(tokenName), locations: []});
       }
-      const color = castExists(shapes.get(tokenName));
+      const color = shapes.get(tokenName) as TokenColor;
       const shape = jsonObj as LottieShape;
       color.locations.push(shape);
     }
@@ -233,13 +231,15 @@ export class LottieRenderer extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     if (!this.worker) {
-      this.worker = safeWorker.create(WORKER_BINARY);
+      this.worker = getWorker();
       this.worker.onmessage = (e) => void this.onMessage(e);
     }
   }
 
   override firstUpdated() {
-    assertExists(this.onscreenCanvas);
+    assertExists(
+        this.onscreenCanvas,
+        'Could not find <cavas> element in lottie-renderer');
     this.resizeObserver =
         new ResizeObserver(this.onCanvasElementResized.bind(this));
     this.resizeObserver.observe(this.onscreenCanvas);
@@ -296,7 +296,7 @@ export class LottieRenderer extends LitElement {
    * pauses it, so there's no need to wait for initialization.
    */
   async stop(): Promise<Event> {
-    assertExists(this.worker);
+    assertExists(this.worker, 'lottie-renderer has no web worker.');
     this.worker.postMessage({control: {stop: true}});
     return waitForEvent(this, CrosLottieEvent.STOPPED);
   }
@@ -315,13 +315,14 @@ export class LottieRenderer extends LitElement {
     // TODO(b/276079531): Investigate if this can be removed when using events.
     this.requestUpdate();
     await this.updateComplete;
-    const animationData = castExists(this.animationData);
+    const animationData = castExists(
+        this.animationData, 'cros-lottie has no animation data to refresh.');
     this.updateColorsInAnimationData(animationData);
     this.sendAnimationToWorker(animationData);
   }
 
   private sendAnimationToWorker(animationData: JSON) {
-    assertExists(this.worker);
+    assertExists(this.worker, 'lottie-renderer has no web worker.');
     const animationConfig: MessageData = ({
       animationData,
       drawSize: this.getCanvasDrawBufferSize(),
@@ -359,7 +360,8 @@ export class LottieRenderer extends LitElement {
     } catch (error) {
       console.log(`Unable to load JSON from ${this.assetUrl}`, error);
     }
-    const animationData = castExists(this.animationData);
+    const animationData = castExists(
+        this.animationData, 'cros-lottie-renderer fetched null animation data');
 
     // When the animation is first loaded, it needs to be traversed via DFS to
     // find all shapes that are mapped to tokens, as these will need to receive
@@ -395,7 +397,7 @@ export class LottieRenderer extends LitElement {
   }
 
   private async setAssetUrl(url: string) {
-    assertExists(this.worker);
+    assertExists(this.worker, 'lottie-renderer has no web worker.');
 
     // If we have an already loaded animation, stop it from playing and
     // reinitialize.
@@ -432,7 +434,7 @@ export class LottieRenderer extends LitElement {
   }
 
   private sendCanvasSizeToWorker() {
-    assertExists(this.worker);
+    assertExists(this.worker, 'lottie-renderer has no web worker.');
     this.worker.postMessage({drawSize: this.getCanvasDrawBufferSize()});
   }
 
@@ -447,7 +449,7 @@ export class LottieRenderer extends LitElement {
   }
 
   private sendPlayControlToWorker() {
-    assertExists(this.worker);
+    assertExists(this.worker, 'lottie-renderer has no web worker.');
     this.worker.postMessage({control: {play: this.playStateInternal}});
   }
 
