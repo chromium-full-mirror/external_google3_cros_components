@@ -4,17 +4,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {Icon} from 'google3/third_party/javascript/cros_components/icon/icon';
+
 import {Sidenav} from './sidenav';
 import {SidenavItem} from './sidenav_item';
 
 /** Check if an `Element` is a sidenav or not. */
-export function isSidenav(element: Element): element is Sidenav {
-  return element.tagName === 'CROS-SIDENAV';
+export function isSidenav(element: unknown): element is Sidenav {
+  return element instanceof Element && element.tagName === 'CROS-SIDENAV';
 }
 
 /** Check if an `Element` is a sidenav item or not. */
-export function isSidenavItem(element: Element): element is SidenavItem {
-  return element.tagName === 'CROS-SIDENAV-ITEM';
+export function isSidenavItem(element: unknown): element is SidenavItem {
+  return element instanceof Element && element.tagName === 'CROS-SIDENAV-ITEM';
+}
+
+/** Check if an `Element` is an icon or not. */
+export function isIcon(element: unknown): element is Icon {
+  return element instanceof Element && element.tagName === 'CROS-ICON';
 }
 
 /** True if the page is read right-to-left. */

@@ -10,7 +10,7 @@ import {castExists} from 'google3/javascript/common/asserts/asserts';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {SidenavItem, TreeItemCollapsedEvent, TreeItemEnabledChangedEvent, TreeItemExpandedEvent} from './sidenav_item';
-import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
+import {isIcon, isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
 
 /**
  * Allow calling `scrollIntoViewIfNeeded`.
@@ -215,11 +215,18 @@ export class Sidenav extends LitElement {
 
   /** Called when the user clicks on a tree item. */
   private async onTreeClicked(e: MouseEvent) {
-    // Stop if the the click target is not a tree item.
-    const treeItem = e.target as SidenavItem;
-    if (treeItem && !isSidenavItem(treeItem)) {
-      return;
+    if (!e.target) return;
+
+    let treeItem: SidenavItem|null = null;
+    // If the click target is an icon, find the containing tree item.
+    if (isIcon(e.target)) {
+      treeItem = e.target.closest('cros-sidenav-item');
+    } else if (isSidenavItem(e.target)) {
+      treeItem = e.target;
     }
+
+    // Stop if the the click target is not a tree item.
+    if (!treeItem) return;
 
     if (treeItem.disabled) {
       e.stopImmediatePropagation();
