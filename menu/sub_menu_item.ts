@@ -28,7 +28,7 @@ export class SubMenuItem extends LitElement {
   // selected state.
   static override styles: CSSResultGroup = css`
     md-sub-menu-item {
-      --md-menu-list-item-selected-container-color: #00000000;
+      --md-menu-item-list-item-selected-container-color: #00000000;
     }
     :host-context(html[dir=rtl]) #icon {
       transform: scaleX(-1);

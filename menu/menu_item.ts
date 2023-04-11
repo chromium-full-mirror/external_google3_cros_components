@@ -21,12 +21,12 @@ export class MenuItem extends LitElement {
   static override styles: CSSResultGroup = css`
     md-menu-item {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-list-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-list-list-item-hover-state-layer-opacity: 1;
-      --md-list-list-item-label-text-type: var(--cros-typography-button2);
-      --md-list-list-item-leading-icon-color: var(--cros-sys-on_surface);
-      --md-list-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
-      --md-list-list-item-pressed-state-layer-opacity: 1;
+      --md-list-item-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-list-item-list-item-hover-state-layer-opacity: 1;
+      --md-list-item-list-item-label-text-type: var(--cros-typography-button2);
+      --md-list-item-list-item-leading-icon-color: var(--cros-sys-on_surface);
+      --md-list-item-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-list-item-list-item-pressed-state-layer-opacity: 1;
     }
     :host {
       display: inline block;
