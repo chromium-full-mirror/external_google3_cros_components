@@ -262,7 +262,7 @@ export class LottieRenderer extends LitElement {
     super.updated(changedProperties);
     const prop = changedProperties.get('assetUrl');
     if (prop && prop !== undefined && this.worker) {
-      this.setAssetUrl(changedProperties.get('assetUrl'));
+      this.assetUrlChanged();
     }
   }
 
@@ -317,7 +317,7 @@ export class LottieRenderer extends LitElement {
     await this.updateComplete;
     const animationData = castExists(
         this.animationData, 'cros-lottie has no animation data to refresh.');
-    this.updateColorsInAnimationData(animationData);
+    this.updateColorsInAnimationData();
     this.sendAnimationToWorker(animationData);
   }
 
@@ -376,7 +376,7 @@ export class LottieRenderer extends LitElement {
           `resolution script.`);
     }
 
-    this.updateColorsInAnimationData(animationData);
+    this.updateColorsInAnimationData();
     this.sendAnimationToWorker(animationData);
   }
 
@@ -385,7 +385,7 @@ export class LottieRenderer extends LitElement {
    * their colors updated, and use the current computed style to ensure they
    * match the current color scheme.
    */
-  private updateColorsInAnimationData(json: JSON) {
+  private updateColorsInAnimationData() {
     const computedStyle = getComputedStyle(this);
     for (const color of this.colors.values()) {
       const computedColor = computedStyle.getPropertyValue(color.cssVar).trim();
@@ -396,7 +396,7 @@ export class LottieRenderer extends LitElement {
     }
   }
 
-  private async setAssetUrl(url: string) {
+  private async assetUrlChanged() {
     assertExists(this.worker, 'lottie-renderer has no web worker.');
 
     // If we have an already loaded animation, stop it from playing and

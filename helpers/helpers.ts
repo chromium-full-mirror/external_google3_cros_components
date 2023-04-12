@@ -40,7 +40,7 @@ export function castExists<A>(arg: A, msg: string): NonNullable<A> {
 }
 
 /** Converts a given hex string to a [r, g, b] array. */
-export function hexToRgb(hexString: string) {
+export function hexToRgb(hexString: string): [number, number, number] {
   const rHex = hexString.substring(1, 3);
   const gHex = hexString.substring(3, 5);
   const bHex = hexString.substring(5, 7);
