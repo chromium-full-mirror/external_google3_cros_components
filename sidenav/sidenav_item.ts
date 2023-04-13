@@ -440,8 +440,10 @@ export class SidenavItem extends LitElement {
             ${ripple(this.ripple)}>
           <md-ripple></md-ripple>
           <!-- TODO(b/262453851): Implement icon from spec -->
-          <span class="expand-icon">
-            <svg  xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+          <span
+              class="expand-icon"
+              @click=${this.onExpandIconClicked}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
               <polyline points="6 8 10 12 14 8 6 8"/>
             </svg>
           </span>
@@ -459,6 +461,10 @@ export class SidenavItem extends LitElement {
         </ul>
        </li>
      `;
+  }
+
+  override firstUpdated() {
+    this.addEventListener('click', this.onRowClicked);
   }
 
   override updated(changedProperties: PropertyValues<this>) {
@@ -572,6 +578,19 @@ export class SidenavItem extends LitElement {
           detail: {item: this, enabled: this.enabled},
         });
     this.dispatchEvent(event);
+  }
+
+  private onExpandIconClicked(e: MouseEvent) {
+    e.stopPropagation();
+    if (this.disabled) return;
+    this.expanded = !this.expanded;
+  }
+
+  private onRowClicked(e: MouseEvent) {
+    // Prevent the parent `SidenavItem` from acting on this event.
+    e.stopPropagation();
+    if (this.disabled) return;
+    this.enabled = true;
   }
 
   private onRenamingChanged() {
