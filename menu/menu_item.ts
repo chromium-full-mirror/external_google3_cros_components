@@ -8,12 +8,13 @@ import '@material/web/menu/menu-item';
 import '../icon/icon';
 import '../switch/switch';
 
+import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
  * A cros compliant menu-item component for use in cros-menu.
  */
-export class MenuItem extends LitElement {
+export class MenuItem extends LitElement implements MenuItemType {
   /** @nocollapse */
   // TODO(b/198759625): Remove negative margin-inline-end when mwc token
   // available (padding 16px)
@@ -47,11 +48,21 @@ export class MenuItem extends LitElement {
       color: var(--cros-sys-secondary);
     }
   `;
+
+  static override shadowRootOptions = {
+    mode: 'open' as const,
+    delegatesFocus: true,
+  };
+
   /** @nocollapse */
   static override properties = {
     headline: {type: String},
     itemStart: {type: String},
     itemEnd: {type: String},
+    active: {type: Boolean, reflect: true},
+    disabled: {type: Boolean},
+    isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
+    isListItem: {type: Boolean, reflect: true, attribute: 'md-list-item'},
   };
 
   /**
@@ -62,12 +73,34 @@ export class MenuItem extends LitElement {
   itemStart: 'icon'|'';
   itemEnd: 'shortcut'|'icon'|'switch'|null;
 
+  // The following properties are necessary for wrapping and keyboard
+  // navigation
+  /**
+   * Whether or not the menu-item is disabled.
+   */
+  disabled: boolean;
+  readonly isMenuItem: boolean;
+  readonly isListItem: boolean;
+  /**
+   * Whether or not the element is actively being interacted with by md-list.
+   * When active, tabindex is set to 0, and focuses the underlying item.
+   */
+  active: boolean;
+
   constructor() {
     super();
 
     this.headline = '';
     this.itemStart = '';
     this.itemEnd = null;
+
+    this.disabled = false;
+    this.isMenuItem = true;
+    this.isListItem = true;
+    // NOTE: unlike md-sub-menu-item md-menu-item does not internally set
+    // `.active`, so we do not require accessors to synchronize `this.active`
+    // with `md-menu-item.active`
+    this.active = false;
   }
 
   override render() {
@@ -102,11 +135,21 @@ export class MenuItem extends LitElement {
     // keep-open property needs to be true in switch case so cros-switch can be
     // selected/unselected without menu closing.
     return html`
-      <md-menu-item headline=${this.headline} ?keep-open=${keepOpen}>
+      <md-menu-item
+          headline=${this.headline}
+          .keepOpen=${keepOpen}
+          .disabled=${this.disabled}
+          .active=${this.active}>
         ${startItem}
         ${slotEnd}
       </md-menu-item>
       `;
+  }
+
+  // This is just in case `delegatesFocus` doesn't do what is intended (which is
+  // unfortunately often across browser updates).
+  override focus() {
+    this.renderRoot.querySelector('md-menu-item')?.focus();
   }
 }
 

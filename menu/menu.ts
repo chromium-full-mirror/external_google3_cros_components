@@ -6,8 +6,10 @@
 
 import '@material/web/menu/menu.js';
 
-import {Corner} from '@material/web/menu/menu.js';
+import {Corner, DefaultFocusState} from '@material/web/menu/menu.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
+
+export {Corner, DefaultFocusState} from '@material/web/menu/menu.js';
 
 /**
  * A chromeOS menu component.
@@ -36,6 +38,10 @@ export class Menu extends LitElement {
     anchorCorner: {type: String, attribute: 'anchor-corner'},
     hasOverflow: {type: Boolean, attribute: 'has-overflow'},
     open: {type: Boolean},
+    quick: {type: Boolean},
+    menuCorner: {type: String, attribute: 'menu-corner'},
+    defaultFocus: {type: String, attribute: 'default-focus'},
+    skipRestoreFocus: {type: Boolean, attribute: 'skip-restore-focus'},
   };
   /** @nocollapse */
   static override shadowRootOptions = {
@@ -52,29 +58,97 @@ export class Menu extends LitElement {
    */
   open: boolean;
 
+  // The following properties are necessary for wrapping and keyboard
+  // navigation
+  /**
+   * Skips the opening and closing animations.
+   */
+  quick: boolean;
+  /**
+   * The corner of the menu which to align the anchor in the standard logical
+   * property style of <block>_<inline>.
+   */
+  menuCorner: Corner;
+  /**
+   * The element that should be focused by default once opened.
+   */
+  defaultFocus: DefaultFocusState;
+  /**
+   * After closing, does not restore focus to the last focused element before
+   * the menu was opened.
+   */
+  skipRestoreFocus: boolean;
+
   constructor() {
     super();
     this.anchor = null;
     this.anchorCorner = 'END_START';
     this.hasOverflow = false;
     this.open = false;
+    this.quick = false;
+    this.menuCorner = 'START_START';
+    this.defaultFocus = 'LIST_ROOT';
+    this.skipRestoreFocus = false;
+  }
+
+  /**
+   * The menu items associated with this menu. The items must be `MenuItem`s and
+   * have both the `md-menu-item` and `md-list-item` attributes.
+   */
+  get items() {
+    // This accessor is required for keyboard navigation
+    const menu = this.renderRoot.querySelector('md-menu');
+    if (!menu) {
+      return [];
+    }
+
+    return menu.items;
   }
 
   override render() {
     return html`
-      <md-menu .anchor=${this.anchor} ?open=${this.open} @closed=${
-        this.close} ?has-overflow=${this.hasOverflow} anchor-corner=${
-        this.anchorCorner} delegatesFocus> <slot></slot>
+      <md-menu
+          .anchor=${this.anchor}
+          .open=${this.open}
+          .hasOverflow=${this.hasOverflow}
+          .anchorCorner=${this.anchorCorner}
+          .menuCorner=${this.menuCorner}
+          .quick=${this.quick}
+          .defaultFocus=${this.defaultFocus}
+          .skipRestoreFocus=${this.skipRestoreFocus}
+          @closed=${this.close}
+          @opened=${this.show}
+          @closing=${this.onClosing}
+          @opening=${this.onOpening}>
+        <slot></slot>
       </md-menu>
     `;
   }
 
   show() {
     this.open = true;
+    // these non-bubbling events need to be re-dispatched for keyboard
+    // navigation to work on submenus
+    this.dispatchEvent(new Event('opened'));
   }
 
   close() {
     this.open = false;
+    this.dispatchEvent(new Event('closed'));
+  }
+
+  private onClosing() {
+    this.dispatchEvent(new Event('closing'));
+  }
+
+  private onOpening() {
+    this.dispatchEvent(new Event('opening'));
+  }
+
+  // This is just in case `delegatesFocus` doesn't do what is intended (which is
+  // unfortunately often across browser updates).
+  override focus() {
+    this.renderRoot.querySelector('md-menu')?.focus();
   }
 }
 
