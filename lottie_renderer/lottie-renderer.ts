@@ -51,10 +51,12 @@ interface LottieShape {
    */
   nm: string;
   /**
-   * Colors are represented as arrays with values between 0 and 1 for the
-   * RGB components, with the 4th entry being the alpha value.
+   * Colors can be represented in one of two ways. The first and most often used
+   * is as an array of four floats between 0 and 1 for RGB components and alpha.
+   * The second and much more rarely used is with a hex string.
    */
-  c: {k: number[]};
+  c?: {k: number[]};
+  sc?: string;
 }
 
 /** String variant of the name field used for comparison during parsing. */
@@ -391,7 +393,14 @@ export class LottieRenderer extends LitElement {
       const computedColor = computedStyle.getPropertyValue(color.cssVar).trim();
       const colorArray = convertHexToLottieRGBA(computedColor);
       for (const location of color.locations) {
-        location.c.k = colorArray;
+        if (location.c) {
+          location.c.k = colorArray;
+        } else if (location.sc) {
+          location.sc = computedColor;
+        } else {
+          console.log(
+              `Unable to assign color to shape: ${JSON.stringify(location)}`);
+        }
       }
     }
   }
