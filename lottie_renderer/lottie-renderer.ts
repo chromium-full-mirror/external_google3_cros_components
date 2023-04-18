@@ -357,10 +357,22 @@ export class LottieRenderer extends LitElement {
    */
   private async initAnimation() {
     try {
-      const data = await fetch(this.assetUrl);
-      this.animationData = await data.json();
+      // In chromium you are not allowed to use `fetch` with `chrome://` URLs,
+      // as such we use XMLHttpRequest here.
+      this.animationData = await new Promise((resolve, reject) => {
+        const req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open('GET', this.assetUrl, true);
+        req.onload = () => {
+          resolve(req.response);
+        };
+        req.onerror = (err) => {
+          reject(err);
+        };
+        req.send(null);
+      });
     } catch (error) {
-      console.log(`Unable to load JSON from ${this.assetUrl}`, error);
+      console.info(`Unable to load JSON from ${this.assetUrl}`, error);
     }
     const animationData = castExists(
         this.animationData, 'cros-lottie-renderer fetched null animation data');
@@ -398,7 +410,7 @@ export class LottieRenderer extends LitElement {
         } else if (location.sc) {
           location.sc = computedColor;
         } else {
-          console.log(
+          console.info(
               `Unable to assign color to shape: ${JSON.stringify(location)}`);
         }
       }
@@ -483,7 +495,7 @@ export class LottieRenderer extends LitElement {
         this.fire(CrosLottieEvent.RESIZED, event.data.size);
         break;
       default:
-        console.log(`unknown message type received: ${message}`);
+        console.warn(`unknown message type received: ${message}`);
         break;
     }
   }
