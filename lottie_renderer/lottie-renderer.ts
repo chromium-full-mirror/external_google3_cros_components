@@ -384,7 +384,7 @@ export class LottieRenderer extends LitElement {
     traverse(animationData, this.colors);
 
     if (this.colors.size === 0) {
-      throw new Error(
+      console.warn(
           `Unable to find cros.sys.illo tokens in ${this.assetUrl}. Please ` +
           `ensure this animation file has been run through the VisD token ` +
           `resolution script.`);
