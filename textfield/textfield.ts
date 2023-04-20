@@ -79,6 +79,7 @@ export class Textfield extends LitElement {
       --md-filled-text-field-focus-caret-color: var(--cros-sys-primary);
       --md-filled-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-color: var(--cros-sys-on_surface);
+      --md-filled-text-field-input-text-placeholder-color: var(--cros-sys-secondary);
       --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-suffix-padding: 16px;
@@ -114,6 +115,7 @@ export class Textfield extends LitElement {
     disabled: {type: Boolean, reflect: true},
     hint: {type: String, attribute: true},
     maxLength: {type: Number, attribute: true},
+    placeholder: {type: String, attribute: true},
   };
 
   private valueInternal = '';
@@ -158,6 +160,7 @@ export class Textfield extends LitElement {
    */
   maxLength = -1;
 
+  placeholder = '';
   get mdTextfield(): MdFilledTextField|undefined {
     return this.renderRoot?.querySelector('md-filled-text-field') || undefined;
   }
@@ -200,6 +203,7 @@ export class Textfield extends LitElement {
         suffixtext=${this.suffix}
         maxLength=${this.maxLength}
         supportingText=${this.hint}
+        placeholder=${this.placeholder}
         @focus=${this.toggleFocusStyle}
         @blur=${this.toggleFocusStyle}
         @change=${this.checkAndUpdateValidity}
