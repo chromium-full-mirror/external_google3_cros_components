@@ -18,8 +18,8 @@ export class Checkbox extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-checkbox {
-      --md-checkbox-container-size: 20px;
-      --md-checkbox-icon-size: 20px;
+      --md-checkbox-container-size: 16px;
+      --md-checkbox-icon-size: 16px;
       --md-checkbox-state-layer-size: 40px;
 
       --md-sys-color-primary: var(--cros-sys-primary);
