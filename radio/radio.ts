@@ -22,6 +22,8 @@ export class Radio extends LitElement {
     }
     md-radio {
       --md-focus-ring-color: var(--cros-sys-primary);
+      --md-focus-ring-width: 2px;
+      --md-radio-icon-size: 16px;
       --md-radio-unselected-icon-color: var(--cros-sys-on_surface);
       --md-ripple-pressed-color: var(--cros-sys-ripple_primary);
       --md-ripple-pressed-opacity: 32%;
