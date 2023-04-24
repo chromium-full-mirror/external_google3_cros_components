@@ -123,20 +123,20 @@ export class Button extends LitElement {
     if (this.buttonStyle === 'text') {
       return html`
         <md-text-button class=${this.buttonStyle}
-            label=${this.label}
             ?disabled=${this.disabled}
             ?trailingIcon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
+          ${this.label}
         </md-text-button>
         `;
     }
 
     return html`
         <md-filled-button class=${this.buttonStyle}
-            label=${this.label}
             ?disabled=${this.disabled}
             ?trailingIcon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
+          ${this.label}
         </md-filled-button>
         `;
   }
