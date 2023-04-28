@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '../../material/web/iconbutton/filled-icon-button';
 import '../icon/icon';
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '@material/web/iconbutton/standard-icon-button.js';
@@ -31,9 +32,10 @@ export class IconButton extends LitElement {
    * darker container and lighter icon color.
    */
   prominent: boolean;
-  iconButtonStyle: 'filled'|'floating'|'onImage';
+  iconButtonStyle: 'filled'|'floating'|'onImage'|'toggle';
   iconButtonSize: 'small'|'default'|'large';
   disabled: boolean;
+  selected: boolean;
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
@@ -91,8 +93,8 @@ export class IconButton extends LitElement {
       --md-icon-button-icon-size: 24px;
       --md-icon-button-state-layer-shape: 16px;
       height: 64px;
-      width: 80px;
       margin: 0;
+      width: 80px;
     }
     :host([prominent]) md-standard-icon-button {
       --md-icon-button-selected-focus-icon-color: ${
@@ -119,9 +121,44 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-container-shape: 16px;
       --md-filled-tonal-icon-button-container-size: 80px;
       --md-filled-tonal-icon-button-icon-size: 24px;
-      width: 80px;
       height: 64px;
       margin: 0;
+      width: 80px;
+    }
+    md-filled-icon-button {
+      --md-filled-icon-button-container-shape: 12px;
+      --md-filled-icon-button-container-size: 40px;
+      --md-filled-icon-button-disabled-container-color: #00000000;
+      --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-icon-button-hover-state-layer-opacity: 1;
+      --md-filled-icon-button-icon-size: 20px;
+      --md-filled-icon-button-selected-container-color: var(--cros-sys-primary_container);
+      --md-filled-icon-button-toggle-selected-focus-icon-color: var(--cros-sys-on_primary_container);
+      --md-filled-icon-button-toggle-selected-hover-icon-color: var(--cros-sys-on_primary_container);
+      --md-filled-icon-button-toggle-selected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-filled-icon-button-toggle-selected-icon-color: var(--cros-sys-on_primary_container);
+      --md-filled-icon-button-toggle-selected-pressed-icon-color: var(--cros-sys-on_primary_container);
+      --md-filled-icon-button-toggle-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-filled-icon-button-toggle-unselected-focus-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-unselected-hover-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-unselected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-filled-icon-button-toggle-unselected-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-unselected-pressed-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-filled-icon-button-unselected-container-color: #00000000;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+    }
+    md-filled-icon-button.large {
+      --md-filled-icon-button-container-shape: 16px;
+      --md-filled-icon-button-container-size: 80px;
+      --md-filled-icon-button-icon-size: 24px;
+      height: 64px;
+      margin: 0;
+      width: 80px;
+    }
+    md-filled-icon-button[selected] {
+      --md-filled-icon-button-disabled-container-color: var(--cros-sys-disabled_container);
+      --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
     }
   `;
 
@@ -131,6 +168,7 @@ export class IconButton extends LitElement {
     iconButtonStyle: {type: String},
     iconButtonSize: {type: String},
     disabled: {type: Boolean},
+    selected: {type: Boolean},
   };
 
   constructor() {
@@ -139,11 +177,19 @@ export class IconButton extends LitElement {
     this.iconButtonStyle = 'filled';
     this.iconButtonSize = 'default';
     this.disabled = false;
+    this.selected = false;
   }
 
 
   override render() {
-    if (this.iconButtonStyle === 'floating') {
+    if (this.iconButtonStyle === 'toggle') {
+      return html`<md-filled-icon-button toggle ?selected=${
+          this.selected} class=${this.iconButtonSize} ?disabled=${
+          this.disabled}>
+        <slot name="icon"></slot>
+        <slot name="selectedIcon" slot="selectedIcon"></slot>
+      </md-filled-icon-button>`;
+    } else if (this.iconButtonStyle === 'floating') {
       return html`<md-standard-icon-button class=${
           this.iconButtonSize} ?disabled=${this.disabled}>
         <slot name="icon"></slot>
