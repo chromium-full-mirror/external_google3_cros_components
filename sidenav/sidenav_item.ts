@@ -511,6 +511,9 @@ export class SidenavItem extends LitElement {
 
   private onIconSlotChanged() {
     this.hasIcon = this.iconSlotElement.assignedElements().length > 0;
+    this.iconSlotElement.assignedElements().forEach(icon => {
+      icon.setAttribute('tabIndex', '-1');
+    });
   }
 
   // TODO(b/262453851): There's probably a nicer way to implement this.
