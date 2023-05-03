@@ -154,6 +154,13 @@ export class LottieRenderer extends LitElement {
   /** When true, animation will loop continuously. */
   loop: boolean;
 
+  /**
+   * Whether or not the illustration should render using a dynamic palette
+   * taken from the computed style, or the default GM2 palette each asset comes
+   * with.
+   */
+  dynamic: boolean;
+
   /** The onscreen canvas controlled by lottie_worker.js. */
   get onscreenCanvas(): HTMLCanvasElement|null {
     return this.renderRoot.querySelector('#onscreen-canvas');
@@ -208,12 +215,17 @@ export class LottieRenderer extends LitElement {
     assetUrl: {type: String, attribute: 'asset-url'},
     autoplay: {type: Boolean, attribute: true},
     loop: {type: Boolean, attribute: true},
+    dynamic: {type: Boolean, attribute: true},
   };
 
   constructor() {
     super();
     this.autoplay = true;
     this.loop = true;
+
+    // Once all apps are launching with dynamic colors, we can default this to
+    // true, or remove this attribute altogether.
+    this.dynamic = false;
   }
 
   /**
@@ -308,6 +320,7 @@ export class LottieRenderer extends LitElement {
    * TODO(b/276079531): Remove, bind refreshAnimColors to color change event.
    */
   onColorSchemeChanged() {
+    if (!this.dynamic) return;
     this.refreshAnimationColors();
   }
 
@@ -377,17 +390,24 @@ export class LottieRenderer extends LitElement {
     const animationData = castExists(
         this.animationData, 'cros-lottie-renderer fetched null animation data');
 
-    // When the animation is first loaded, it needs to be traversed via DFS to
-    // find all shapes that are mapped to tokens, as these will need to receive
-    // color updates. `colors` is the internal list of all known shapes, and
-    // will be modified by this function.
-    traverse(animationData, this.colors);
+    // For apps using this component without the Jelly flag, they should ignore
+    // the dynamic palette and just use the GM2 colors that are inside the
+    // JSON file itself. This means we can skip populating the color map with
+    // values, which means `updateColorsInAnimationData` will be a no-op.
+    if (this.dynamic) {
+      this.colors.clear();
+      // When the animation is first loaded, it needs to be traversed via DFS to
+      // find all shapes that are mapped to tokens, as these will need to
+      // receive color updates. `colors` is the internal list of all known
+      // shapes, and will be modified by this function.
+      traverse(animationData, this.colors);
 
-    if (this.colors.size === 0) {
-      console.warn(
-          `Unable to find cros.sys.illo tokens in ${this.assetUrl}. Please ` +
-          `ensure this animation file has been run through the VisD token ` +
-          `resolution script.`);
+      if (this.colors.size === 0) {
+        console.warn(
+            `Unable to find cros.sys.illo tokens in ${this.assetUrl}. Please ` +
+            `ensure this animation file has been run through the VisD token ` +
+            `resolution script.`);
+      }
     }
 
     this.updateColorsInAnimationData();
