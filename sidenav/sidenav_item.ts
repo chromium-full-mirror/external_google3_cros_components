@@ -193,7 +193,8 @@ export class SidenavItem extends LitElement {
     }
 
     li[aria-expanded] .tree-label,
-    .has-icon + .tree-label {
+    .has-icon + .tree-label,
+    :host(:not([layer="0"])) .tree-label {
       margin-inline-start: ${ICON_LABEL_GAP};
     }
 
