@@ -82,6 +82,9 @@ export class Slider extends LitElement {
       --md-slider-hover-handle-color: var(--cros-sys-primary);
       --md-slider-hover-state-layer-opacity: 0;
       --md-slider-inactive-track-color: var(--cros-sys-primary_container);
+      --md-slider-label-container-color: var(--cros-sys-primary);
+      --md-slider-label-container-height: 18px;
+      --md-slider-label-label-text-type: var(--cros-typography-label1);
       --md-slider-pressed-handle-color: var(--cros-sys-primary);
       --md-slider-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-slider-pressed-state-layer-opacity: 1;
@@ -99,17 +102,30 @@ export class Slider extends LitElement {
     value: {type: Number},
     disabled: {type: Boolean},
     withTickMarks: {type: Boolean},
+    withLabel: {type: Boolean},
   };
 
   value: number;
   disabled: boolean;
   withTickMarks: boolean;
+  withLabel: boolean;
 
   constructor() {
     super();
     this.value = 0;
     this.disabled = false;
     this.withTickMarks = false;
+    this.withLabel = false;
+  }
+
+  override firstUpdated() {
+    const slider = this.shadowRoot!.querySelector('md-slider')!;
+    // Using unicode non-breaking space U-00A0, charCode 160. This is to add
+    // padding on either side of the label text.
+    const space = `  `;
+    const updateValueLabel = () => slider.valueLabel =
+        `${space}${slider.value}${space}`;
+    updateValueLabel();
   }
 
   override render() {
@@ -125,7 +141,7 @@ export class Slider extends LitElement {
     } else {
       return html`
         <md-slider value=${this.value} ?withTickMarks=${
-          this.withTickMarks}></md-slider>
+          this.withTickMarks} ?withLabel=${this.withLabel}></md-slider>
       `;
     }
   }
