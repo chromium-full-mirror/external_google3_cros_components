@@ -47,6 +47,7 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-container-shape: 12px;
       --md-filled-tonal-icon-button-container-size: 40px;
       --md-filled-tonal-icon-button-disabled-container-color: var(--cros-sys-disabled_container);
+      --md-filled-tonal-icon-button-disabled-container-opacity: 1;
       --md-filled-tonal-icon-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-filled-tonal-icon-button-disabled-icon-opacity: 1;
       --md-filled-tonal-icon-button-focus-icon-color: var(--cros-sys-on_surface);
@@ -131,6 +132,7 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-container-shape: 12px;
       --md-filled-icon-button-container-size: 40px;
       --md-filled-icon-button-disabled-container-color: #00000000;
+      --md-filled-icon-button-disabled-container-opacity: 1;
       --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-filled-icon-button-disabled-icon-opacity: 1;
       --md-filled-icon-button-hover-state-layer-opacity: 1;
