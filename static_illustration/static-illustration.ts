@@ -18,6 +18,13 @@ export class StaticIllustration extends LitElement {
   url: string|null;
 
   /**
+   * Accessible text to inform screenreaders about this asset. If omitted it's
+   * assumed the illustration is solely for visual aesthetic and will be aria
+   * hidden to not clutter the a11y tree.
+   */
+  alt: string|null;
+
+  /**
    * After we fetch a external svg file from `url` we cache it so we can recolor
    * it without having to repeat the network request.
    */
@@ -41,7 +48,8 @@ export class StaticIllustration extends LitElement {
   static override properties = {
     url: {type: String},
     cachedExternalSVG: {type: String},
-    coloredExternalSVGDataURL: {type: String}
+    coloredExternalSVGDataURL: {type: String},
+    alt: {type: String}
   };
 
   /** @nocollapse */
@@ -62,6 +70,7 @@ export class StaticIllustration extends LitElement {
     this.url = null;
     this.cachedExternalSVG = null;
     this.coloredExternalSVGDataURL = null;
+    this.alt = null;
   }
 
   // TODO(b/264329425): Bind this to the color scheme change event.
@@ -150,12 +159,16 @@ export class StaticIllustration extends LitElement {
 
   override render() {
     if (this.coloredExternalSVGDataURL) {
+      // If we don't have alt text set the alt attribute to empty string.
+      // https://www.w3.org/WAI/WCAG21/Techniques/html/H67.html
       return html`
-        <img src="${this.coloredExternalSVGDataURL}" />
+        <img
+          alt=${this.alt !== null ? this.alt : ''}
+          src="${this.coloredExternalSVGDataURL}"/>
       `;
     } else {
       // TODO(b/274718543): Allow users to specify static illustrations as
-      // templates.
+      // templates. Make sure we add alt text too if it's specified.
       return html``;
     }
   }
