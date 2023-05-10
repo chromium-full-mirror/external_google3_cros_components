@@ -48,6 +48,7 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-container-size: 40px;
       --md-filled-tonal-icon-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-tonal-icon-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-tonal-icon-button-disabled-icon-opacity: 1;
       --md-filled-tonal-icon-button-focus-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-hover-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
@@ -64,6 +65,7 @@ export class IconButton extends LitElement {
     md-standard-icon-button {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-icon-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-icon-button-disabled-icon-opacity: 1;
       --md-icon-button-icon-size: 20px;
       --md-icon-button-selected-focus-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
       --md-icon-button-selected-hover-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
@@ -130,6 +132,7 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-container-size: 40px;
       --md-filled-icon-button-disabled-container-color: #00000000;
       --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-icon-button-disabled-icon-opacity: 1;
       --md-filled-icon-button-hover-state-layer-opacity: 1;
       --md-filled-icon-button-icon-size: 20px;
       --md-filled-icon-button-selected-container-color: var(--cros-sys-primary_container);
