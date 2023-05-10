@@ -63,6 +63,7 @@ export class Switch extends LitElement {
       opacity: 0.38;
       --md-switch-disabled-unselected-handle-color: var(--cros-sys-on_secondary);
       --md-switch-disabled-unselected-track-color: var(--cros-sys-secondary);
+      --md-switch-disabled-track-opacity: 1;
 
       --md-switch-disabled-selected-handle-color: var(--cros-sys-on_primary);
       --md-switch-disabled-selected-track-color: var(--cros-sys-primary);
