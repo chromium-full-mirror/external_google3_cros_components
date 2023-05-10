@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {addColorSchemeChangeListener, removeColorSchemeChangeListener} from 'google3/third_party/py/chrome_styles/ts_helpers';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 const SVG_CONTENT_TYPE = 'image/svg+xml';
@@ -44,6 +45,8 @@ export class StaticIllustration extends LitElement {
   /** AbortController associated with a currently pending fetch request. */
   private abortController: AbortController|null = null;
 
+  private readonly onColorChange = () => void this.recolorExternalAsset();
+
   /** @nocollapse */
   static override properties = {
     url: {type: String},
@@ -73,7 +76,6 @@ export class StaticIllustration extends LitElement {
     this.alt = null;
   }
 
-  // TODO(b/264329425): Bind this to the color scheme change event.
   private recolorExternalAsset() {
     if (!this.cachedExternalSVG) {
       // If the user changed their color theme and we don't have an asset to
@@ -149,6 +151,18 @@ export class StaticIllustration extends LitElement {
     this.cachedExternalSVG = await response.text();
     this.recolorExternalAsset();
     this.dispatchEvent(new CustomEvent('illustration-updated'));
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+
+    addColorSchemeChangeListener(this.onColorChange);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+
+    removeColorSchemeChangeListener(this.onColorChange);
   }
 
   override updated(changedProperties: PropertyValues<this>) {
