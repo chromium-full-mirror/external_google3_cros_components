@@ -26,6 +26,13 @@ export class StaticIllustration extends LitElement {
   alt: string|null;
 
   /**
+   * A css variable that all fills in the svg specified by `url` should be
+   * mapped to. Allows for legacy single color svg's to be made
+   * dynamic. Pass the variable in as `--cros-name`.
+   */
+  forceColor: string|null;
+
+  /**
    * After we fetch a external svg file from `url` we cache it so we can recolor
    * it without having to repeat the network request.
    */
@@ -52,7 +59,8 @@ export class StaticIllustration extends LitElement {
     url: {type: String},
     cachedExternalSVG: {type: String},
     coloredExternalSVGDataURL: {type: String},
-    alt: {type: String}
+    alt: {type: String},
+    forceColor: {type: String}
   };
 
   /** @nocollapse */
@@ -74,6 +82,7 @@ export class StaticIllustration extends LitElement {
     this.cachedExternalSVG = null;
     this.coloredExternalSVGDataURL = null;
     this.alt = null;
+    this.forceColor = null;
   }
 
   private recolorExternalAsset() {
@@ -86,19 +95,38 @@ export class StaticIllustration extends LitElement {
       return;
     }
 
-    // Replaces references to css variables in the svg source i.e
-    //     fill="var(--cros-sys-illo1)"
-    //     <style> * { fill: var(--cros-sys-illo1); } </style>
-    // With their actual hex values in the current color scheme.
-    //     fill="#ff00ff"
-    //     <style> * { fill: #ff00ff } </style>
-    // This is because when rendering svg in a <img> tag the svg is isolated
-    // from the page context and does not have access to any css variables.
-    // Note that we also can't render external svg in page since it's untrusted
-    // and would pose a XSS risk.
-    const resolvedSVG = this.cachedExternalSVG.replaceAll(
-        /var\((--[\w\-_\.]+)\)/gi,
-        (match, variable) => getComputedStyle(this).getPropertyValue(variable));
+    let resolvedSVG;
+    const currentStyles = getComputedStyle(this);
+    if (this.forceColor) {
+      // Replaces all fills and strokes in the svg source i.e
+      //     fill="#ff0000"
+      //     <style> * { fill: #00ff00 } </style>
+      // With `forceColor`, assuming forceColor resolves to #ff00ff:
+      //     fill="#ff00ff"
+      //     <style> * { fill: #ff00ff } </style>
+      const resolvedForceColor =
+          currentStyles.getPropertyValue(this.forceColor);
+      resolvedSVG = this.cachedExternalSVG.replaceAll(
+          /(fill|stroke)\s*=\s*['"][^'"]+['"]/gi,
+          (match, attr) => `${attr} = "${resolvedForceColor}"`);
+      resolvedSVG = resolvedSVG.replaceAll(
+          /(fill|stroke)\s*:\s*[^;]+;/gi,
+          (match, attr) => `${attr} : ${resolvedForceColor};`);
+    } else {
+      // Replaces references to css variables in the svg source i.e
+      //     fill="var(--cros-sys-illo1)"
+      //     <style> * { fill: var(--cros-sys-illo1); } </style>
+      // With their actual hex values in the current color scheme.
+      //     fill="#ff00ff"
+      //     <style> * { fill: #ff00ff } </style>
+      // This is because when rendering svg in a <img> tag the svg is isolated
+      // from the page context and does not have access to any css variables.
+      // Note that we also can't render external svg in page since it's
+      // untrusted and would pose a XSS risk.
+      resolvedSVG = this.cachedExternalSVG.replaceAll(
+          /var\((--[\w\-_\.]+)\)/gi,
+          (match, variable) => currentStyles.getPropertyValue(variable));
+    }
     const b64 = btoa(resolvedSVG);
     this.coloredExternalSVGDataURL = `data:${SVG_CONTENT_TYPE};base64,${b64}`;
   }
