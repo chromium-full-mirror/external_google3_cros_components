@@ -6,6 +6,7 @@
 
 import {addColorSchemeChangeListener, removeColorSchemeChangeListener} from 'google3/third_party/py/chrome_styles/ts_helpers';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {templateContent} from 'lit/directives/template-content';
 
 const SVG_CONTENT_TYPE = 'image/svg+xml';
 
@@ -13,7 +14,17 @@ function isAbortError(error: unknown): boolean {
   return (error as Error).name === 'AbortError';
 }
 
-/** A static illustration for SVG illustrations. */
+/**
+ * A static illustration component for SVG illustrations. This component
+ * supports both externally fetched SVGs as well as local HTMLTemplateElements.
+ * The external url will override any local template provided, eg the following
+ * will result in ONLY the external SVG being fetched and rendererd:
+ *
+ * <cros-static-illustration url='<url>' .template=${templateRef}>
+ *
+ * To render a local HTMLTemplateElement, make sure there is no url set:
+ * <cros-static-illustration .template=${templateRef}>
+ */
 export class StaticIllustration extends LitElement {
   /** A url to a external svg asset with embedded cros var references. */
   url: string|null;
@@ -24,6 +35,11 @@ export class StaticIllustration extends LitElement {
    * hidden to not clutter the a11y tree.
    */
   alt: string|null;
+  /**
+   * A template containing a local SVG file. This will only be rendered if no
+   * url to an external asset has been provided.
+   */
+  template: HTMLTemplateElement;
 
   /**
    * A css variable that all fills in the svg specified by `url` should be
@@ -53,6 +69,7 @@ export class StaticIllustration extends LitElement {
   private abortController: AbortController|null = null;
 
   private readonly onColorChange = () => void this.recolorExternalAsset();
+  private shouldRenderTemplate = false;
 
   /** @nocollapse */
   static override properties = {
@@ -60,7 +77,8 @@ export class StaticIllustration extends LitElement {
     cachedExternalSVG: {type: String},
     coloredExternalSVGDataURL: {type: String},
     alt: {type: String},
-    forceColor: {type: String}
+    forceColor: {type: String},
+    template: {attribute: false, type: HTMLTemplateElement}
   };
 
   /** @nocollapse */
@@ -70,7 +88,7 @@ export class StaticIllustration extends LitElement {
       height: 100px;
       display: block;
     }
-    img {
+    img, svg {
       width: 100%;
       height: 100%;
     }
@@ -83,6 +101,7 @@ export class StaticIllustration extends LitElement {
     this.coloredExternalSVGDataURL = null;
     this.alt = null;
     this.forceColor = null;
+    this.template = document.createElement('template');
   }
 
   private recolorExternalAsset() {
@@ -193,14 +212,23 @@ export class StaticIllustration extends LitElement {
     removeColorSchemeChangeListener(this.onColorChange);
   }
 
-  override updated(changedProperties: PropertyValues<this>) {
-    if (changedProperties.has('url') && this.url) {
-      this.fetchExternalSVG(this.url);
+  override willUpdate(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('url')) {
+      if (this.url) {
+        this.shouldRenderTemplate = false;
+        this.fetchExternalSVG(this.url);
+        return;
+      }
+
+      // If the url has been removed, and there is a template for a local
+      // asset bound, on next render we want to render that rather than the
+      // cached colored SVG.
+      this.shouldRenderTemplate = true;
     }
   }
 
   override render() {
-    if (this.coloredExternalSVGDataURL) {
+    if (!this.shouldRenderTemplate && !!this.coloredExternalSVGDataURL) {
       // If we don't have alt text set the alt attribute to empty string.
       // https://www.w3.org/WAI/WCAG21/Techniques/html/H67.html
       return html`
@@ -208,11 +236,9 @@ export class StaticIllustration extends LitElement {
           alt=${this.alt !== null ? this.alt : ''}
           src="${this.coloredExternalSVGDataURL}"/>
       `;
-    } else {
-      // TODO(b/274718543): Allow users to specify static illustrations as
-      // templates. Make sure we add alt text too if it's specified.
-      return html``;
     }
+    // This will either render a local SVG template or the empty template.
+    return html`${templateContent(this.template)}`;
   }
 }
 
