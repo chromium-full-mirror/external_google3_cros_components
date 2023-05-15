@@ -89,6 +89,7 @@ export class StaticIllustration extends LitElement {
       display: block;
     }
     img, svg {
+      object-fit: cover;
       width: 100%;
       height: 100%;
     }
