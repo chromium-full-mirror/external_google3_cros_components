@@ -132,7 +132,7 @@ export class Slider extends LitElement {
     if (this.disabled) {
       return html`
         <md-slider class="disabledStyle" disabled value=${
-          this.value} ?withTickMarks=${this.withTickMarks}>
+          this.value} max=10 ?withTickMarks=${this.withTickMarks}>
           <div slot="track">
             <div class="lower"></div>
             <div class="upper"></div>
@@ -140,7 +140,7 @@ export class Slider extends LitElement {
         </md-slider>`;
     } else {
       return html`
-        <md-slider value=${this.value} ?withTickMarks=${
+        <md-slider value=${this.value} max=10 ?withTickMarks=${
           this.withTickMarks} ?withLabel=${this.withLabel}></md-slider>
       `;
     }
