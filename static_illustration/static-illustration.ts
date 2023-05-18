@@ -24,6 +24,20 @@ function isAbortError(error: unknown): boolean {
  *
  * To render a local HTMLTemplateElement, make sure there is no url set:
  * <cros-static-illustration .template=${templateRef}>
+ *
+ * A build rule "gen_gm3_illustrations" has been provided which takes in a
+ * directory of GM3 .svg assets and compiles to a HTMLTemplateElement.
+ *
+ * In your BUILD file:
+ *
+ * load("//third_party/javascript/cros_components/static_illustration:build_defs.bzl",
+ * "gen_gm3_illustrations")
+ *
+ * gen_gm3_illustrations(
+ *  name = "gm3_assets",
+ *  srcs = glob(["gm3_assets/**"]),
+ * )
+ *
  */
 export class StaticIllustration extends LitElement {
   /** A url to a external svg asset with embedded cros var references. */
