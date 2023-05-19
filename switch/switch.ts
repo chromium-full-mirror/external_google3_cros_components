@@ -106,6 +106,10 @@ export class Switch extends LitElement {
   private onChange(e: Event) {
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
+
+  override click() {
+    this.shadowRoot!.querySelector('md-switch')?.click();
+  }
 }
 
 customElements.define('cros-switch', Switch);
