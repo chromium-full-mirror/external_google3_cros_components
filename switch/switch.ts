@@ -78,6 +78,12 @@ export class Switch extends LitElement {
     disabled: {type: Boolean},
   };
 
+  /** @nocollapse */
+  static events = {
+    /** The switch value changed via user input. */
+    CHANGE: 'change',
+  } as const;
+
   disabled: boolean;
   selected: boolean;
 
@@ -89,15 +95,26 @@ export class Switch extends LitElement {
 
   override render() {
     return html`
-    <md-switch ?disabled=${this.disabled} ?selected=${
-        this.selected}></md-switch>
+      <md-switch
+          ?disabled=${this.disabled}
+          ?selected=${this.selected}
+          @change=${this.onChange}>
+      </md-switch>
     `;
+  }
+
+  private onChange(e: Event) {
+    this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 }
 
 customElements.define('cros-switch', Switch);
 
 declare global {
+  interface HTMLElementEventMap {
+    [Switch.events.CHANGE]: Event;
+  }
+
   interface HTMLElementTagNameMap {
     'cros-switch': Switch;
   }
