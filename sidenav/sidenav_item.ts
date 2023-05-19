@@ -290,21 +290,35 @@ export class SidenavItem extends LitElement {
   /**
    * The `separator` attribute will show a top border for the tree item. It's
    * mainly used to identify this tree item is a start of the new section.
+   * @export
    */
   separator: boolean;
   /**
    * Indicate if a tree item is disabled or not. Disabled tree item will have
    * a greyed out color, can't be enabled, can't get focus. It can still have
    * children, but it can't be expanded, and the expand icon will be hidden.
+   * @export
    */
   disabled: boolean;
-  /** Indicate if a tree item has been enabled or not. */
+  /**
+   * Indicate if a tree item has been enabled or not.
+   * @export
+   */
   enabled: boolean;
-  /** Indicate if a tree item has been expanded or not. */
+  /**
+   * Indicate if a tree item has been expanded or not.
+   * @export
+   */
   expanded: boolean;
-  /** Indicate if a tree item is in renaming mode or not. */
+  /**
+   * Indicate if a tree item is in renaming mode or not.
+   * @export
+   */
   renaming: boolean;
-  /** Indicate the item contains an error. */
+  /**
+   * Indicate the item contains an error.
+   * @export
+   */
   error: boolean;
   /**
    * A tree item will have children if the child tree items have been inserted
@@ -312,26 +326,33 @@ export class SidenavItem extends LitElement {
    * to appear as having children even without the actual child tree items
    * (e.g. no DOM children). This is mainly used when we asynchronously load
    * child tree items.
+   * @export
    */
   mayHaveChildren: boolean;
-  /** The label text of the tree item. */
+  /**
+   * The label text of the tree item.
+   * @export
+   */
   label: string;
   /**
    * If the user navigates to this item, tabs away from the sidenav and then
    * tabs back into the sidenav, the item that receives focus should be the one
    * they had navigated to. `tabIndex` is forwarded to the ` < li > ` element.
+   * @export
    */
   override tabIndex: number;
   /**
    * Indicate the depth of this tree item, we use it to calculate the padding
    * indentation. Note: "aria-level" can be calculated by DOM structure so
    * no need to provide it explicitly.
+   * @export
    */
   layer: number;
 
   /**
    * Whether an icon has been slotted. CSS cannot distinguish slots that have
    * slotted items, so we check manually and set a class.
+   * @export
    */
   hasIcon: boolean;
 

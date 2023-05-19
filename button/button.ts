@@ -98,10 +98,16 @@ export class Button extends LitElement {
     }
   `;
 
+  /** @export */
   label: string;
+  /** @export */
   disabled: boolean;
+  /** @export */
   trailingIcon: boolean;
-  /** How the button should be styled. One of {primary, secondary, text} */
+  /**
+   * How the button should be styled. One of {primary, secondary, text}.
+   * @export
+   */
   buttonStyle: 'primary'|'secondary'|'text' = 'primary';
 
   /** @nocollapse */

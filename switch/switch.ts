@@ -84,7 +84,9 @@ export class Switch extends LitElement {
     CHANGE: 'change',
   } as const;
 
+  /** @export */
   disabled: boolean;
+  /** @export */
   selected: boolean;
 
   constructor() {

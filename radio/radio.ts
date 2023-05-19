@@ -39,12 +39,14 @@ export class Radio extends LitElement {
 
   private checkedInternal = false;
 
+  /** @export */
   disabled: boolean;
 
   get mdRadio(): MdRadio|undefined {
     return this.renderRoot?.querySelector('md-radio') || undefined;
   }
 
+  /** @export */
   get checked() {
     return this.mdRadio?.checked || false;
   }

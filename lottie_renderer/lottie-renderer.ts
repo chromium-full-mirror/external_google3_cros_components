@@ -145,19 +145,29 @@ function traverse(jsonObj: object, shapes: Map<string, TokenColor>) {
  * it is more performant to use <cros-static-illustration>.
  */
 export class LottieRenderer extends LitElement {
-  /** The path to the lottie asset JSON file. */
+  /**
+   * The path to the lottie asset JSON file.
+   * @export
+   */
   assetUrl!: string;
 
-  /** When true, animation will begin to play as soon as it's loaded. */
+  /**
+   * When true, animation will begin to play as soon as it's loaded.
+   * @export
+   */
   autoplay: boolean;
 
-  /** When true, animation will loop continuously. */
+  /**
+   * When true, animation will loop continuously.
+   * @export
+   */
   loop: boolean;
 
   /**
    * Whether or not the illustration should render using a dynamic palette
    * taken from the computed style, or the default GM2 palette each asset comes
    * with.
+   * @export
    */
   dynamic: boolean;
 

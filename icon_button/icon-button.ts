@@ -30,11 +30,16 @@ export class IconButton extends LitElement {
   /**
    * When false, uses lighter container and darker icon color. When true, uses
    * darker container and lighter icon color.
+   * @export
    */
   prominent: boolean;
+  /** @export */
   iconButtonStyle: 'filled'|'floating'|'onImage'|'toggle';
+  /** @export */
   iconButtonSize: 'small'|'default'|'large';
+  /** @export */
   disabled: boolean;
+  /** @export */
   selected: boolean;
 
   /** @nocollapse */

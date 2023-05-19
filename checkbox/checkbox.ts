@@ -48,7 +48,9 @@ export class Checkbox extends LitElement {
     disabled: {type: Boolean},
   };
 
+  /** @export */
   checkedInternal: boolean;
+  /** @export */
   disabled: boolean;
 
   get mdCheckbox(): MdCheckbox {

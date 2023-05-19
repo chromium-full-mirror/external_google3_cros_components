@@ -105,9 +105,13 @@ export class Slider extends LitElement {
     withLabel: {type: Boolean},
   };
 
+  /** @export */
   value: number;
+  /** @export */
   disabled: boolean;
+  /** @export */
   withTickMarks: boolean;
+  /** @export */
   withLabel: boolean;
 
   constructor() {

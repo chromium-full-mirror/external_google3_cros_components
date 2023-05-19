@@ -40,28 +40,31 @@ function isAbortError(error: unknown): boolean {
  *
  */
 export class StaticIllustration extends LitElement {
-  /** A url to a external svg asset with embedded cros var references. */
+  /**
+   * A url to a external svg asset with embedded cros var references.
+   * @export
+   */
   url: string|null;
-
   /**
    * Accessible text to inform screenreaders about this asset. If omitted it's
    * assumed the illustration is solely for visual aesthetic and will be aria
    * hidden to not clutter the a11y tree.
+   * @export
    */
   alt: string|null;
   /**
    * A template containing a local SVG file. This will only be rendered if no
    * url to an external asset has been provided.
+   * @export
    */
   template: HTMLTemplateElement;
-
   /**
    * A css variable that all fills in the svg specified by `url` should be
    * mapped to. Allows for legacy single color svg's to be made
    * dynamic. Pass the variable in as `--cros-name`.
+   * @export
    */
   forceColor: string|null;
-
   /**
    * After we fetch a external svg file from `url` we cache it so we can recolor
    * it without having to repeat the network request.
@@ -72,13 +75,13 @@ export class StaticIllustration extends LitElement {
    * with real hex codes.
    */
   private coloredExternalSVGDataURL: string|null;
+
   /**
    * Everytime we make a fetch we increment this token. This allows us to
    * gracefully handle the user changing the url multiple times before the first
    * request has had a chance to complete.
    */
   private currentFetchToken = 0;
-
   /** AbortController associated with a currently pending fetch request. */
   private abortController: AbortController|null = null;
 
