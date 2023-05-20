@@ -40,6 +40,16 @@ function isAbortError(error: unknown): boolean {
  *
  */
 export class StaticIllustration extends LitElement {
+  /** @nocollapse */
+  static override properties = {
+    url: {type: String},
+    cachedExternalSVG: {type: String},
+    coloredExternalSVGDataURL: {type: String},
+    alt: {type: String},
+    forceColor: {type: String},
+    template: {attribute: false, type: HTMLTemplateElement}
+  };
+
   /**
    * A url to a external svg asset with embedded cros var references.
    * @export
@@ -87,16 +97,6 @@ export class StaticIllustration extends LitElement {
 
   private readonly onColorChange = () => void this.recolorExternalAsset();
   private shouldRenderTemplate = false;
-
-  /** @nocollapse */
-  static override properties = {
-    url: {type: String},
-    cachedExternalSVG: {type: String},
-    coloredExternalSVGDataURL: {type: String},
-    alt: {type: String},
-    forceColor: {type: String},
-    template: {attribute: false, type: HTMLTemplateElement}
-  };
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
