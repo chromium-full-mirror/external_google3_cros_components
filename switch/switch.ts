@@ -105,7 +105,7 @@ export class Switch extends LitElement {
     `;
   }
 
-  private onChange(e: Event) {
+  private onChange() {
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
