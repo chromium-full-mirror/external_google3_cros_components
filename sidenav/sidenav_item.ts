@@ -7,7 +7,6 @@
 import 'google3/third_party/javascript/cros_components/icon/icon';
 import '@material/web/ripple/ripple.js';
 
-import {ripple} from '@material/web/ripple/directive.js';
 import {MdRipple} from '@material/web/ripple/ripple.js';
 import {castExists} from 'google3/javascript/common/asserts/asserts';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
@@ -458,8 +457,7 @@ export class SidenavItem extends LitElement {
           aria-disabled=${this.disabled}>
         <div
             class="tree-row"
-            style=${styleMap(treeRowStyles)}
-            ${ripple(this.ripple)}>
+            style=${styleMap(treeRowStyles)}>
           <md-ripple></md-ripple>
           <!-- TODO(b/262453851): Implement icon from spec -->
           <span
