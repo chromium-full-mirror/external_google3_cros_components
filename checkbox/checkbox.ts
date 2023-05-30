@@ -48,6 +48,12 @@ export class Checkbox extends LitElement {
     disabled: {type: Boolean},
   };
 
+  /** @nocollapse */
+  static events = {
+    /** The checkbox value changed via user input. */
+    CHANGE: 'change',
+  } as const;
+
   /** @export */
   checkedInternal: boolean;
   /** @export */
@@ -75,15 +81,30 @@ export class Checkbox extends LitElement {
 
   override render() {
     return html`
-      <md-checkbox ?disabled=${this.disabled} ?checked=${this.checkedInternal}>
+      <md-checkbox
+          ?disabled=${this.disabled}
+          ?checked=${this.checkedInternal}
+          @change=${this.onChange}>
       </md-checkbox>
     `;
+  }
+
+  private onChange() {
+    this.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  override click() {
+    this.mdCheckbox.click();
   }
 }
 
 customElements.define('cros-checkbox', Checkbox);
 
 declare global {
+  interface HTMLElementEventMap {
+    [Checkbox.events.CHANGE]: Event;
+  }
+
   interface HTMLElementTagNameMap {
     'cros-checkbox': Checkbox;
   }
