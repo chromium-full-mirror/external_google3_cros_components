@@ -74,8 +74,8 @@ export class Switch extends LitElement {
 
   /** @nocollapse */
   static override properties = {
-    selected: {type: Boolean},
-    disabled: {type: Boolean},
+    selected: {type: Boolean, reflect: true},
+    disabled: {type: Boolean, reflect: true},
   };
 
   /** @nocollapse */
