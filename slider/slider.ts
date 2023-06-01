@@ -7,8 +7,9 @@
 import '@material/web/slider/slider.js';
 
 import {MdSlider} from '@material/web/slider/slider.js';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
 
+// TODO(b/285172083) remove unsupported disabled state rendering/styling
 // tslint:disable:no-any needed for JS interface
 const renderTrack = (MdSlider.prototype as any).renderTrack;
 (MdSlider.prototype as any).renderTrack = function() {
@@ -24,10 +25,7 @@ const renderTrack = (MdSlider.prototype as any).renderTrack;
  * gap (half of the handle width + width of transparent gap on one side).
  */
 const DISABLED_STATE_OVERRIDES = css`
-  md-slider[disabled] {
-    --md-slider-pressed-handle-color: var(--disabled-color);
-  }
-  .disabledStyle > [slot="track"] {
+  md-slider[disabled] > [slot="track"] {
     display: flex;
     align-items: center;
     position: absolute;
@@ -43,12 +41,12 @@ const DISABLED_STATE_OVERRIDES = css`
   .lower {
       border-radius: 9999px 0 0 9999px;
       left: 0;
-      width: calc((var(--slider-upper-fraction)) * 100% - var(--handle-gap));
+      width: calc((var(--slider-end-fraction)) * 100% - var(--handle-gap));
   }
   .upper {
       border-radius: 0 9999px 9999px 0;
       right: 0;
-      width: calc((1 - var(--slider-upper-fraction)) * 100% - var(--handle-gap));
+      width: calc((1 - var(--slider-end-fraction)) * 100% - var(--handle-gap));
   }
 `;
 /**
@@ -103,6 +101,7 @@ export class Slider extends LitElement {
     disabled: {type: Boolean},
     withTickMarks: {type: Boolean},
     withLabel: {type: Boolean},
+    valueLabel: {type: String, state: true},
   };
 
   /** @export */
@@ -113,6 +112,8 @@ export class Slider extends LitElement {
   withTickMarks: boolean;
   /** @export */
   withLabel: boolean;
+  /** @export */
+  valueLabel?: string;
 
   constructor() {
     super();
@@ -122,32 +123,27 @@ export class Slider extends LitElement {
     this.withLabel = false;
   }
 
-  override firstUpdated() {
-    const slider = this.shadowRoot!.querySelector('md-slider')!;
+  override render() {
     // Using unicode non-breaking space U-00A0, charCode 160. This is to add
     // padding on either side of the label text.
     const space = `  `;
-    const updateValueLabel = () => slider.valueLabel =
-        `${space}${slider.value}${space}`;
-    updateValueLabel();
+    const valueLabel = `${space}${this.valueLabel ?? this.value}${space}`;
+    const disabledTemplate = this.disabled ? html`
+      <div slot="track">
+        <div class="lower"></div>
+        <div class="upper"></div>
+      </div>
+      ` :
+                                             nothing;
+    return html`
+      <md-slider @input=${this.handleInput} .valueLabel=${
+        valueLabel} .disabled=${this.disabled} .value=${
+        this.value} max=10 .withTickMarks=${this.withTickMarks} .withLabel=${
+        this.withLabel}>${disabledTemplate}</md-slider>`;
   }
 
-  override render() {
-    if (this.disabled) {
-      return html`
-        <md-slider class="disabledStyle" disabled value=${
-          this.value} max=10 ?withTickMarks=${this.withTickMarks}>
-          <div slot="track">
-            <div class="lower"></div>
-            <div class="upper"></div>
-          </div>
-        </md-slider>`;
-    } else {
-      return html`
-        <md-slider value=${this.value} max=10 ?withTickMarks=${
-          this.withTickMarks} ?withLabel=${this.withLabel}></md-slider>
-      `;
-    }
+  handleInput(e: Event) {
+    this.valueLabel = String((e.target as MdSlider).value);
   }
 }
 
