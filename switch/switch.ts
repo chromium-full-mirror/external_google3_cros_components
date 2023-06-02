@@ -6,6 +6,7 @@
 
 import '@material/web/switch/switch.js';
 
+import {MdSwitch} from '@material/web/switch/switch.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /** A chromeOS switch component. */
@@ -89,6 +90,10 @@ export class Switch extends LitElement {
   /** @export */
   selected: boolean;
 
+  get mdSwitch(): MdSwitch|undefined|null {
+    return this.shadowRoot!.querySelector('md-switch');
+  }
+
   constructor() {
     super();
     this.disabled = false;
@@ -106,11 +111,12 @@ export class Switch extends LitElement {
   }
 
   private onChange() {
+    this.selected = this.mdSwitch!.selected;
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
   override click() {
-    this.shadowRoot!.querySelector('md-switch')?.click();
+    this.mdSwitch?.click();
   }
 }
 
