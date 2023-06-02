@@ -55,7 +55,7 @@ export class Checkbox extends LitElement {
   } as const;
 
   /** @export */
-  checkedInternal: boolean;
+  checked: boolean;
   /** @export */
   disabled: boolean;
 
@@ -63,33 +63,24 @@ export class Checkbox extends LitElement {
     return this.renderRoot.querySelector('md-checkbox') as MdCheckbox;
   }
 
-  get checked() {
-    return this.mdCheckbox?.checked || false;
-  }
-  set checked(value: boolean) {
-    // Store the value for `checked`, so that it is not lost if it is set before
-    // the first render.
-    this.checkedInternal = value;
-    this.requestUpdate();
-  }
-
   constructor() {
     super();
     this.disabled = false;
-    this.checkedInternal = false;
+    this.checked = false;
   }
 
   override render() {
     return html`
       <md-checkbox
           ?disabled=${this.disabled}
-          ?checked=${this.checkedInternal}
+          ?checked=${this.checked}
           @change=${this.onChange}>
       </md-checkbox>
     `;
   }
 
   private onChange() {
+    this.checked = this.mdCheckbox.checked;
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
