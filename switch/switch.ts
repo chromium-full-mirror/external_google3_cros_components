@@ -9,6 +9,8 @@ import '@material/web/switch/switch.js';
 import {MdSwitch} from '@material/web/switch/switch.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+import {shouldProcessClick} from 'google3/third_party/javascript/cros_components/helpers/helpers';
+
 /** A chromeOS switch component. */
 export class Switch extends LitElement {
   /** @nocollapse */
@@ -98,6 +100,12 @@ export class Switch extends LitElement {
     super();
     this.disabled = false;
     this.selected = false;
+
+    this.addEventListener('click', (event: MouseEvent) => {
+      if (shouldProcessClick(event)) {
+        this.click();
+      }
+    });
   }
 
   override render() {
