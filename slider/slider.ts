@@ -138,7 +138,7 @@ export class Slider extends LitElement {
     return html`
       <md-slider @input=${this.handleInput} .valueLabel=${
         valueLabel} .disabled=${this.disabled} .value=${
-        this.value} max=10 .withTickMarks=${this.withTickMarks} .withLabel=${
+        this.value} max=10 .tickmarks=${this.withTickMarks} .labeled=${
         this.withLabel}>${disabledTemplate}</md-slider>`;
   }
 
