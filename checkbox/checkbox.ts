@@ -45,7 +45,7 @@ export class Checkbox extends LitElement {
   /** @nocollapse */
   static override properties = {
     checked: {type: Boolean, reflect: true},
-    disabled: {type: Boolean},
+    disabled: {type: Boolean, reflect: true},
   };
 
   /** @nocollapse */
