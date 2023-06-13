@@ -9,6 +9,8 @@ import '@material/web/checkbox/checkbox.js';
 import {MdCheckbox} from '@material/web/checkbox/checkbox.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+import {shouldProcessClick} from '../helpers/helpers';
+
 /**
  * A ChromeOS compliant checkbox.
  * See spec
@@ -67,6 +69,12 @@ export class Checkbox extends LitElement {
     super();
     this.disabled = false;
     this.checked = false;
+
+    this.addEventListener('click', (event: MouseEvent) => {
+      if (shouldProcessClick(event)) {
+        this.click();
+      }
+    });
   }
 
   override render() {
