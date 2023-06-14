@@ -105,10 +105,10 @@ export class Button extends LitElement {
   /** @export */
   trailingIcon: boolean;
   /**
-   * How the button should be styled. One of {primary, secondary, text}.
+   * How the button should be styled. One of {primary, secondary, floating}.
    * @export
    */
-  buttonStyle: 'primary'|'secondary'|'text' = 'primary';
+  buttonStyle: 'primary'|'secondary'|'floating' = 'primary';
 
   /** @nocollapse */
   static override properties = {
@@ -126,7 +126,7 @@ export class Button extends LitElement {
   }
 
   override render() {
-    if (this.buttonStyle === 'text') {
+    if (this.buttonStyle === 'floating') {
       return html`
         <md-text-button class=${this.buttonStyle}
             ?disabled=${this.disabled}
