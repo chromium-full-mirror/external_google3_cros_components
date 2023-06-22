@@ -36,6 +36,9 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-list-item-list-item-leading-icon-color: var(--cros-sys-on_surface);
       --md-list-item-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-list-item-list-item-pressed-state-layer-opacity: 1;
+      --md-list-item-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-list-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
     }
     :host {
       display: inline block;
@@ -136,13 +139,15 @@ export class MenuItem extends LitElement implements MenuItemType {
       case 'shortcut':
         // TODO(b/288231413): expose shortcut text.
         endSlot =
-            html`<span slot="end" class="slot-end" id="shortcut">Shortcut</span>`;
+            html`<span slot="end" class="slot-end" id="shortcut" data-variant="icon">Shortcut</span>`;
         break;
       case 'icon':
-        endSlot = html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
+        endSlot =
+            html`<cros-icon slot="end" class="slot-end" data-variant="icon"></cros-icon>`;
         break;
       case 'switch':
-        endSlot = html`<cros-switch slot="end" class="slot-end"></cros-switch>`;
+        endSlot =
+            html`<cros-switch slot="end" class="slot-end" data-variant="icon"></cros-switch>`;
         break;
       default:
         // md-list-item has a ::slotted(*) selector which will never select the
