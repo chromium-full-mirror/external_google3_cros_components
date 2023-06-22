@@ -130,7 +130,7 @@ export class Button extends LitElement {
       return html`
         <md-text-button class=${this.buttonStyle}
             ?disabled=${this.disabled}
-            ?trailingIcon=${this.trailingIcon}>
+            ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
           ${this.label}
         </md-text-button>
@@ -140,7 +140,7 @@ export class Button extends LitElement {
     return html`
         <md-filled-button class=${this.buttonStyle}
             ?disabled=${this.disabled}
-            ?trailingIcon=${this.trailingIcon}>
+            ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
           ${this.label}
         </md-filled-button>
