@@ -209,9 +209,9 @@ export class Textfield extends LitElement {
         type=${this.type}
         data-aria-label=${this.label}
         value=${this.value}
-        suffixtext=${this.suffix}
+        suffix-text=${this.suffix}
         maxLength=${this.maxLength}
-        supportingText=${this.hint}
+        supporting-text=${this.hint}
         placeholder=${this.placeholder}
         @focus=${this.toggleFocusStyle}
         @blur=${this.toggleFocusStyle}
