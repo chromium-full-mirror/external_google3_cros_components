@@ -11,6 +11,14 @@ import '../switch/switch';
 import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+// From google3/chrome/apps/common/client/icons/chromeos/ic_checked.svg
+const CHECKED_ICON = html`
+  <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" slot="end" class="slot-end" id="checkedIcon">
+    <path d="M13.7071 7.29289C13.3166 6.90237 12.6834 6.90237 12.2929 7.29289L9 10.5858L7.70711 9.29289C7.31658 8.90237 6.68342 8.90237 6.29289 9.29289C5.90237 9.68342 5.90237 10.3166 6.29289 10.7071L8.29289 12.7071C8.68342 13.0976 9.31658 13.0976 9.70711 12.7071L13.7071 8.70711C14.0976 8.31658 14.0976 7.68342 13.7071 7.29289Z"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM10 16C13.3137 16 16 13.3137 16 10C16 6.68629 13.3137 4 10 4C6.68629 4 4 6.68629 4 10C4 13.3137 6.68629 16 10 16Z"/>
+  </svg>
+`;
+
 /**
  * A cros compliant menu-item component for use in cros-menu.
  */
@@ -47,6 +55,9 @@ export class MenuItem extends LitElement implements MenuItemType {
     #shortcut {
       color: var(--cros-sys-secondary);
     }
+    #checkedIcon {
+      fill: var(--cros-sys-primary);
+    }
   `;
 
   static override shadowRootOptions = {
@@ -63,6 +74,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     disabled: {type: Boolean},
     isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
     isListItem: {type: Boolean, reflect: true, attribute: 'md-list-item'},
+    checked: {type: Boolean, reflect: true},
   };
 
   /**
@@ -93,6 +105,7 @@ export class MenuItem extends LitElement implements MenuItemType {
    * @export
    */
   active: boolean;
+  checked: boolean;
 
   constructor() {
     super();
@@ -108,47 +121,58 @@ export class MenuItem extends LitElement implements MenuItemType {
     // `.active`, so we do not require accessors to synchronize `this.active`
     // with `md-menu-item.active`
     this.active = false;
+    this.checked = false;
   }
 
-  override render() {
-    let slotEnd;
+  // Set item to be placed in `end` slot of menu item (if any).
+  // Checked property (check mark) will always take precedence over any icon
+  // placed in end slot (if both are specified the checked icon will be used).
+  private getEndSlot() {
+    if (this.checked) {
+      return CHECKED_ICON;
+    }
+    let endSlot;
     switch (this.itemEnd) {
       case 'shortcut':
-        // TODO(heidichan): expose shortcut text.
-        slotEnd =
+        // TODO(b/288231413): expose shortcut text.
+        endSlot =
             html`<span slot="end" class="slot-end" id="shortcut">Shortcut</span>`;
         break;
       case 'icon':
-        slotEnd = html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
+        endSlot = html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
         break;
       case 'switch':
-        slotEnd = html`<cros-switch slot="end" class="slot-end"></cros-switch>`;
+        endSlot = html`<cros-switch slot="end" class="slot-end"></cros-switch>`;
         break;
       default:
         // md-list-item has a ::slotted(*) selector which will never select the
         // children of a <slot> or a <slot> itself which is why default content
         // is not set as children of slot.
         // i.e. <slot slot="end">${slotEnd}</slot>
-        slotEnd = html`<slot slot="end"></slot>`;
+        endSlot = html`<slot slot="end"></slot>`;
         break;
     }
+    return endSlot;
+  }
 
+  override render() {
+    const endSlot = this.getEndSlot();
+    // `keep-open` property needs to be true in switch case so cros-switch can
+    // be selected/unselected without menu closing.
     const keepOpen = this.itemEnd === 'switch';
-    let startItem = null;
+    let startSlot = null;
     if (this.itemStart === 'icon') {
-      startItem =
+      startSlot =
           html`<cros-icon slot="start" data-variant="icon"></cros-icon>`;
     }
-    // keep-open property needs to be true in switch case so cros-switch can be
-    // selected/unselected without menu closing.
     return html`
       <md-menu-item
           headline=${this.headline}
           .keepOpen=${keepOpen}
           .disabled=${this.disabled}
           .active=${this.active}>
-        ${startItem}
-        ${slotEnd}
+        ${startSlot}
+        ${endSlot}
       </md-menu-item>
       `;
   }
