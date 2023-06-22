@@ -78,6 +78,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
     isListItem: {type: Boolean, reflect: true, attribute: 'md-list-item'},
     checked: {type: Boolean, reflect: true},
+    shortcutText: {type: String},
   };
 
   /**
@@ -86,9 +87,16 @@ export class MenuItem extends LitElement implements MenuItemType {
    * @export
    */
   headline: string;
-  /** @export */
+  /**
+   * Item to be placed in the start slot if any. This can only be cros-icon.
+   * @export
+   */
   itemStart: 'icon'|'';
-  /** @export */
+  /**
+   * Item to be placed in the end slot if any. Shortcut allows a text label,
+   * icon uses cros-icon and switch uses cros-switch.
+   * @export
+   */
   itemEnd: 'shortcut'|'icon'|'switch'|null;
 
   // The following properties are necessary for wrapping and keyboard
@@ -108,7 +116,18 @@ export class MenuItem extends LitElement implements MenuItemType {
    * @export
    */
   active: boolean;
+  /**
+   * If true, this will result in a checkmark icon used in the end slot. This
+   * overrides any other components in end slot if otherwise specified.
+   * @export
+   */
   checked: boolean;
+  /**
+   * The text that will appear in the end slot if menu-item is of `shortcut`
+   * type. Defaults to 'Shortcut' if text is not given.
+   * @export
+   */
+  shortcutText: string;
 
   constructor() {
     super();
@@ -125,6 +144,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     // with `md-menu-item.active`
     this.active = false;
     this.checked = false;
+    this.shortcutText = 'Shortcut';
   }
 
   // Set item to be placed in `end` slot of menu item (if any).
@@ -137,9 +157,9 @@ export class MenuItem extends LitElement implements MenuItemType {
     let endSlot;
     switch (this.itemEnd) {
       case 'shortcut':
-        // TODO(b/288231413): expose shortcut text.
         endSlot =
-            html`<span slot="end" class="slot-end" id="shortcut" data-variant="icon">Shortcut</span>`;
+            html`<span slot="end" class="slot-end" id="shortcut" data-variant="icon">${
+                this.shortcutText}</span>`;
         break;
       case 'icon':
         endSlot =
