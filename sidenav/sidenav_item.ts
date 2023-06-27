@@ -442,6 +442,7 @@ export class SidenavItem extends LitElement {
   override render() {
     const showExpandIcon = this.hasChildren();
     const treeRowStyles = {
+      /** @export */
       paddingInlineStart:
           `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.layer}px))`,
     };
