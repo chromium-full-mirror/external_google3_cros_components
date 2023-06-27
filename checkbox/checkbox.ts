@@ -24,24 +24,34 @@ export class Checkbox extends LitElement {
       --md-checkbox-icon-size: 16px;
       --md-checkbox-state-layer-size: 40px;
 
-      --md-sys-color-primary: var(--cros-sys-primary);
-      --md-sys-color-on-surface: var(--cros-sys-on_surface);
-      --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-checkbox-selected-icon-opacity: 0%;
-      --md-checkbox-unselected-focused-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-hover-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-pressed-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-checkbox-unselected-hover-state-layer-opacity: 100%;
+      --md-checkbox-selected-container-color: var(--cros-sys-primary);
+      --md-checkbox-selected-disabled-container-color: var(--cros-sys-disabled);
+      --md-checkbox-selected-disabled-container-opacity: 100%;
+      --md-checkbox-selected-disabled-icon-color: var(--cros-sys-on_primary);
+      --md-checkbox-selected-focus-container-color: var(--cros-sys-primary);
+      --md-checkbox-selected-focus-icon-color: var(--cros-sys-on_primary);
+      --md-checkbox-selected-hover-container-color: var(--cros-sys-primary);
+      --md-checkbox-selected-hover-icon-color: var(--cros-sys-on_primary);
       --md-checkbox-selected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-checkbox-selected-hover-state-layer-opacity: 100%;
-      --md-checkbox-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
-      --md-checkbox-unselected-pressed-state-layer-opacity: 100%;
+      --md-checkbox-selected-icon-color: var(--cros-sys-on_primary);
+      --md-checkbox-selected-pressed-container-color: var(--cros-sys-primary);
+      --md-checkbox-selected-pressed-icon-color: var(--cros-sys-on_primary);
       --md-checkbox-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-checkbox-selected-pressed-state-layer-opacity: 100%;
-      --md_checkbox-unselected-disabled-container-opacity: 38%;
-      --md-checkbox-selected-disabled-container-opacity: 38%;
+
+      --md-checkbox-unselected-disabled-container-opacity: 100%;
+      --md-checkbox-unselected-disabled-outline-color: var(--cros-sys-disabled);
+      --md-checkbox-unselected-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-unselected-focus-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-unselected-hover-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-unselected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-checkbox-unselected-hover-state-layer-opacity: 100%;
+      --md-checkbox-unselected-pressed-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-checkbox-unselected-pressed-state-layer-opacity: 100%;
+
+      --md-sys-color-secondary: var(--cros-sys-focus_ring);
     }
   `;
   /** @nocollapse */
