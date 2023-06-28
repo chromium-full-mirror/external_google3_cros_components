@@ -6,8 +6,8 @@
 
 import '@material/web/menu/menu.js';
 
-import {Corner, DefaultFocusState} from '@material/web/menu/menu.js';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {Corner, DefaultFocusState, MdMenu} from '@material/web/menu/menu.js';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 export {Corner, DefaultFocusState} from '@material/web/menu/menu.js';
 
@@ -49,6 +49,26 @@ export class Menu extends LitElement {
     delegatesFocus: true
   };
 
+  private readonly anchorKeydownListener = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      this.focusFirstItem();
+    } else if (e.key === 'ArrowUp') {
+      this.focusLastItem();
+    }
+  };
+
+  async focusFirstItem() {
+    this.mdMenu.defaultFocus = 'FIRST_ITEM';
+    await this.mdMenu.updateComplete;
+    this.show();
+  }
+
+  async focusLastItem() {
+    this.mdMenu.defaultFocus = 'LAST_ITEM';
+    await this.mdMenu.updateComplete;
+    this.show();
+  }
+
   /** @export */
   anchor: HTMLElement|null;
   /** @export */
@@ -87,6 +107,10 @@ export class Menu extends LitElement {
    */
   skipRestoreFocus: boolean;
 
+  get mdMenu(): MdMenu {
+    return this.renderRoot.querySelector('md-menu') as MdMenu;
+  }
+
   constructor() {
     super();
     this.anchor = null;
@@ -99,18 +123,33 @@ export class Menu extends LitElement {
     this.skipRestoreFocus = false;
   }
 
+  // We add the listener here instead of connectedCallback in case the anchor is
+  // added after initial menu render.
+  override updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('anchor') && this.anchor) {
+      this.anchor.addEventListener('keydown', this.anchorKeydownListener);
+    }
+  }
+
+  override disconnectedCallback() {
+    if (this.anchor) {
+      this.anchor.removeEventListener('keydown', this.anchorKeydownListener);
+    }
+    super.disconnectedCallback();
+  }
+
   /**
    * The menu items associated with this menu. The items must be `MenuItem`s and
    * have both the `md-menu-item` and `md-list-item` attributes.
    */
   get items() {
     // This accessor is required for keyboard navigation
-    const menu = this.renderRoot.querySelector('md-menu');
-    if (!menu) {
+    if (!this.mdMenu) {
       return [];
     }
 
-    return menu.items;
+    return this.mdMenu.items;
   }
 
   override render() {
@@ -136,13 +175,17 @@ export class Menu extends LitElement {
   show() {
     this.open = true;
     // these non-bubbling events need to be re-dispatched for keyboard
-    // navigation to work on submenus
+    // navigation to work on submenus.
     this.dispatchEvent(new Event('opened'));
   }
 
   close() {
     this.open = false;
     this.dispatchEvent(new Event('closed'));
+    // Set default focus back to entire menu. Default for keyboard navigation
+    // apart from arrow up/down. We avoid doing this in focusFirstItem() to
+    // avoid race conditions with menu open.
+    this.renderRoot.querySelector('md-menu')!.defaultFocus = 'LIST_ROOT';
   }
 
   private onClosing() {
