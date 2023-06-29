@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/button/text-button.js';
+
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
@@ -14,12 +16,15 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 export class Breadcrumb extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
-      display: inline-block;
+      display: flex;
+      align-items: center;
     }
   `;
 
   override render() {
-    return html``;
+    return html`
+      <slot></slot>
+    `;
   }
 }
 
