@@ -31,6 +31,10 @@ const CROS_TOKENS = new Set<string>([
   'cros.sys.illo.color6',
   'cros.sys.illo.base',
   'cros.sys.illo.secondary',
+  // In OOBE illustrations have elements that need to match the surface the
+  // illustration is being rendered on and as such some shapes may reference
+  // app base shaded.
+  'cros.sys.app_base_shaded',
 ]);
 
 interface MessageData {
