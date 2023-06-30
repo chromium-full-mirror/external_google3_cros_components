@@ -11,6 +11,11 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {shouldProcessClick} from '../helpers/helpers';
 
+// The spec says icon size is 20px, but that doesn't render to the same thing.
+const ICON_SIZE = css`16px`;
+const TOUCH_TARGET_SIZE = css`48px`;
+const RIPPLE_SIZE = css`40px`;
+
 /**
  * A ChromeOS compliant checkbox.
  * See spec
@@ -19,10 +24,17 @@ import {shouldProcessClick} from '../helpers/helpers';
 export class Checkbox extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
+    :host {
+      display: inline-block;
+      height: ${TOUCH_TARGET_SIZE};
+      vertical-align: calc((${TOUCH_TARGET_SIZE} - ${ICON_SIZE}) / 2);
+      width: ${TOUCH_TARGET_SIZE};
+    }
+
     md-checkbox {
-      --md-checkbox-container-size: 16px;
-      --md-checkbox-icon-size: 16px;
-      --md-checkbox-state-layer-size: 40px;
+      --md-checkbox-container-size: ${ICON_SIZE};
+      --md-checkbox-icon-size: ${ICON_SIZE};
+      --md-checkbox-state-layer-size: ${RIPPLE_SIZE};
 
       --md-checkbox-selected-container-color: var(--cros-sys-primary);
       --md-checkbox-selected-disabled-container-color: var(--cros-sys-disabled);
