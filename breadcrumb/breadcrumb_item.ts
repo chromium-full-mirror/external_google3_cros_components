@@ -9,6 +9,12 @@ import '../icon/icon';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+// From google3/chrome/apps/common/client/icons/chromeos/ic_chevron-right.svg
+const CHEVRON_ICON =
+    html`<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" id="icon">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66669 13.825L10.7872 10L6.66669 6.175L7.93524 5L13.3334 10L7.93524 15L6.66669 13.825Z"/>
+    </svg>`;
+
 /**
  * A cros compliant breadcrumb-item component for use in cros-breadcrumb.
  */
@@ -26,9 +32,20 @@ export class BreadcrumbItem extends LitElement {
       --md-text-button-pressed-state-layer-opacity: 1;
     }
     ::slotted(*) {
-      width: 20px;
-      height: 20px;
       color: var(--cros-sys-on_surface_variant);
+      height: 36px;
+      width: 36px;
+    }
+    :host {
+      align-items: center;
+      display: flex;
+    }
+    #icon {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+    :host(:last-of-type) #icon {
+      display: none;
     }
   `;
   /** @nocollapse */
@@ -53,11 +70,10 @@ export class BreadcrumbItem extends LitElement {
   }
 
   override render() {
-    if (this.variant === 'icon') {
-      return html`<slot></slot>`;
-    } else {
-      return html`<md-text-button>${this.label}</md-text-button>`;
-    }
+    const itemVariant = (this.variant === 'icon') ?
+        html`<slot></slot>` :
+        html`<md-text-button>${this.label}</md-text-button>`;
+    return html`${itemVariant} ${CHEVRON_ICON}`;
   }
 }
 
