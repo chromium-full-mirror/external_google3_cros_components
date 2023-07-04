@@ -30,7 +30,7 @@ export class SubMenuItem extends LitElement {
     md-sub-menu-item {
       --md-menu-item-list-item-selected-container-color: #00000000;
     }
-    :host-context(html[dir=rtl]) #icon {
+    :host-context([dir=rtl]) #icon {
       transform: scaleX(-1);
     }
   `;
