@@ -18,8 +18,9 @@ import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
  * Consumers of the component can use the `shaded` property to ensure that it
  * has the correct container color for their use case.
  */
-const TEXTFIELD_CONTAINER_ON_BASE = css`var(--cros-sys-input_field_dark)`;
-const TEXTFIELD_CONTAINER_ON_SHADED = css`var(--cros-sys-input_field_light)`;
+const TEXTFIELD_CONTAINER_ON_BASE = css`var(--cros-sys-input_field_on_base)`;
+const TEXTFIELD_CONTAINER_ON_SHADED =
+    css`var(--cros-sys-input_field_on_shaded)`;
 
 /**
  * Textfield component. See the specs here:
