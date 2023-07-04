@@ -54,7 +54,7 @@ export class Button extends LitElement {
       --md-filled-button-label-text-type: var(--cros-typography-button2);
     }
 
-    md-filled-button.primary {
+    :host([buttonStyle="primary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-on-primary: var(--cros-sys-on_primary);
       --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary);
@@ -62,7 +62,7 @@ export class Button extends LitElement {
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
 
-    md-filled-button.secondary {
+    :host([buttonStyle="secondary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary_container);
       --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
       --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary_container);
@@ -115,7 +115,7 @@ export class Button extends LitElement {
     label: {type: String},
     disabled: {type: Boolean},
     trailingIcon: {type: Boolean},
-    buttonStyle: {type: String},
+    buttonStyle: {type: String, reflect: true},
   };
 
   constructor() {
@@ -128,7 +128,7 @@ export class Button extends LitElement {
   override render() {
     if (this.buttonStyle === 'floating') {
       return html`
-        <md-text-button class=${this.buttonStyle}
+        <md-text-button
             ?disabled=${this.disabled}
             ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
@@ -138,7 +138,7 @@ export class Button extends LitElement {
     }
 
     return html`
-        <md-filled-button class=${this.buttonStyle}
+        <md-filled-button
             ?disabled=${this.disabled}
             ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
