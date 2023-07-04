@@ -39,7 +39,7 @@ export function changeDocumentDirection(
 }
 
 /** Returns Knob for use in stories to switch document RTL direction */
-export function rtlKnob(): Knob<boolean> {
+export function rtlKnob(): Knob<boolean, 'rtl'> {
   return new Knob(
       RIGHT_TO_LEFT,
       {defaultValue: false, ui: boolInput(), wiring: changeDocumentDirection});
