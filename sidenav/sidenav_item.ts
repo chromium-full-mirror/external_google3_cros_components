@@ -152,7 +152,7 @@ export class SidenavItem extends LitElement {
       visibility: visible;
     }
 
-    :host-context(html[dir=rtl]) .expand-icon {
+    :host-context([dir=rtl]) .expand-icon {
       transform: rotate(90deg);
     }
 
