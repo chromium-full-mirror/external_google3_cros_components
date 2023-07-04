@@ -47,6 +47,9 @@ export class BreadcrumbItem extends LitElement {
     :host(:last-of-type) #icon {
       display: none;
     }
+    :host-context([dir=rtl]) #icon {
+      transform: scaleX(-1);
+    }
   `;
   /** @nocollapse */
   static override properties = {
