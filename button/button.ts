@@ -54,7 +54,7 @@ export class Button extends LitElement {
       --md-filled-button-label-text-type: var(--cros-typography-button2);
     }
 
-    :host([buttonStyle="primary"]) md-filled-button {
+    :host([button-style="primary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-on-primary: var(--cros-sys-on_primary);
       --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary);
@@ -62,7 +62,7 @@ export class Button extends LitElement {
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
 
-    :host([buttonStyle="secondary"]) md-filled-button {
+    :host([button-style="secondary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary_container);
       --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
       --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary_container);
@@ -115,7 +115,7 @@ export class Button extends LitElement {
     label: {type: String},
     disabled: {type: Boolean},
     trailingIcon: {type: Boolean},
-    buttonStyle: {type: String, reflect: true},
+    buttonStyle: {type: String, reflect: true, attribute: 'button-style'},
   };
 
   constructor() {
