@@ -14,10 +14,29 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3669%3A53793&t=6W7VqUU0nkApOSgg-0
  */
 export class Breadcrumb extends LitElement {
+  /** @nocollapse */
+  static override properties = {
+    size: {type: String},
+  };
+  /**
+   * @export
+   */
+  size: 'default'|'small';
+  constructor() {
+    super();
+    this.size = 'default';
+  }
   static override styles: CSSResultGroup = css`
     :host {
       display: flex;
       align-items: center;
+    }
+    :host([size="small"]) ::slotted(*) {
+      --breadcrumb-size: 32px;
+      --icon-size: 32px;
+      --chevron-size: 16px;
+      --font-type: var(--cros-typography-button1);
+      --padding-between: 0px;
     }
   `;
 
