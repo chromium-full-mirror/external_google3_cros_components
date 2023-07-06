@@ -112,9 +112,9 @@ export class Button extends LitElement {
 
   /** @nocollapse */
   static override properties = {
-    label: {type: String},
-    disabled: {type: Boolean},
-    trailingIcon: {type: Boolean},
+    label: {type: String, reflect: true},
+    disabled: {type: Boolean, reflect: true},
+    trailingIcon: {type: Boolean, reflect: true, attribute: 'trailing-icon'},
     buttonStyle: {type: String, reflect: true, attribute: 'button-style'},
   };
 
