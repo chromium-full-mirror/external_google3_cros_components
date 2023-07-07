@@ -216,7 +216,7 @@ export class Textfield extends LitElement {
         placeholder=${this.placeholder}
         @focus=${this.toggleFocusStyle}
         @blur=${this.toggleFocusStyle}
-        @change=${this.checkAndUpdateValidity}
+        @change=${this.onChange}
         @invalid=${() => void this.toggleErrorStyles(true)}>
       </md-filled-text-field>
     `;
@@ -232,6 +232,11 @@ export class Textfield extends LitElement {
   }
   private toggleFocusStyle() {
     this.classList.toggle('focused');
+  }
+
+  private onChange() {
+    this.checkAndUpdateValidity();
+    this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 }
 
