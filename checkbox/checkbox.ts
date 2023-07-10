@@ -29,6 +29,15 @@ export class Checkbox extends LitElement {
       height: ${TOUCH_TARGET_SIZE};
       vertical-align: calc((${TOUCH_TARGET_SIZE} - ${ICON_SIZE}) / 2);
       width: ${TOUCH_TARGET_SIZE};
+
+      margin-inline-start: calc(var(--cros-checkbox-reserve-inline-start, ${
+      ICON_SIZE}) - ${ICON_SIZE});
+      margin-inline-end: calc(var(--cros-checkbox-reserve-inline-end, ${
+      ICON_SIZE}) - ${ICON_SIZE});
+      margin-top: calc(var(--cros-checkbox-reserve-top, ${ICON_SIZE}) - ${
+      ICON_SIZE});
+      margin-bottom: calc(var(--cros-checkbox-reserve-bottom, ${ICON_SIZE}) - ${
+      ICON_SIZE});
     }
 
     md-checkbox {
