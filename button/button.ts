@@ -42,9 +42,9 @@ export class Button extends LitElement {
       --md-filled-button-pressed-state-layer-opacity: 100%;
       --md-filled-button-spacing-leading: ${PADDING};
       --md-filled-button-spacing-trailing: ${PADDING};
-      --md-filled-button-with-icon-icon-size: ${ICON_SIZE};
-      --md-filled-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
-      --md-filled-button-with-icon-disabled-icon-opacity: 100%;
+      --md-filled-button-icon-size: ${ICON_SIZE};
+      --md-filled-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-button-disabled-icon-opacity: 100%;
       --md-filled-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
       --md-filled-button-with-icon-spacing-trailing: ${PADDING};
       --md-filled-button-with-trailing-icon-spacing-leading: ${PADDING};
@@ -57,7 +57,7 @@ export class Button extends LitElement {
     :host([button-style="primary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-on-primary: var(--cros-sys-on_primary);
-      --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary);
+      --md-filled-button-icon-color: var(--cros-sys-on_primary);
       --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
@@ -65,7 +65,7 @@ export class Button extends LitElement {
     :host([button-style="secondary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary_container);
       --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
-      --md-filled-button-with-icon-icon-color: var(--cros-sys-on_primary_container);
+      --md-filled-button-icon-color: var(--cros-sys-on_primary_container);
       --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
     }
@@ -83,10 +83,10 @@ export class Button extends LitElement {
       --md-text-button-pressed-state-layer-opacity: 100%;
       --md-text-button-spacing-leading: ${PADDING};
       --md-text-button-spacing-trailing: ${PADDING};
-      --md-text-button-with-icon-disabled-icon-color: var(--cros-sys-disabled);
-      --md-text-button-with-icon-disabled-icon-opacity: 100%;
-      --md-text-button-with-icon-icon-size: ${ICON_SIZE};
-      --md-text-button-with-icon-icon-color: var(--cros-sys-primary);
+      --md-text-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-text-button-disabled-icon-opacity: 100%;
+      --md-text-button-icon-size: ${ICON_SIZE};
+      --md-text-button-icon-color: var(--cros-sys-primary);
       --md-text-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
       --md-text-button-with-icon-spacing-trailing: ${PADDING};
       --md-text-button-with-trailing-icon-spacing-leading: ${PADDING};
