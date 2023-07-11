@@ -56,8 +56,9 @@ export class Textfield extends LitElement {
       --md-filled-field-container-padding-vertical: 8px;
       --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-filled-field-supporting-text-type: var(--cros-typography-label2);
-      --md-filled-field-supporting-text-padding: 0px;
-      --md-filled-field-supporting-text-padding-top: 8px;;
+      --md-filled-field-supporting-text-leading-space: 0px;
+      --md-filled-field-supporting-text-trailing-space: 0px;
+      --md-filled-field-supporting-text-top-space: 8px;;
       --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-active-indicator-height: 0;
       --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_BASE};
