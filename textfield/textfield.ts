@@ -83,7 +83,7 @@ export class Textfield extends LitElement {
       --md-filled-text-field-input-text-placeholder-color: var(--cros-sys-secondary);
       --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-input-text-suffix-padding: 16px;
+      --md-filled-text-field-input-text-suffix-leading-space: 16px;
       --md-filled-text-field-input-text-type: var(--cros-typography-body2);
       --md-filled-text-field-hover-active-indicator-height: 0;
       --md-filled-text-field-hover-input-text-color: var(--cros-sys-on_surface);
