@@ -5,7 +5,6 @@
  */
 
 import '../../material/web/iconbutton/filled-icon-button';
-import '../icon/icon';
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '@material/web/iconbutton/standard-icon-button.js';
 
