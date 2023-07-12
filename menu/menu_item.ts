@@ -5,19 +5,11 @@
  */
 
 import '@material/web/menu/menu-item';
-import '../icon/icon';
-import '../switch/switch';
+import 'google3/third_party/javascript/cros_components/switch/switch';
+import 'google3/third_party/javascript/cros_components/icon/icon';
 
 import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-
-// From google3/chrome/apps/common/client/icons/chromeos/ic_checked.svg
-const CHECKED_ICON = html`
-  <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" slot="end" class="slot-end" id="checkedIcon">
-    <path d="M13.7071 7.29289C13.3166 6.90237 12.6834 6.90237 12.2929 7.29289L9 10.5858L7.70711 9.29289C7.31658 8.90237 6.68342 8.90237 6.29289 9.29289C5.90237 9.68342 5.90237 10.3166 6.29289 10.7071L8.29289 12.7071C8.68342 13.0976 9.31658 13.0976 9.70711 12.7071L13.7071 8.70711C14.0976 8.31658 14.0976 7.68342 13.7071 7.29289Z"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM10 16C13.3137 16 16 13.3137 16 10C16 6.68629 13.3137 4 10 4C6.68629 4 4 6.68629 4 10C4 13.3137 6.68629 16 10 16Z"/>
-  </svg>
-`;
 
 /**
  * A cros compliant menu-item component for use in cros-menu.
@@ -43,23 +35,28 @@ export class MenuItem extends LitElement implements MenuItemType {
     :host {
       display: inline block;
     }
+
+    :host([checked]) cros-icon {
+      color: var(--cros-sys-primary);
+    }
+
     cros-icon {
       width: 20px;
       height: 20px;
       color: var(--cros-sys-on_surface);
     }
+
     cros-switch {
       width: 32px;
       height: 18px;
     }
+
     .slot-end {
       font: var(--cros-typography-button2);
     }
+
     #shortcut {
       color: var(--cros-sys-secondary);
-    }
-    #checkedIcon {
-      fill: var(--cros-sys-primary);
     }
   `;
 
@@ -146,28 +143,40 @@ export class MenuItem extends LitElement implements MenuItemType {
     this.checked = false;
     this.shortcutText = 'Shortcut';
   }
-
   // Set item to be placed in `end` slot of menu item (if any).
   // Checked property (check mark) will always take precedence over any icon
   // placed in end slot (if both are specified the checked icon will be used).
   private getEndSlot() {
     if (this.checked) {
-      return CHECKED_ICON;
+      return html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
     }
     let endSlot;
     switch (this.itemEnd) {
       case 'shortcut':
-        endSlot =
-            html`<span slot="end" class="slot-end" id="shortcut" data-variant="icon">${
-                this.shortcutText}</span>`;
+        endSlot = html`
+          <span
+              slot="end"
+              class="slot-end"
+              id="shortcut"
+              data-variant="icon">
+            ${this.shortcutText}
+          </span>`;
         break;
       case 'icon':
-        endSlot =
-            html`<cros-icon slot="end" class="slot-end" data-variant="icon"></cros-icon>`;
+        endSlot = html`
+          <cros-icon
+              slot="end"
+              class="slot-end"
+              data-variant="icon">
+          </cros-icon>`;
         break;
       case 'switch':
-        endSlot =
-            html`<cros-switch slot="end" class="slot-end" data-variant="icon"></cros-switch>`;
+        endSlot = html`
+          <cros-switch
+              slot="end"
+              class="slot-end"
+              data-variant="icon">
+          </cros-switch>`;
         break;
       default:
         // md-list-item has a ::slotted(*) selector which will never select the
