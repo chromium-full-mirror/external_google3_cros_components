@@ -99,6 +99,8 @@ export class Button extends LitElement {
   `;
 
   /** @export */
+  a11yLabel: string;
+  /** @export */
   label: string;
   /** @export */
   disabled: boolean;
@@ -112,6 +114,7 @@ export class Button extends LitElement {
 
   /** @nocollapse */
   static override properties = {
+    a11yLabel: {type: String, reflect: true},
     label: {type: String, reflect: true},
     disabled: {type: Boolean, reflect: true},
     trailingIcon: {type: Boolean, reflect: true, attribute: 'trailing-icon'},
@@ -120,6 +123,7 @@ export class Button extends LitElement {
 
   constructor() {
     super();
+    this.a11yLabel = '';
     this.label = '';
     this.disabled = false;
     this.trailingIcon = false;
@@ -129,6 +133,7 @@ export class Button extends LitElement {
     if (this.buttonStyle === 'floating') {
       return html`
         <md-text-button
+            aria-label=${this.a11yLabel}
             ?disabled=${this.disabled}
             ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
@@ -139,6 +144,7 @@ export class Button extends LitElement {
 
     return html`
         <md-filled-button
+            aria-label=${this.a11yLabel}
             ?disabled=${this.disabled}
             ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
