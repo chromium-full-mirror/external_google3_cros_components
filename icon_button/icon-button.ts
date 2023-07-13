@@ -26,6 +26,8 @@ const ICON_ON_SELECTABLE_SUBTLE = css`var(--cros-sys-on_primary_container)`;
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2447%3A5928
  */
 export class IconButton extends LitElement {
+  /** @export */
+  a11yLabel: string;
   /**
    * When false, uses lighter container and darker icon color. When true, uses
    * darker container and lighter icon color.
@@ -173,6 +175,7 @@ export class IconButton extends LitElement {
 
   /** @nocollapse */
   static override properties = {
+    a11yLabel: {type: String, reflect: true},
     prominent: {type: Boolean, reflect: true},
     iconButtonStyle: {type: String},
     iconButtonSize: {type: String, reflect: true},
@@ -182,6 +185,7 @@ export class IconButton extends LitElement {
 
   constructor() {
     super();
+    this.a11yLabel = '';
     this.prominent = false;
     this.iconButtonStyle = 'filled';
     this.iconButtonSize = 'default';
@@ -192,18 +196,18 @@ export class IconButton extends LitElement {
 
   override render() {
     if (this.iconButtonStyle === 'toggle') {
-      return html`<md-filled-icon-button toggle ?selected=${
+      return html`<md-filled-icon-button aria-label=${this.a11yLabel} toggle ?selected=${
           this.selected} ?disabled=${this.disabled}>
         <slot name="icon"></slot>
         <slot name="selectedIcon" slot="selectedIcon"></slot>
       </md-filled-icon-button>`;
     } else if (this.iconButtonStyle === 'floating') {
-      return html`<md-standard-icon-button ?disabled=${this.disabled}>
+      return html`<md-standard-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
         <slot name="icon"></slot>
       </md-standard-icon-button>`;
     } else {
       // Both filled & onImage use the md-filled-tonal-icon-button.
-      return html`<md-filled-tonal-icon-button ?disabled=${this.disabled}>
+      return html`<md-filled-tonal-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
         <slot name="icon"></slot>
       </md-filled-tonal-icon-button>`;
     }
