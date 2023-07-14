@@ -5,11 +5,11 @@
  */
 
 import '@material/web/menu/menu-item';
-import 'google3/third_party/javascript/cros_components/switch/switch';
-import 'google3/third_party/javascript/cros_components/icon/icon';
+import '../icon/icon';
+import '../switch/switch';
 
 import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
  * A cros compliant menu-item component for use in cros-menu.
@@ -143,6 +143,29 @@ export class MenuItem extends LitElement implements MenuItemType {
     this.checked = false;
     this.shortcutText = 'Shortcut';
   }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('itemEnd') && this.itemEnd === 'switch') {
+      this.addEventListener('keydown', this.switchKeyDownListener);
+    }
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.itemEnd === 'switch') {
+      this.removeEventListener('keydown', this.switchKeyDownListener);
+    }
+  }
+
+  // Toggles switch item within the end slot on `enter` or `space`.
+  private readonly switchKeyDownListener = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
+      crosSwitch.selected = !crosSwitch.selected;
+    }
+  };
+
   // Set item to be placed in `end` slot of menu item (if any).
   // Checked property (check mark) will always take precedence over any icon
   // placed in end slot (if both are specified the checked icon will be used).
@@ -179,9 +202,9 @@ export class MenuItem extends LitElement implements MenuItemType {
           </cros-switch>`;
         break;
       default:
-        // md-list-item has a ::slotted(*) selector which will never select the
-        // children of a <slot> or a <slot> itself which is why default content
-        // is not set as children of slot.
+        // md-list-item has a ::slotted(*) selector which will never select
+        // the children of a <slot> or a <slot> itself which is why default
+        // content is not set as children of slot.
         // i.e. <slot slot="end">${slotEnd}</slot>
         endSlot = html`<slot slot="end"></slot>`;
         break;
@@ -211,8 +234,8 @@ export class MenuItem extends LitElement implements MenuItemType {
       `;
   }
 
-  // This is just in case `delegatesFocus` doesn't do what is intended (which is
-  // unfortunately often across browser updates).
+  // This is just in case `delegatesFocus` doesn't do what is intended (which
+  // is unfortunately often across browser updates).
   override focus() {
     this.renderRoot.querySelector('md-menu-item')?.focus();
   }
