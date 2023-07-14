@@ -33,6 +33,11 @@ export class Menu extends LitElement {
       --md-focus-ring-width: 2px;
       --md-focus-ring-active-width: 2px;
     }
+    ::slotted(hr) {
+      background-color: var(--cros-sys-separator);
+      height: 1px;
+      border: 0;
+    }
   `;
   /** @nocollapse */
   static override properties = {
