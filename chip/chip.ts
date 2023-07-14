@@ -10,6 +10,8 @@ import 'google3/third_party/javascript/material/web/chips/suggestion-chip.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+const ICON_SIZE = css`20px`;
+const FOCUS_RING_WIDTH = css`2px`;
 /**
  * A cros-compliant chip component.
  * See spec:
@@ -29,6 +31,12 @@ export class Chip extends LitElement {
    * @export
    */
   trailingIcon: boolean;
+  /**
+   * Input chips can have an avatar as leading icon which makes the icon
+   * circular and changes border radius of component.
+   * @export
+   */
+  avatar: boolean;
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
@@ -55,7 +63,7 @@ export class Chip extends LitElement {
       --md-filter-chip-hover-trailing-icon-color: var(--cros-sys-on_surface);
       --md-filter-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filter-chip-hover-state-layer-opacity: 1;
-      --md-filter-chip-icon-size: 20px;
+      --md-filter-chip-icon-size: ${ICON_SIZE};
       --md-filter-chip-label-text-type: var(--cros-typography-button1);
       --md-filter-chip-leading-icon-color: var(--cros-sys-on_surface);
       --md-filter-chip-outline-color: var(--cros-sys-separator);
@@ -75,6 +83,7 @@ export class Chip extends LitElement {
       --md-filter-chip-selected-trailing-icon-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-trailing-icon-color: var(--cros-sys-on_surface);
       --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
     }
 
     md-suggestion-chip {
@@ -90,7 +99,7 @@ export class Chip extends LitElement {
       --md-suggestion-chip-hover-leading-icon-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-suggestion-chip-hover-state-layer-opacity: 1;
-      --md-suggestion-chip-icon-size: 20px;
+      --md-suggestion-chip-icon-size: ${ICON_SIZE};
       --md-suggestion-chip-label-text-type: var(--cros-typography-button1);
       --md-suggestion-chip-leading-icon-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-outline-color: var(--cros-sys-separator);
@@ -99,7 +108,37 @@ export class Chip extends LitElement {
       --md-suggestion-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-suggestion-chip-pressed-state-layer-opacity: 1;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
     }
+
+    md-input-chip {
+      --md-input-chip-disabled-label-text-color: var(--cros-sys-on_surface);
+      --md-input-chip-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
+      --md-input-chip-disabled-leading-icon-color: var(--cros-sys-disabled);
+      --md-input-chip-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-input-chip-disabled-outline-color: var(--cros-sys-separator);
+      --md-input-chip-disabled-outline-opacity: var(--cros-sys-opacity-disabled);
+      --md-input-chip-focus-label-text-color: var(--cros-sys-on_surface);
+      --md-input-chip-focus-leading-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-hover-label-text-color: var(--cros-sys-on_surface);
+      --md-input-chip-hover-leading-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-input-chip-hover-state-layer-opacity: 1;
+      --md-input-chip-icon-size: ${ICON_SIZE};
+      --md-input-chip-label-text-type: var(--cros-typography-button1);
+      --md-input-chip-leading-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-outline-color: var(--cros-sys-separator);
+      --md-input-chip-pressed-label-text-color: var(--cros-sys-on_surface);
+      --md-input-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-input-chip-pressed-state-layer-opacity: 1;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
+      }
+
+      :host([avatar]) md-input-chip {
+        --md-input-chip-container-shape: 9999px;
+      }
   `;
 
   /** @nocollapse */
@@ -109,6 +148,7 @@ export class Chip extends LitElement {
     label: {type: String},
     type: {type: String},
     trailingIcon: {type: Boolean},
+    avatar: {type: Boolean},
   };
 
   constructor() {
@@ -118,6 +158,7 @@ export class Chip extends LitElement {
     this.type = 'filter';
     this.trailingIcon = false;
     this.label = '';
+    this.avatar = false;
   }
 
   override render() {
@@ -130,27 +171,26 @@ export class Chip extends LitElement {
           <slot slot='icon' name='icon'></slot>
         </md-filter-chip>
         `;
-    } else {
-      if (!this.trailingIcon) {
-        return html`
-          <md-suggestion-chip
-              label=${this.label}
-              ?disabled=${this.disabled}
-              ?selected=${this.selected}>
-            <slot slot='icon' name='icon'></slot>
-          </md-suggestion-chip>
-        `;
-      } else {
-        return html`
-          <md-input-chip
-              label=${this.label}
-              ?disabled=${this.disabled}
-              ?selected=${this.selected}>
+    }
+    if (this.trailingIcon || this.avatar) {
+      return html`
+        <md-input-chip
+          label=${this.label}
+          ?disabled=${this.disabled}
+          ?selected=${this.selected}
+          ?avatar=${this.avatar}>
             <slot slot='icon' name='icon'></slot>
           </md-input-chip>
         `;
-      }
     }
+    return html`
+      <md-suggestion-chip
+        label=${this.label}
+        ?disabled=${this.disabled}
+        ?selected=${this.selected}>
+          <slot slot='icon' name='icon'></slot>
+      </md-suggestion-chip>
+      `;
   }
 }
 
