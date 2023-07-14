@@ -30,6 +30,8 @@ export class Menu extends LitElement {
       --md-list-item-list-item-one-line-container-height: 36px;
       --md-menu-container-shape: 8px;
       --md-menu-container-surface-tint-layer-color: white;
+      --md-focus-ring-width: 2px;
+      --md-focus-ring-active-width: 2px;
     }
   `;
   /** @nocollapse */
