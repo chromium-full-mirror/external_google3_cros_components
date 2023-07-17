@@ -124,6 +124,7 @@ export class Button extends LitElement {
   constructor() {
     super();
     this.a11yLabel = '';
+    this.ariaHasPopup = 'false';
     this.label = '';
     this.disabled = false;
     this.trailingIcon = false;
@@ -134,6 +135,9 @@ export class Button extends LitElement {
       return html`
         <md-text-button
             aria-label=${this.a11yLabel}
+            aria-haspopup=${
+          (this.ariaHasPopup ?? 'false') as 'false' | 'true' | 'menu' |
+          'listbox' | 'tree' | 'grid' | 'dialog'}
             ?disabled=${this.disabled}
             ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
@@ -145,6 +149,9 @@ export class Button extends LitElement {
     return html`
         <md-filled-button
             aria-label=${this.a11yLabel}
+            aria-haspopup=${
+        (this.ariaHasPopup ?? 'false') as 'false' | 'true' | 'menu' |
+        'listbox' | 'tree' | 'grid' | 'dialog'}
             ?disabled=${this.disabled}
             ?trailing-icon=${this.trailingIcon}>
           <slot slot="icon" name="icon"></slot>
