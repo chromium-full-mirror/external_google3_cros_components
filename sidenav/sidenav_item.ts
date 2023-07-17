@@ -78,7 +78,7 @@ export class SidenavItem extends LitElement {
 
     li {
       display: block;
-      font: var(--cros-typography-button2);
+      font: var(--cros-button2-font);
     }
 
     li:focus-visible {
@@ -207,7 +207,7 @@ export class SidenavItem extends LitElement {
       margin-inline-start: ${ICON_LABEL_GAP};
       outline: 2px solid var(--cros-sys-focus_ring);
       overflow: hidden;
-      font: var(--cros-typography-button2);
+      font: var(--cros-button2-font);
     }
 
     /* We need to ensure that even empty labels take up space */

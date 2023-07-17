@@ -25,7 +25,7 @@ export class BreadcrumbItem extends LitElement {
       --breadcrumb-size: 36px;
       --icon-size: 36px;
       --chevron-size: 20px;
-      --font-type: var(--cros-typography-title1);
+      --font-type: var(--cros-title1-font);
       --padding-between: 2px;
     }
     md-text-button {

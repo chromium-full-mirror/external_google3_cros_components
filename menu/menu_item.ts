@@ -24,7 +24,7 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-list-item-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-list-item-list-item-hover-state-layer-opacity: 1;
-      --md-list-item-list-item-label-text-type: var(--cros-typography-button2);
+      --md-list-item-list-item-label-text-type: var(--cros-button2-font);
       --md-list-item-list-item-leading-icon-color: var(--cros-sys-on_surface);
       --md-list-item-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-list-item-list-item-pressed-state-layer-opacity: 1;
@@ -52,7 +52,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     }
 
     .slot-end {
-      font: var(--cros-typography-button2);
+      font: var(--cros-button2-font);
     }
 
     #shortcut {

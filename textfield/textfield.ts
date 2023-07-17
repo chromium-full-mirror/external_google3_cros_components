@@ -56,7 +56,7 @@ export class Textfield extends LitElement {
       --md-filled-field-top-space: 8px;
       --md-filled-field-bottom-space: 8px;
       --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
-      --md-filled-field-supporting-text-type: var(--cros-typography-label2);
+      --md-filled-field-supporting-text-type: var(--cros-label2-font);
       --md-filled-field-supporting-text-leading-space: 0px;
       --md-filled-field-supporting-text-trailing-space: 0px;
       --md-filled-field-supporting-text-top-space: 8px;;
@@ -87,11 +87,11 @@ export class Textfield extends LitElement {
       --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
       --md-filled-text-field-input-text-suffix-leading-space: 16px;
-      --md-filled-text-field-input-text-type: var(--cros-typography-body2);
+      --md-filled-text-field-input-text-type: var(--cros-body2-font);
       --md-filled-text-field-hover-active-indicator-height: 0;
       --md-filled-text-field-hover-input-text-color: var(--cros-sys-on_surface);
       --md-filled-text-field-hover-state-layer-opacity: 0;
-      --md-filled-text-field-label-text-type: var(--cros-typography-body2);
+      --md-filled-text-field-label-text-type: var(--cros-body2-font);
       --md-filled-text-field-pressed-active-indicator-height: 2px;
       --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
       --md-filled-text-field-supporting-text-color: var(--cros-sys-on_surface);
@@ -104,8 +104,8 @@ export class Textfield extends LitElement {
 
     #visibleLabel {
       color: var(--cros-sys-on_surface);
+      font: var(--cros-label1-font);
       padding-bottom: 8px;
-      font: var(--cros-typography-label1);
     }
   `;
 

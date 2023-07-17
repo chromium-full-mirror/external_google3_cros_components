@@ -82,7 +82,7 @@ export class Slider extends LitElement {
       --md-slider-inactive-track-color: var(--cros-sys-primary_container);
       --md-slider-label-container-color: var(--cros-sys-primary);
       --md-slider-label-container-height: 18px;
-      --md-slider-label-label-text-type: var(--cros-typography-label1);
+      --md-slider-label-label-text-type: var(--cros-label1-font);
       --md-slider-pressed-handle-color: var(--cros-sys-primary);
       --md-slider-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-slider-pressed-state-layer-opacity: 1;
