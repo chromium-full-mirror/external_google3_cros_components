@@ -130,6 +130,15 @@ export class Menu extends LitElement {
     this.skipRestoreFocus = false;
   }
 
+  override firstUpdated() {
+    // Per spec, the submenu needs to be offset to account for the 8px padding
+    // at the top of the menu. This way the first element of the submenu is
+    // inline with the parent (anchor) sub-menu-item as per spec.
+    if (this.slot === 'submenu') {
+      this.mdMenu.yOffset = -8;
+    }
+  }
+
   // We add the listener here instead of connectedCallback in case the anchor is
   // added after initial menu render.
   override updated(changedProperties: PropertyValues<this>) {
