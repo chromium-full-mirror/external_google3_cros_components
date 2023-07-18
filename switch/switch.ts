@@ -34,8 +34,6 @@ export class Switch extends LitElement {
 
       --md-switch-state-layer-size: 32px;
 
-      --md-focus-ring-width: 2px;
-
       /* selected */
       --md-switch-selected-track-color: var(--cros-sys-primary);
       --md-switch-selected-hover-track-color: var(--cros-sys-primary);
@@ -57,7 +55,10 @@ export class Switch extends LitElement {
       --md-switch-unselected-hover-handle-color: var(--cros-sys-on_secondary);
       --md-switch-unselected-focus-handle-color: var(--cros-sys-on_secondary);
       --md-switch-unselected-pressed-handle-color: var(--cros-sys-on_secondary);
+    }
 
+    md-switch::part(focus-ring) {
+      --md-focus-ring-width: 2px;
       --md-focus-ring-color: var(--cros-sys-primary);
     }
 

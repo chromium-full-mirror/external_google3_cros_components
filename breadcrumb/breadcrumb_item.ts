@@ -29,7 +29,6 @@ export class BreadcrumbItem extends LitElement {
       --padding-between: 2px;
     }
     md-text-button {
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-sys-color-primary: var(--cros-sys-on_surface_variant);
       --md-text-button-container-height: var(--breadcrumb-size);
       --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
@@ -37,6 +36,9 @@ export class BreadcrumbItem extends LitElement {
       --md-text-button-label-text-type: var(--font-type);
       --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-text-button-pressed-state-layer-opacity: 1;
+    }
+    md-text-button::part(focus-ring) {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
     }
     ::slotted(*) {
       color: var(--cros-sys-on_surface_variant);

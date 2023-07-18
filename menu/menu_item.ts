@@ -21,7 +21,6 @@ export class MenuItem extends LitElement implements MenuItemType {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-menu-item {
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-list-item-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-list-item-list-item-hover-state-layer-opacity: 1;
       --md-list-item-list-item-label-text-type: var(--cros-button2-font);
@@ -31,6 +30,11 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-list-item-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-list-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
+    }
+    md-menu-item::part(focus-ring) {
+      --md-focus-ring-active-width: 2px;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: 2px;
     }
     :host {
       display: inline block;

@@ -82,8 +82,6 @@ export class Chip extends LitElement {
       --md-filter-chip-selected-pressed-state-layer-opacity: 1;
       --md-filter-chip-selected-trailing-icon-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-trailing-icon-color: var(--cros-sys-on_surface);
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
     }
 
     md-suggestion-chip {
@@ -107,8 +105,6 @@ export class Chip extends LitElement {
       --md-suggestion-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-suggestion-chip-pressed-state-layer-opacity: 1;
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
     }
 
     md-input-chip {
@@ -132,12 +128,19 @@ export class Chip extends LitElement {
       --md-input-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-input-chip-pressed-state-layer-opacity: 1;
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
       }
 
       :host([avatar]) md-input-chip {
         --md-input-chip-container-shape: 9999px;
+      }
+
+      md-filter-chip::part(focus-ring),
+      md-filter-chip::part(trailing-focus-ring),
+      md-suggestion-chip::part(focus-ring),
+      md-input-chip::part(focus-ring),
+      md-input-chip::part(trailing-focus-ring) {
+        --md-focus-ring-color: var(--cros-sys-focus_ring);
+        --md-focus-ring-width: ${FOCUS_RING_WIDTH};
       }
   `;
 

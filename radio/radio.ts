@@ -21,8 +21,6 @@ export class Radio extends LitElement {
       display: inline-block;
     }
     md-radio {
-      --md-focus-ring-color: var(--cros-sys-primary);
-      --md-focus-ring-width: 2px;
       --md-radio-icon-size: 16px;
       --md-radio-unselected-icon-color: var(--cros-sys-on_surface);
       --md-radio-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
@@ -31,6 +29,10 @@ export class Radio extends LitElement {
       --md-radio-selected-pressed-state-layer-opacity: 32%;
       --md-sys-color-on-surface: var(--cros-sys-on_surface);
       --md-sys-color-primary: var(--cros-sys-primary);
+    }
+    md-radio::part(focus-ring) {
+      --md-focus-ring-color: var(--cros-sys-primary);
+      --md-focus-ring-width: 2px;
     }
   `;
   /** @nocollapse */

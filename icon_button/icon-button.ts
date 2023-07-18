@@ -67,10 +67,8 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-pressed-state-layer-opacity: 1;
       --md-filled-tonal-icon-button-selected-focus-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-selected-pressed-icon-color: var(--cros-sys-on_surface);
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
     }
     md-standard-icon-button {
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-icon-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-icon-button-disabled-icon-opacity: 1;
       --md-icon-button-icon-size: 20px;
@@ -157,7 +155,6 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-toggle-unselected-pressed-icon-color: var(--cros-sys-on_surface);
       --md-filled-icon-button-toggle-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-filled-icon-button-unselected-container-color: #00000000;
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
     }
     :host([iconButtonSize="large"]) md-filled-icon-button {
       --md-filled-icon-button-container-shape: 16px;
@@ -170,6 +167,11 @@ export class IconButton extends LitElement {
     md-filled-icon-button[selected] {
       --md-filled-icon-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
+    }
+    md-filled-tonal-icon-button::part(focus-ring),
+    md-filled-icon-button::part(focus-ring),
+    md-standard-icon-button::part(focus-ring) {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
     }
   `;
 
