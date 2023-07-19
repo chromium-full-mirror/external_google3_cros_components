@@ -92,7 +92,7 @@ export class IconButton extends LitElement {
       --md-icon-button-unselected-pressed-state-layer-opacity: 1;
     }
     :host([size="small"]) md-standard-icon-button {
-      --md-icon-button-icon-size: 16px;
+      --md-icon-button-icon-size: 20px;
       --md-icon-button-state-layer-shape: 100%;
       --md-icon-button-state-layer-size: 32px;
     }
@@ -115,7 +115,7 @@ export class IconButton extends LitElement {
     :host([size="small"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 100%;
       --md-filled-tonal-icon-button-container-size: 32px;
-      --md-filled-tonal-icon-button-icon-size: 16px;
+      --md-filled-tonal-icon-button-icon-size: 20px;
     }
     :host([size="large"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 16px;
