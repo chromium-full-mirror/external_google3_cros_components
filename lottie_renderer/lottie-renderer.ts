@@ -92,18 +92,29 @@ interface ResizeDetail {
 }
 
 /**
- * Helper function for converting between the hexadecimal RGBA string we get
- * from the computed style to the format that lottie expects, which is an array
- * of four floats. Since these come directly from the computed style and color
- * pipeline, we can be confident that we are only going to be parsing 8 digit
- * hexadecimal strings.
+ * Helper function for converting between the hexadecimal string we get from the
+ * computed style to the format that lottie expects, which is an array of four
+ * floats. Since these come directly from the computed style and color pipeline,
+ * we can be confident that we are only going to be parsing 8 digit hexadecimal
+ * strings.
  */
 function convertHexToLottieRGBA(hexString: string): number[] {
-  const hexRgb = hexString.slice(0, -2);
-  const alphaString = hexString.slice(-2);
-  const [r, g, b] = hexToRgb(hexRgb);
+  let r;
+  let g;
+  let b;
+  let alpha;
+  if (hexString.length === 9) {
+    // Assume #rrggbbaa format.
+    const hexRgb = hexString.slice(0, -2);
+    const alphaString = hexString.slice(-2);
+    [r, g, b] = hexToRgb(hexRgb);
+    alpha = Number(`0x${alphaString}`);
+  } else {
+    // Assume #rrggbb format.
+    [r, g, b] = hexToRgb(hexString);
+    alpha = 255;
+  }
 
-  const alpha = Number(`0x${alphaString}`);
   return [r / 255, g / 255, b / 255, alpha / 255];
 }
 
