@@ -9,6 +9,7 @@ import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {waitForEvent} from '../async_helpers/async_helpers';
 import {assertExists, castExists, hexToRgb} from '../helpers/helpers';
 
+import {addColorSchemeChangeListener, removeColorSchemeChangeListener} from './event_binders';
 import {getWorker} from './worker';
 
 /**
@@ -191,6 +192,16 @@ export class LottieRenderer extends LitElement {
     return this.renderRoot.querySelector('#onscreen-canvas');
   }
 
+  /**
+   * Temporary public API to ensure component color resolution works.
+   * TODO(b/290864323): Remove legacy usages of this function and then make
+   * private.
+   */
+  onColorSchemeChanged = () => {
+    if (!this.dynamic) return;
+    this.refreshAnimationColors();
+  };
+
   /** The worker thread running the lottie library. */
   private worker: Worker|null = null;
   private offscreenCanvas: OffscreenCanvas|null = null;
@@ -273,6 +284,8 @@ export class LottieRenderer extends LitElement {
       this.worker = getWorker();
       this.worker.onmessage = (e) => void this.onMessage(e);
     }
+
+    addColorSchemeChangeListener(this.onColorSchemeChanged);
   }
 
   override firstUpdated() {
@@ -295,6 +308,7 @@ export class LottieRenderer extends LitElement {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
+    removeColorSchemeChangeListener(this.onColorSchemeChanged);
   }
 
   override updated(changedProperties: PropertyValues<LottieRenderer>) {
@@ -339,16 +353,6 @@ export class LottieRenderer extends LitElement {
     this.worker.postMessage({control: {stop: true}});
     return waitForEvent(this, CrosLottieEvent.STOPPED);
   }
-
-  /**
-   * Temporary public API to ensure component color resolution works.
-   * TODO(b/276079531): Remove, bind refreshAnimColors to color change event.
-   */
-  onColorSchemeChanged() {
-    if (!this.dynamic) return;
-    this.refreshAnimationColors();
-  }
-
   private async refreshAnimationColors() {
     // We must await update here to ensure the computed style will be up to date
     // with the new color scheme.
