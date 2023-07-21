@@ -30,6 +30,14 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-list-item-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-list-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
+      --md-list-item-list-item-trailing-space: 16px;
+    }
+    :host([itemEnd="icon"]) md-menu-item {
+      --md-list-item-list-item-trailing-space: 12px;
+    }
+    :host([checked]) md-menu-item {
+      --md-list-item-list-item-trailing-space: 12px;
     }
     md-menu-item::part(focus-ring) {
       --md-focus-ring-active-width: 2px;
