@@ -61,16 +61,16 @@ export class Checkbox extends LitElement {
       --md-checkbox-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-checkbox-selected-pressed-state-layer-opacity: 100%;
 
-      --md-checkbox-unselected-disabled-container-opacity: 100%;
-      --md-checkbox-unselected-disabled-outline-color: var(--cros-sys-disabled);
-      --md-checkbox-unselected-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-focus-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-hover-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-checkbox-unselected-hover-state-layer-opacity: 100%;
-      --md-checkbox-unselected-pressed-outline-color: var(--cros-sys-on_surface);
-      --md-checkbox-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
-      --md-checkbox-unselected-pressed-state-layer-opacity: 100%;
+      --md-checkbox-disabled-container-opacity: 100%;
+      --md-checkbox-disabled-outline-color: var(--cros-sys-disabled);
+      --md-checkbox-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-focus-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-hover-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-checkbox-hover-state-layer-opacity: 100%;
+      --md-checkbox-pressed-outline-color: var(--cros-sys-on_surface);
+      --md-checkbox-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-checkbox-pressed-state-layer-opacity: 100%;
 
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
     }
