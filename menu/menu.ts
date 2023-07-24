@@ -51,7 +51,11 @@ export class Menu extends LitElement {
     menuCorner: {type: String, attribute: 'menu-corner'},
     defaultFocus: {type: String, attribute: 'default-focus'},
     skipRestoreFocus: {type: Boolean, attribute: 'skip-restore-focus'},
+    stayOpenOnFocusout: {type: Boolean, attribute: 'stay-open-on-focus-out'},
+    stayOpenOnOutsideClick:
+        {type: Boolean, attribute: 'stay-open-on-outside-click'},
   };
+
   /** @nocollapse */
   static override shadowRootOptions = {
     ...LitElement.shadowRootOptions,
@@ -115,6 +119,16 @@ export class Menu extends LitElement {
    * @export
    */
   skipRestoreFocus: boolean;
+  /**
+   * Keeps the menu open when focus leaves the menu's composed subtree.
+   * @export
+   */
+  stayOpenOnFocusout: boolean;
+  /**
+   * Keeps the menu open even if user clicks outside window.
+   * @export
+   */
+  stayOpenOnOutsideClick: boolean;
 
   get mdMenu(): MdMenu {
     return this.renderRoot.querySelector('md-menu') as MdMenu;
@@ -130,6 +144,8 @@ export class Menu extends LitElement {
     this.menuCorner = 'START_START';
     this.defaultFocus = 'LIST_ROOT';
     this.skipRestoreFocus = false;
+    this.stayOpenOnFocusout = false;
+    this.stayOpenOnOutsideClick = false;
   }
 
   override firstUpdated() {
@@ -184,7 +200,9 @@ export class Menu extends LitElement {
           @closed=${this.close}
           @opened=${this.show}
           @closing=${this.onClosing}
-          @opening=${this.onOpening}>
+          @opening=${this.onOpening}
+          .stayOpenOnFocusout=${this.stayOpenOnFocusout}
+          .stayOpenOnOutsideClick=${this.stayOpenOnOutsideClick}>
         <slot></slot>
       </md-menu>
     `;
