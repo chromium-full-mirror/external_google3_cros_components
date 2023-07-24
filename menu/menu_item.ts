@@ -50,17 +50,19 @@ export class MenuItem extends LitElement implements MenuItemType {
 
     :host([checked]) cros-icon {
       color: var(--cros-sys-primary);
+      height: 20px;
+      width: 20px;
     }
 
-    cros-icon {
-      width: 20px;
-      height: 20px;
+    ::slotted([slot="start"]), ::slotted([slot="end"]) {
       color: var(--cros-sys-on_surface);
+      height: 20px;
+      width: 20px;
     }
 
     cros-switch {
-      width: 32px;
       height: 18px;
+      width: 32px;
     }
 
     .slot-end {
@@ -97,13 +99,14 @@ export class MenuItem extends LitElement implements MenuItemType {
    */
   headline: string;
   /**
-   * Item to be placed in the start slot if any. This can only be cros-icon.
+   * Item to be placed in the start slot if any. 'icon' exposes the start slot.
    * @export
    */
   itemStart: 'icon'|'';
   /**
-   * Item to be placed in the end slot if any. Shortcut allows a text label,
-   * icon uses cros-icon and switch uses cros-switch.
+   * Item to be placed in the end slot if any. Shortcut allows a text label (set
+   * via `shortcutText`), switch uses cros-switch and 'icon' exposes the end
+   * slot.
    * @export
    */
   itemEnd: 'shortcut'|'icon'|'switch'|null;
@@ -156,10 +159,34 @@ export class MenuItem extends LitElement implements MenuItemType {
     this.shortcutText = 'Shortcut';
   }
 
+  // Start slot should exist when `itemStart` is  `icon`.
+  private get startSlot(): HTMLSlotElement|null {
+    return this.renderRoot.querySelector('slot[name="start"]');
+  }
+
+  // End slot should exist when `itemEnd` is `icon`.
+  private get endSlot(): HTMLSlotElement|null {
+    return this.renderRoot.querySelector('slot[name="end"]');
+  }
+
   override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
     if (changedProperties.has('itemEnd') && this.itemEnd === 'switch') {
       this.addEventListener('keydown', this.switchKeyDownListener);
+    }
+    if (changedProperties.has('itemStart') && this.itemStart === 'icon' &&
+        this.startSlot) {
+      const startItems = this.startSlot.assignedElements();
+      startItems.forEach((startItem) => {
+        startItem.setAttribute('data-variant', 'icon');
+      });
+    }
+    if (changedProperties.has('itemEnd') && this.itemEnd === 'icon' &&
+        this.endSlot) {
+      const endItems = this.endSlot.assignedElements();
+      endItems.forEach((endItem) => {
+        endItem.setAttribute('data-variant', 'icon');
+      });
     }
   }
 
@@ -181,9 +208,18 @@ export class MenuItem extends LitElement implements MenuItemType {
   // Set item to be placed in `end` slot of menu item (if any).
   // Checked property (check mark) will always take precedence over any icon
   // placed in end slot (if both are specified the checked icon will be used).
+  // `switch` enforces cros-switch to be placed into the md-menu-item end slot,
+  // `shortcut` uses a span that uses `shortcutText` as a label in the
+  // md-menu-item end slot. `icon` exposes a slot so the user can pass in a
+  // slotted element via cros-menu-item.
   private getEndSlot() {
     if (this.checked) {
-      return html`<cros-icon slot="end" class="slot-end"></cros-icon>`;
+      return html`
+          <cros-icon
+              slot="end"
+              class="slot-end"
+              data-variant="icon">
+          </cros-icon>`;
     }
     let endSlot;
     switch (this.itemEnd) {
@@ -199,11 +235,11 @@ export class MenuItem extends LitElement implements MenuItemType {
         break;
       case 'icon':
         endSlot = html`
-          <cros-icon
+          <slot
+              name="end"
               slot="end"
-              class="slot-end"
-              data-variant="icon">
-          </cros-icon>`;
+              class="slot-end">
+          </slot>`;
         break;
       case 'switch':
         endSlot = html`
@@ -231,8 +267,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     const keepOpen = this.itemEnd === 'switch';
     let startSlot = null;
     if (this.itemStart === 'icon') {
-      startSlot =
-          html`<cros-icon slot="start" data-variant="icon"></cros-icon>`;
+      startSlot = html`<slot name="start" slot="start"></slot>`;
     }
     return html`
       <md-menu-item
