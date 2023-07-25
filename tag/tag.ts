@@ -26,12 +26,13 @@ export class Tag extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      align-items: center;
       background: var(--cros-tag-surface-color, var(--cros-sys-app_base));
       border-radius: ${Tag.radius}px;
       color: var(--cros-sys-on_surface);
-      display: inline-block;
+      display: flex;
       font: var(--cros-button-2-font);
-      line-height: ${Tag.height}px;
+      height: ${Tag.height}px;
       margin: 0;
       padding: 0 ${Tag.padding}px;
       text-align: center;
