@@ -22,9 +22,9 @@ export class Radio extends LitElement {
     }
     md-radio {
       --md-radio-icon-size: 16px;
-      --md-radio-unselected-icon-color: var(--cros-sys-on_surface);
-      --md-radio-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
-      --md-radio-unselected-pressed-state-layer-opacity: 32%;
+      --md-radio-icon-color: var(--cros-sys-on_surface);
+      --md-radio-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-radio-pressed-state-layer-opacity: 32%;
       --md-radio-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-radio-selected-pressed-state-layer-opacity: 32%;
       --md-sys-color-on-surface: var(--cros-sys-on_surface);
