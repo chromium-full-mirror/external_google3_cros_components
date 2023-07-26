@@ -159,12 +159,14 @@ export class Menu extends LitElement {
     }
   }
 
-  // We add the listener here instead of connectedCallback in case the anchor is
-  // added after initial menu render.
+  // We add the listener & aria-expanded here instead of
+  // connectedCallback/firstUpdated in case the anchor is added after initial
+  // menu render.
   override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
     if (changedProperties.has('anchor') && this.anchor) {
       this.anchor.addEventListener('keydown', this.anchorKeydownListener);
+      this.anchor?.setAttribute('aria-expanded', 'false');
     }
   }
 
@@ -215,6 +217,7 @@ export class Menu extends LitElement {
     // these non-bubbling events need to be re-dispatched for keyboard
     // navigation to work on submenus.
     this.dispatchEvent(new Event('opened'));
+    this.anchor?.setAttribute('aria-expanded', 'true');
   }
 
   close() {
@@ -224,6 +227,7 @@ export class Menu extends LitElement {
     // apart from arrow up/down. We avoid doing this in focusFirstItem() to
     // avoid race conditions with menu open.
     this.renderRoot.querySelector('md-menu')!.defaultFocus = 'LIST_ROOT';
+    this.anchor?.setAttribute('aria-expanded', 'false');
   }
 
   private onClosing() {
