@@ -33,6 +33,9 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
       --md-list-item-list-item-trailing-space: 16px;
     }
+    md-menu-item([itemEnd=null]) {
+      --md-list-itwm-list-item-trailing-space: 48px;
+    }
     :host([itemEnd="icon"]) md-menu-item {
       --md-list-item-list-item-trailing-space: 12px;
     }

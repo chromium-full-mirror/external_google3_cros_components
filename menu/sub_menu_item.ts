@@ -33,6 +33,7 @@ export class SubMenuItem extends LitElement {
       --md-list-item-list-item-label-text-type: var(--cros-button2-font);
       --md-menu-item-list-item-selected-container-color: #00000000;
       --md-list-item-list-item-trailing-space: 16px;
+      --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
     }
     :host-context([dir=rtl]) #icon {
       transform: scaleX(-1);

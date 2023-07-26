@@ -21,6 +21,7 @@ export class Menu extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
+      --menu-width: 96px;
     }
     md-menu {
       --md-list-container-color: var(--cros-sys-on_primary);
@@ -29,6 +30,7 @@ export class Menu extends LitElement {
       --md-list-item-list-item-one-line-container-height: 36px;
       --md-menu-container-shape: 8px;
       --md-menu-container-surface-tint-layer-color: white;
+      min-width: max(var(--menu-width), 96px);
     }
     md-menu::part(focus-ring) {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
