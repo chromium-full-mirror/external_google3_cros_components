@@ -35,7 +35,7 @@ export class Breadcrumb extends LitElement {
       --breadcrumb-size: 32px;
       --icon-size: 32px;
       --chevron-size: 16px;
-      --font-type: var(--cros-button1-font);
+      --font-type: var(--cros-button-1-font);
       --padding-between: 0px;
     }
   `;
