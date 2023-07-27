@@ -39,6 +39,7 @@ export class Button extends LitElement {
       --md-filled-button-focus-state-layer-opacity: 100%;
       --md-filled-button-hover-container-elevation: 0;
       --md-filled-button-hover-state-layer-opacity: 100%;
+      --md-filled-button-label-text-type: var(--cros-button-2-font);
       --md-filled-button-pressed-state-layer-opacity: 100%;
       --md-filled-button-spacing-leading: ${PADDING};
       --md-filled-button-spacing-trailing: ${PADDING};
@@ -51,7 +52,6 @@ export class Button extends LitElement {
       --md-filled-button-with-trailing-icon-spacing-trailing: ${
       PADDING_ICON_SIDE};
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-filled-button-label-text-type: var(--cros-button2-font);
     }
 
     :host([button-style="primary"]) md-filled-button {
