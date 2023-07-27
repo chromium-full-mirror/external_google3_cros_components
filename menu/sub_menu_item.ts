@@ -121,7 +121,9 @@ export class SubMenuItem extends LitElement {
     return html`
       <md-sub-menu-item
           .headline=${this.headline}
-          .disabled=${this.disabled}>
+          .disabled=${this.disabled}
+          aria-haspopup='menu'
+        >
       ${chevronIcon}<slot name='submenu' slot='submenu'></slot>
       </md-sub-menu-item>`;
   }

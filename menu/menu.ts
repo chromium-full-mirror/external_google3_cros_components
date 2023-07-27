@@ -167,6 +167,8 @@ export class Menu extends LitElement {
     if (changedProperties.has('anchor') && this.anchor) {
       this.anchor.addEventListener('keydown', this.anchorKeydownListener);
       this.anchor?.setAttribute('aria-expanded', 'false');
+      this.anchor?.setAttribute('role', 'button');
+      this.anchor?.setAttribute('aria-haspopup', 'menu');
     }
   }
 
