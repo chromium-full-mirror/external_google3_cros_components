@@ -30,7 +30,7 @@ export class SubMenuItem extends LitElement {
     md-sub-menu-item {
       --md-list-item-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-list-item-label-text-type: var(--cros-button2-font);
+      --md-list-item-list-item-label-text-type: var(--cros-button-2-font);
       --md-menu-item-list-item-selected-container-color: #00000000;
       --md-list-item-list-item-trailing-space: 16px;
       --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
