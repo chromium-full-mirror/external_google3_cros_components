@@ -6,7 +6,7 @@
 
 import '../../material/web/iconbutton/filled-icon-button';
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
-import '@material/web/iconbutton/standard-icon-button.js';
+import '@material/web/iconbutton/icon-button.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
@@ -73,7 +73,7 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-selected-focus-icon-color: var(--cros-sys-on_surface);
       --md-filled-tonal-icon-button-selected-pressed-icon-color: var(--cros-sys-on_surface);
     }
-    md-standard-icon-button {
+    md-icon-button {
       --md-icon-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-icon-button-disabled-icon-opacity: 1;
       --md-icon-button-icon-size: 20px;
@@ -91,19 +91,19 @@ export class IconButton extends LitElement {
       --md-icon-button-unselected-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-icon-button-unselected-pressed-state-layer-opacity: 1;
     }
-    :host([size="small"]) md-standard-icon-button {
+    :host([size="small"]) md-icon-button {
       --md-icon-button-icon-size: 20px;
       --md-icon-button-state-layer-shape: 100%;
       --md-icon-button-state-layer-size: 32px;
     }
-    :host([size="large"]) md-standard-icon-button {
+    :host([size="large"]) md-icon-button {
       --md-icon-button-icon-size: 24px;
       --md-icon-button-state-layer-shape: 16px;
       height: 64px;
       margin: 0;
       width: 80px;
     }
-    :host([prominent]) md-standard-icon-button {
+    :host([prominent]) md-icon-button {
       --md-icon-button-unselected-focus-icon-color: ${
       ICON_ON_SELECTABLE_PROMINENT};
       --md-icon-button-unselected-hover-icon-color: ${
@@ -163,7 +163,7 @@ export class IconButton extends LitElement {
     }
     md-filled-tonal-icon-button::part(focus-ring),
     md-filled-icon-button::part(focus-ring),
-    md-standard-icon-button::part(focus-ring) {
+    md-icon-button::part(focus-ring) {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
     }
   `;
@@ -197,9 +197,9 @@ export class IconButton extends LitElement {
         <slot name="selectedIcon" slot="selectedIcon"></slot>
       </md-filled-icon-button>`;
     } else if (this.buttonStyle === 'floating') {
-      return html`<md-standard-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
+      return html`<md-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
         <slot name="icon"></slot>
-      </md-standard-icon-button>`;
+      </md-icon-button>`;
     } else {
       // Both filled & onImage use the md-filled-tonal-icon-button.
       return html`<md-filled-tonal-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
