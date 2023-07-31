@@ -41,15 +41,15 @@ export class Button extends LitElement {
       --md-filled-button-hover-state-layer-opacity: 100%;
       --md-filled-button-label-text-type: var(--cros-button-2-font);
       --md-filled-button-pressed-state-layer-opacity: 100%;
-      --md-filled-button-spacing-leading: ${PADDING};
-      --md-filled-button-spacing-trailing: ${PADDING};
+      --md-filled-button-leading-space: ${PADDING};
+      --md-filled-button-trailing-space: ${PADDING};
       --md-filled-button-icon-size: ${ICON_SIZE};
       --md-filled-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-filled-button-disabled-icon-opacity: 100%;
-      --md-filled-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
-      --md-filled-button-with-icon-spacing-trailing: ${PADDING};
-      --md-filled-button-with-trailing-icon-spacing-leading: ${PADDING};
-      --md-filled-button-with-trailing-icon-spacing-trailing: ${
+      --md-filled-button-with-leading-icon-leading-space: ${PADDING_ICON_SIDE};
+      --md-filled-button-with-leading-icon-trailing-space: ${PADDING};
+      --md-filled-button-with-trailing-icon-leading-space: ${PADDING};
+      --md-filled-button-with-trailing-icon-trailing-space: ${
       PADDING_ICON_SIDE};
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
     }
@@ -81,16 +81,16 @@ export class Button extends LitElement {
       --md-text-button-hover-state-layer-opacity: 100%;
       --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-text-button-pressed-state-layer-opacity: 100%;
-      --md-text-button-spacing-leading: ${PADDING};
-      --md-text-button-spacing-trailing: ${PADDING};
+      --md-text-button-leading-space: ${PADDING};
+      --md-text-button-trailing-space: ${PADDING};
       --md-text-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-text-button-disabled-icon-opacity: 100%;
       --md-text-button-icon-size: ${ICON_SIZE};
       --md-text-button-icon-color: var(--cros-sys-primary);
-      --md-text-button-with-icon-spacing-leading: ${PADDING_ICON_SIDE};
-      --md-text-button-with-icon-spacing-trailing: ${PADDING};
-      --md-text-button-with-trailing-icon-spacing-leading: ${PADDING};
-      --md-text-button-with-trailing-icon-spacing-trailing: ${
+      --md-text-button-with-leading-icon-leading-space: ${PADDING_ICON_SIDE};
+      --md-text-button-with-leading-icon-trailing-space: ${PADDING};
+      --md-text-button-with-trailing-icon-leading-space: ${PADDING};
+      --md-text-button-with-trailing-icon-trailing-space: ${
       PADDING_ICON_SIDE};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
