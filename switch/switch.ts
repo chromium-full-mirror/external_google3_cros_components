@@ -19,8 +19,8 @@ export class Switch extends LitElement {
       display: inline-block;
     }
     md-switch {
-      --md-switch-unselected-handle-height: 12px;
-      --md-switch-unselected-handle-width: 12px;
+      --md-switch-handle-height: 12px;
+      --md-switch-handle-width: 12px;
 
       --md-switch-selected-handle-height: 12px;
       --md-switch-selected-handle-width: 12px;
@@ -46,15 +46,15 @@ export class Switch extends LitElement {
       --md-switch-selected-pressed-handle-color: var(--cros-sys-on_primary);
 
       /* unselected */
-      --md-switch-unselected-track-color: var(--cros-sys-secondary);
-      --md-switch-unselected-hover-track-color: var(--cros-sys-secondary);
-      --md-switch-unselected-focus-track-color: var(--cros-sys-secondary);
-      --md-switch-unselected-pressed-track-color: var(--cros-sys-secondary);
+      --md-switch-track-color: var(--cros-sys-secondary);
+      --md-switch-hover-track-color: var(--cros-sys-secondary);
+      --md-switch-focus-track-color: var(--cros-sys-secondary);
+      --md-switch-pressed-track-color: var(--cros-sys-secondary);
 
-      --md-switch-unselected-handle-color: var(--cros-sys-on_secondary);
-      --md-switch-unselected-hover-handle-color: var(--cros-sys-on_secondary);
-      --md-switch-unselected-focus-handle-color: var(--cros-sys-on_secondary);
-      --md-switch-unselected-pressed-handle-color: var(--cros-sys-on_secondary);
+      --md-switch-handle-color: var(--cros-sys-on_secondary);
+      --md-switch-hover-handle-color: var(--cros-sys-on_secondary);
+      --md-switch-focus-handle-color: var(--cros-sys-on_secondary);
+      --md-switch-pressed-handle-color: var(--cros-sys-on_secondary);
     }
 
     md-switch::part(focus-ring) {
@@ -65,9 +65,9 @@ export class Switch extends LitElement {
     /* disabled */
     md-switch[disabled] {
       opacity: 0.38;
-      --md-switch-disabled-unselected-handle-color: var(--cros-sys-on_secondary);
-      --md-switch-disabled-unselected-handle-opacity: 1;
-      --md-switch-disabled-unselected-track-color: var(--cros-sys-secondary);
+      --md-switch-disabled-handle-color: var(--cros-sys-on_secondary);
+      --md-switch-disabled-handle-opacity: 1;
+      --md-switch-disabled-track-color: var(--cros-sys-secondary);
       --md-switch-disabled-track-opacity: 1;
 
       --md-switch-disabled-selected-handle-color: var(--cros-sys-on_primary);
