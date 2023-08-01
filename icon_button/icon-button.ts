@@ -79,17 +79,14 @@ export class IconButton extends LitElement {
       --md-icon-button-icon-size: 20px;
       --md-icon-button-state-layer-shape: 12px;
       --md-icon-button-state-layer-size: 40px;
-      --md-icon-button-unselected-focus-icon-color: ${
-      ICON_ON_SELECTABLE_SUBTLE};
-      --md-icon-button-unselected-hover-icon-color: ${
-      ICON_ON_SELECTABLE_SUBTLE};
-      --md-icon-button-unselected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-icon-button-unselected-hover-state-layer-opacity: 1;
-      --md-icon-button-unselected-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
-      --md-icon-button-unselected-pressed-icon-color: ${
-      ICON_ON_SELECTABLE_SUBTLE};
-      --md-icon-button-unselected-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
-      --md-icon-button-unselected-pressed-state-layer-opacity: 1;
+      --md-icon-button-focus-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-hover-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-icon-button-hover-state-layer-opacity: 1;
+      --md-icon-button-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-pressed-icon-color: ${ICON_ON_SELECTABLE_SUBTLE};
+      --md-icon-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-icon-button-pressed-state-layer-opacity: 1;
     }
     :host([size="small"]) md-icon-button {
       --md-icon-button-icon-size: 20px;
@@ -104,13 +101,10 @@ export class IconButton extends LitElement {
       width: 80px;
     }
     :host([prominent]) md-icon-button {
-      --md-icon-button-unselected-focus-icon-color: ${
-      ICON_ON_SELECTABLE_PROMINENT};
-      --md-icon-button-unselected-hover-icon-color: ${
-      ICON_ON_SELECTABLE_PROMINENT};
-      --md-icon-button-unselected-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
-      --md-icon-button-unselected-pressed-icon-color: ${
-      ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-focus-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-hover-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
+      --md-icon-button-pressed-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
     }
     :host([size="small"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 100%;
@@ -141,12 +135,12 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-toggle-selected-icon-color: var(--cros-sys-on_primary_container);
       --md-filled-icon-button-toggle-selected-pressed-icon-color: var(--cros-sys-on_primary_container);
       --md-filled-icon-button-toggle-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
-      --md-filled-icon-button-toggle-unselected-focus-icon-color: var(--cros-sys-on_surface);
-      --md-filled-icon-button-toggle-unselected-hover-icon-color: var(--cros-sys-on_surface);
-      --md-filled-icon-button-toggle-unselected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-filled-icon-button-toggle-unselected-icon-color: var(--cros-sys-on_surface);
-      --md-filled-icon-button-toggle-unselected-pressed-icon-color: var(--cros-sys-on_surface);
-      --md-filled-icon-button-toggle-unselected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-filled-icon-button-toggle-focus-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-hover-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-filled-icon-button-toggle-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-pressed-icon-color: var(--cros-sys-on_surface);
+      --md-filled-icon-button-toggle-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-filled-icon-button-unselected-container-color: #00000000;
     }
     :host([size="large"]) md-filled-icon-button {
@@ -191,18 +185,21 @@ export class IconButton extends LitElement {
 
   override render() {
     if (this.buttonStyle === 'toggle') {
-      return html`<md-filled-icon-button aria-label=${this.a11yLabel} toggle ?selected=${
-          this.selected} ?disabled=${this.disabled}>
+      return html`<md-filled-icon-button aria-label=${
+          this.a11yLabel} toggle ?selected=${this.selected} ?disabled=${
+          this.disabled}>
         <slot name="icon"></slot>
         <slot name="selectedIcon" slot="selectedIcon"></slot>
       </md-filled-icon-button>`;
     } else if (this.buttonStyle === 'floating') {
-      return html`<md-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
+      return html`<md-icon-button ?disabled=${this.disabled} aria-label=${
+          this.a11yLabel}>
         <slot name="icon"></slot>
       </md-icon-button>`;
     } else {
       // Both filled & onImage use the md-filled-tonal-icon-button.
-      return html`<md-filled-tonal-icon-button ?disabled=${this.disabled} aria-label=${this.a11yLabel}>
+      return html`<md-filled-tonal-icon-button ?disabled=${
+          this.disabled} aria-label=${this.a11yLabel}>
         <slot name="icon"></slot>
       </md-filled-tonal-icon-button>`;
     }
