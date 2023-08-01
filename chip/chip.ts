@@ -180,7 +180,6 @@ export class Chip extends LitElement {
         <md-input-chip
           label=${this.label}
           ?disabled=${this.disabled}
-          ?selected=${this.selected}
           ?avatar=${this.avatar}>
             <slot slot='icon' name='icon'></slot>
           </md-input-chip>
@@ -189,8 +188,7 @@ export class Chip extends LitElement {
     return html`
       <md-suggestion-chip
         label=${this.label}
-        ?disabled=${this.disabled}
-        ?selected=${this.selected}>
+        ?disabled=${this.disabled}>
           <slot slot='icon' name='icon'></slot>
       </md-suggestion-chip>
       `;
