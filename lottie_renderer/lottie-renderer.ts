@@ -165,7 +165,7 @@ export class LottieRenderer extends LitElement {
    * The path to the lottie asset JSON file.
    * @export
    */
-  assetUrl!: string;
+  assetUrl: string;
 
   /**
    * When true, animation will begin to play as soon as it's loaded.
@@ -256,6 +256,7 @@ export class LottieRenderer extends LitElement {
 
   constructor() {
     super();
+    this.assetUrl = '';
     this.autoplay = true;
     this.loop = true;
 
@@ -353,6 +354,7 @@ export class LottieRenderer extends LitElement {
     this.worker.postMessage({control: {stop: true}});
     return waitForEvent(this, CrosLottieEvent.STOPPED);
   }
+
   private async refreshAnimationColors() {
     // We must await update here to ensure the computed style will be up to date
     // with the new color scheme.
@@ -366,7 +368,15 @@ export class LottieRenderer extends LitElement {
   }
 
   private sendAnimationToWorker(animationData: JSON) {
-    assertExists(this.worker, 'lottie-renderer has no web worker.');
+    // There are some edge cases where the renderer has been removed from the
+    // DOM in between initialization and this function running, which causes
+    // the worker to have been terminated. In these cases, we can just early
+    // exit without attempting to send anything to the worker.
+    if (!this.worker) {
+      console.info('lottie-renderer has no web worker.');
+      return;
+    }
+
     const animationConfig: MessageData = ({
       animationData,
       drawSize: this.getCanvasDrawBufferSize(),
@@ -395,9 +405,14 @@ export class LottieRenderer extends LitElement {
 
   /**
    * Load the animation data from `assetUrl` and begin the color token
-   * resolution work.
+   * resolution work. If no `assetUrl` was provided, we don't need to try and
+   * fetch or send anything to the worker.
    */
   private async initAnimation() {
+    if (!this.assetUrl) {
+      console.info('No assetUrl provided.');
+      return;
+    }
     try {
       // In chromium you are not allowed to use `fetch` with `chrome://` URLs,
       // as such we use XMLHttpRequest here.
