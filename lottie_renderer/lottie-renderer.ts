@@ -32,10 +32,23 @@ const CROS_TOKENS = new Set<string>([
   'cros.sys.illo.color6',
   'cros.sys.illo.base',
   'cros.sys.illo.secondary',
-  // In OOBE illustrations have elements that need to match the surface the
-  // illustration is being rendered on and as such some shapes may reference
-  // app base shaded.
+
+  /**
+   * These are colors outside of the standard illo palette. Some animations
+   * need to modify the base background color depending on the surface so
+   * contain tokens for app base, card color etc,
+   */
+  'cros.sys.app_base',
   'cros.sys.app_base_shaded',
+  'cros.sys.app_base_elevated',
+  'cros.sys.illo.card.color4',
+  'cros.sys.illo.card.on_color4',
+  'cros.sys.illo.card.color3',
+  'cros.sys.illo.card.on_color3',
+  'cros.sys.illo.card.color2',
+  'cros.sys.illo.card.on_color2',
+  'cros.sys.illo.card.color1',
+  'cros.sys.illo.card.on_color1',
 ]);
 
 interface MessageData {
