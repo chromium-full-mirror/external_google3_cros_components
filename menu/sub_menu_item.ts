@@ -13,7 +13,7 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 // From google3/chrome/apps/common/client/icons/chromeos/ic_chevron-right.svg
 const chevronIcon =
-    html`<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" slot="end" id="icon" data-variant="icon">
+    html`<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" slot="end" id="icon" data-variant="icon">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66669 13.825L10.7872 10L6.66669 6.175L7.93524 5L13.3334 10L7.93524 15L6.66669 13.825Z"/>
     </svg>`;
 /**
@@ -34,6 +34,11 @@ export class SubMenuItem extends LitElement {
       --md-menu-item-list-item-selected-container-color: #00000000;
       --md-list-item-list-item-trailing-space: 16px;
       --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
+    }
+    #icon {
+      width: 20px;
+      height: 20px;
+      fill: black;
     }
     :host-context([dir=rtl]) #icon {
       transform: scaleX(-1);

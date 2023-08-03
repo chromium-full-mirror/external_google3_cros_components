@@ -68,8 +68,10 @@ export class MenuItem extends LitElement implements MenuItemType {
       width: 32px;
     }
 
-    .slot-end {
+    .slot-end:not(cros-switch) {
       font: var(--cros-button-2-font);
+      width: unset;
+      height: unset;
     }
 
     #shortcut {
