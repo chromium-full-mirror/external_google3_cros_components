@@ -374,10 +374,12 @@ export class LottieRenderer extends LitElement {
     // TODO(b/276079531): Investigate if this can be removed when using events.
     this.requestUpdate();
     await this.updateComplete;
-    const animationData = castExists(
-        this.animationData, 'cros-lottie has no animation data to refresh.');
+    if (!this.animationData) {
+      console.info('Refresh animation colors failed: No animation data.');
+      return;
+    }
     this.updateColorsInAnimationData();
-    this.sendAnimationToWorker(animationData);
+    this.sendAnimationToWorker(this.animationData);
   }
 
   private sendAnimationToWorker(animationData: JSON) {
