@@ -151,6 +151,11 @@ export class IconButton extends LitElement {
       margin: 0;
       width: 80px;
     }
+    :host([size="small"]) md-filled-icon-button {
+      --md-filled-icon-button-container-shape: 100%;
+      --md-filled-icon-button-container-size: 32px;
+      --md-filled-icon-button-icon-size: 20px;
+    }
     md-filled-icon-button[selected] {
       --md-filled-icon-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
