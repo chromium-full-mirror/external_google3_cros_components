@@ -99,8 +99,6 @@ export class Button extends LitElement {
   `;
 
   /** @export */
-  a11yLabel: string;
-  /** @export */
   label: string;
   /** @export */
   disabled: boolean;
@@ -114,7 +112,7 @@ export class Button extends LitElement {
 
   /** @nocollapse */
   static override properties = {
-    a11yLabel: {type: String, reflect: true},
+    ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     label: {type: String, reflect: true},
     disabled: {type: Boolean, reflect: true},
     trailingIcon: {type: Boolean, reflect: true, attribute: 'trailing-icon'},
@@ -123,7 +121,7 @@ export class Button extends LitElement {
 
   constructor() {
     super();
-    this.a11yLabel = '';
+    this.ariaLabel = '';
     this.ariaHasPopup = 'false';
     this.label = '';
     this.disabled = false;
@@ -134,7 +132,7 @@ export class Button extends LitElement {
     if (this.buttonStyle === 'floating') {
       return html`
         <md-text-button
-            aria-label=${this.a11yLabel}
+            aria-label=${this.ariaLabel || ''}
             aria-haspopup=${
           (this.ariaHasPopup ?? 'false') as 'false' | 'true' | 'menu' |
           'listbox' | 'tree' | 'grid' | 'dialog'}
@@ -148,7 +146,7 @@ export class Button extends LitElement {
 
     return html`
         <md-filled-button
-            aria-label=${this.a11yLabel}
+            aria-label=${this.ariaLabel || ''}
             aria-haspopup=${
         (this.ariaHasPopup ?? 'false') as 'false' | 'true' | 'menu' |
         'listbox' | 'tree' | 'grid' | 'dialog'}
