@@ -90,11 +90,10 @@ export class Button extends LitElement {
       --md-text-button-with-leading-icon-leading-space: ${PADDING_ICON_SIDE};
       --md-text-button-with-leading-icon-trailing-space: ${PADDING};
       --md-text-button-with-trailing-icon-leading-space: ${PADDING};
-      --md-text-button-with-trailing-icon-trailing-space: ${
-      PADDING_ICON_SIDE};
+      --md-text-button-with-trailing-icon-trailing-space: ${PADDING_ICON_SIDE};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-text-button-label-text-type: var(--cros-button2-font);
+      --md-text-button-label-text-type: var(--cros-button-2-font);
     }
   `;
 
