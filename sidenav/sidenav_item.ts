@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import 'google3/third_party/javascript/cros_components/icon/icon';
 import '@material/web/ripple/ripple.js';
 
 import {MdRipple} from '@material/web/ripple/ripple.js';
-import {castExists} from 'google3/javascript/common/asserts/asserts';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
+
+import {castExists} from '../helpers/helpers';
 
 import {isSidenav, isSidenavItem} from './sidenav_util';
 
@@ -359,15 +359,18 @@ export class SidenavItem extends LitElement {
   }
 
   private get renameInputElement(): HTMLInputElement {
-    return castExists(this.renderRoot.querySelector('.rename'));
+    return castExists(
+        this.renderRoot.querySelector('.rename') as HTMLInputElement);
   }
 
   private get childrenSlotElement(): HTMLSlotElement {
-    return castExists(this.renderRoot.querySelector('slot:not([name])'));
+    return castExists(
+        this.renderRoot.querySelector('slot:not([name])') as HTMLSlotElement);
   }
 
   private get iconSlotElement(): HTMLSlotElement {
-    return castExists(this.renderRoot.querySelector('slot[name="icon"]'));
+    return castExists(
+        this.renderRoot.querySelector('slot[name="icon"]') as HTMLSlotElement);
   }
 
   protected get ripple(): Promise<MdRipple|null> {

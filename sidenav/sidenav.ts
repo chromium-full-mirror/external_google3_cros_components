@@ -6,8 +6,9 @@
 
 import './sidenav_item';
 
-import {castExists} from 'google3/javascript/common/asserts/asserts';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
+
+import {castExists} from '../helpers/helpers';
 
 import {SidenavItem, TreeItemCollapsedEvent, TreeItemEnabledChangedEvent, TreeItemExpandedEvent} from './sidenav_item';
 import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
