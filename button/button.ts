@@ -28,6 +28,10 @@ export class Button extends LitElement {
   // unless a cros theme is present.
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
+    :host {
+      display: inline-block;
+    }
+
     md-filled-button {
       max-width: ${MAX_WIDTH};
       min-width: ${MIN_WIDTH};
