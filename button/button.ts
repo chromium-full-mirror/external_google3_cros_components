@@ -34,18 +34,18 @@ export class Button extends LitElement {
       --md-filled-button-container-height: ${CONTAINER_HEIGHT};
       --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-button-disabled-container-opacity: 100%;
+      --md-filled-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-filled-button-disabled-icon-opacity: 100%;
       --md-filled-button-disabled-label-text-color: var(--cros-sys-disabled);
       --md-filled-button-disabled-label-text-opacity: 100%;
       --md-filled-button-focus-state-layer-opacity: 100%;
       --md-filled-button-hover-container-elevation: 0;
       --md-filled-button-hover-state-layer-opacity: 100%;
-      --md-filled-button-label-text-type: var(--cros-button-2-font);
-      --md-filled-button-pressed-state-layer-opacity: 100%;
-      --md-filled-button-leading-space: ${PADDING};
-      --md-filled-button-trailing-space: ${PADDING};
       --md-filled-button-icon-size: ${ICON_SIZE};
-      --md-filled-button-disabled-icon-color: var(--cros-sys-disabled);
-      --md-filled-button-disabled-icon-opacity: 100%;
+      --md-filled-button-label-text-type: var(--cros-button-2-font);
+      --md-filled-button-leading-space: ${PADDING};
+      --md-filled-button-pressed-state-layer-opacity: 100%;
+      --md-filled-button-trailing-space: ${PADDING};
       --md-filled-button-with-leading-icon-leading-space: ${PADDING_ICON_SIDE};
       --md-filled-button-with-leading-icon-trailing-space: ${PADDING};
       --md-filled-button-with-trailing-icon-leading-space: ${PADDING};
@@ -63,37 +63,37 @@ export class Button extends LitElement {
     }
 
     :host([button-style="secondary"]) md-filled-button {
-      --md-sys-color-primary: var(--cros-sys-primary_container);
-      --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
       --md-filled-button-icon-color: var(--cros-sys-on_primary_container);
       --md-filled-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-sys-color-primary: var(--cros-sys-primary_container);
+      --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
     }
 
     md-text-button {
       max-width: ${MAX_WIDTH};
       min-width: ${MIN_WIDTH};
+      --md-sys-color-primary: var(--cros-sys-primary);
+      --md-sys-color-secondary: var(--cros-sys-focus_ring);
       --md-text-button-container-height: ${CONTAINER_HEIGHT};
       --md-text-button-disabled-label-text-color: var(--cros-sys-disabled);
       --md-text-button-disabled-label-text-opacity: 100%;
+      --md-text-button-disabled-icon-color: var(--cros-sys-disabled);
+      --md-text-button-disabled-icon-opacity: 100%;
       --md-text-button-focus-state-layer-opacity: 100%;
       --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-text-button-hover-state-layer-opacity: 100%;
-      --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
-      --md-text-button-pressed-state-layer-opacity: 100%;
-      --md-text-button-leading-space: ${PADDING};
-      --md-text-button-trailing-space: ${PADDING};
-      --md-text-button-disabled-icon-color: var(--cros-sys-disabled);
-      --md-text-button-disabled-icon-opacity: 100%;
       --md-text-button-icon-size: ${ICON_SIZE};
       --md-text-button-icon-color: var(--cros-sys-primary);
+      --md-text-button-label-text-type: var(--cros-button-2-font);
+      --md-text-button-leading-space: ${PADDING};
+      --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-text-button-pressed-state-layer-opacity: 100%;
+      --md-text-button-trailing-space: ${PADDING};
       --md-text-button-with-leading-icon-leading-space: ${PADDING_ICON_SIDE};
       --md-text-button-with-leading-icon-trailing-space: ${PADDING};
       --md-text-button-with-trailing-icon-leading-space: ${PADDING};
       --md-text-button-with-trailing-icon-trailing-space: ${PADDING_ICON_SIDE};
-      --md-sys-color-primary: var(--cros-sys-primary);
-      --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      --md-text-button-label-text-type: var(--cros-button-2-font);
     }
   `;
 
