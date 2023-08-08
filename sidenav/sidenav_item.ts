@@ -16,17 +16,17 @@ import {castExists} from '../helpers/helpers';
 import {isSidenav, isSidenavItem} from './sidenav_util';
 
 /** Type of the tree item expanded custom event. */
-export type TreeItemExpandedEvent = CustomEvent<{
+export type SidenavItemExpandedEvent = CustomEvent<{
   /** The tree item which has been expanded. */
   item: SidenavItem,
 }>;
 /** Type of the tree item collapsed custom event. */
-export type TreeItemCollapsedEvent = CustomEvent<{
+export type SidenavItemCollapsedEvent = CustomEvent<{
   /** The tree item which has been collapsed. */
   item: SidenavItem,
 }>;
 /** Type of the tree item collapsed custom event. */
-export type TreeItemRenamedEvent = CustomEvent<{
+export type SidenavItemRenamedEvent = CustomEvent<{
   /** The tree item which has been renamed. */
   item: SidenavItem,
   /** The label before rename. */
@@ -35,7 +35,7 @@ export type TreeItemRenamedEvent = CustomEvent<{
   newLabel: string,
 }>;
 /** Type of the tree item enabled changed custom event. */
-export type TreeItemEnabledChangedEvent = CustomEvent<{
+export type SidenavItemEnabledChangedEvent = CustomEvent<{
   /** The tree item which has been (un)enabled. */
   item: SidenavItem,
   /** The new enabled value. */
@@ -578,7 +578,7 @@ export class SidenavItem extends LitElement {
 
   private onExpandChanged() {
     if (this.expanded) {
-      const expandedEvent: TreeItemExpandedEvent =
+      const expandedEvent: SidenavItemExpandedEvent =
           new CustomEvent(SidenavItem.events.SIDENAV_ITEM_EXPANDED, {
             bubbles: true,
             composed: true,
@@ -586,7 +586,7 @@ export class SidenavItem extends LitElement {
           });
       this.dispatchEvent(expandedEvent);
     } else {
-      const collapseEvent: TreeItemCollapsedEvent =
+      const collapseEvent: SidenavItemCollapsedEvent =
           new CustomEvent(SidenavItem.events.SIDENAV_ITEM_COLLAPSED, {
             bubbles: true,
             composed: true,
@@ -597,7 +597,7 @@ export class SidenavItem extends LitElement {
   }
 
   private onEnabledChanged() {
-    const event: TreeItemEnabledChangedEvent =
+    const event: SidenavItemEnabledChangedEvent =
         new CustomEvent(SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED, {
           bubbles: true,
           composed: true,
@@ -673,7 +673,7 @@ export class SidenavItem extends LitElement {
     }
     const oldLabel = this.label;
     this.label = newName;
-    const renameEvent: TreeItemRenamedEvent =
+    const renameEvent: SidenavItemRenamedEvent =
         new CustomEvent(SidenavItem.events.SIDENAV_ITEM_RENAMED, {
           bubbles: true,
           composed: true,
@@ -687,11 +687,11 @@ customElements.define('cros-sidenav-item', SidenavItem);
 
 declare global {
   interface HTMLElementEventMap {
-    [SidenavItem.events.SIDENAV_ITEM_EXPANDED]: TreeItemExpandedEvent;
-    [SidenavItem.events.SIDENAV_ITEM_COLLAPSED]: TreeItemCollapsedEvent;
-    [SidenavItem.events.SIDENAV_ITEM_RENAMED]: TreeItemRenamedEvent;
+    [SidenavItem.events.SIDENAV_ITEM_EXPANDED]: SidenavItemExpandedEvent;
+    [SidenavItem.events.SIDENAV_ITEM_COLLAPSED]: SidenavItemCollapsedEvent;
+    [SidenavItem.events.SIDENAV_ITEM_RENAMED]: SidenavItemRenamedEvent;
     [SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED]:
-        TreeItemEnabledChangedEvent;
+        SidenavItemEnabledChangedEvent;
   }
 
   interface HTMLElementTagNameMap {

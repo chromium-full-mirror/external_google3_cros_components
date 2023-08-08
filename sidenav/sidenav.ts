@@ -10,7 +10,7 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {castExists} from '../helpers/helpers';
 
-import {SidenavItem, TreeItemCollapsedEvent, TreeItemEnabledChangedEvent, TreeItemExpandedEvent} from './sidenav_item';
+import {SidenavItem, SidenavItemCollapsedEvent, SidenavItemEnabledChangedEvent, SidenavItemExpandedEvent} from './sidenav_item';
 import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
 
 /**
@@ -188,13 +188,13 @@ export class Sidenav extends LitElement {
   }
 
   /** Handles the expanded event of the tree item. */
-  private onSidenavItemExpanded(e: TreeItemExpandedEvent) {
+  private onSidenavItemExpanded(e: SidenavItemExpandedEvent) {
     const treeItem = e.detail.item;
     (treeItem as unknown as ExtendedElement).scrollIntoViewIfNeeded(false);
   }
 
   /** Handles the collapse event of the tree item. */
-  private onSidenavItemCollapsed(e: TreeItemCollapsedEvent) {
+  private onSidenavItemCollapsed(e: SidenavItemCollapsedEvent) {
     const collapsedItem = e.detail.item;
     // If the currently selected tree item (`oldSelectedItem`) is a descent of
     // another tree item (`treeItem`) which is going to be collapsed, we need to
@@ -208,7 +208,7 @@ export class Sidenav extends LitElement {
   }
 
   /** Handles when that enabled status of an item has changed. */
-  private onSidenavItemEnabledChanged(e: TreeItemEnabledChangedEvent) {
+  private onSidenavItemEnabledChanged(e: SidenavItemEnabledChangedEvent) {
     const item = e.detail.item;
 
     if (item.enabled) {
