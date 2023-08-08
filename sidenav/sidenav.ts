@@ -183,7 +183,7 @@ export class Sidenav extends LitElement {
     // has a selected/tabbable item.
     if (!this.items.some(item => item.enabled) &&
         this.selectableItems.length > 0) {
-      this.enableItem(this.selectableItems[0]);
+      this.enableItem(castExists(this.selectableItems[0]));
     }
   }
 
