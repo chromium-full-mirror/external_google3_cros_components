@@ -69,7 +69,7 @@ export class Radio extends LitElement {
   override render() {
     return html`
       <md-radio ?disabled=${this.disabled} ?checked=${
-        this.checkedInternal}></md-radio>
+        this.checkedInternal} touch-target="wrapper"></md-radio>
     `;
   }
 }

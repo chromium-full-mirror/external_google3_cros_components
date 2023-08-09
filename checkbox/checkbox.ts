@@ -113,7 +113,8 @@ export class Checkbox extends LitElement {
       <md-checkbox
           ?disabled=${this.disabled}
           ?checked=${this.checked}
-          @change=${this.onChange}>
+          @change=${this.onChange}
+          touch-target="wrapper">
       </md-checkbox>
     `;
   }
