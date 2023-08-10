@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
+import {assertExists, hexToRgb} from 'google3/third_party/javascript/cros_components/helpers/helpers';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-
-import {waitForEvent} from '../async_helpers/async_helpers';
-import {assertExists, castExists, hexToRgb} from '../helpers/helpers';
 
 import {addColorSchemeChangeListener, removeColorSchemeChangeListener} from './event_binders';
 import {getWorker} from './worker';
@@ -446,8 +445,11 @@ export class LottieRenderer extends LitElement {
     } catch (error) {
       console.info(`Unable to load JSON from ${this.assetUrl}`, error);
     }
-    const animationData = castExists(
-        this.animationData, 'cros-lottie-renderer fetched null animation data');
+
+    if (!this.animationData) {
+      console.log('cros-lottie-renderer fetched null animation data');
+      return;
+    }
 
     // For apps using this component without the Jelly flag, they should ignore
     // the dynamic palette and just use the GM2 colors that are inside the
@@ -459,7 +461,7 @@ export class LottieRenderer extends LitElement {
       // find all shapes that are mapped to tokens, as these will need to
       // receive color updates. `colors` is the internal list of all known
       // shapes, and will be modified by this function.
-      traverse(animationData, this.colors);
+      traverse(this.animationData, this.colors);
 
       if (this.colors.size === 0) {
         console.warn(
@@ -470,7 +472,7 @@ export class LottieRenderer extends LitElement {
     }
 
     this.updateColorsInAnimationData();
-    this.sendAnimationToWorker(animationData);
+    this.sendAnimationToWorker(this.animationData);
   }
 
   /**
