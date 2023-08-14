@@ -33,16 +33,18 @@ const ICON_ON_SELECTABLE_SUBTLE =
 export class IconButton extends LitElement {
   /** @export */
   a11yLabel: string;
-  /**
-   * When false, uses lighter container and darker icon color. When true, uses
-   * darker container and lighter icon color.
-   * @export
-   */
-  prominent: boolean;
   /** @export */
-  buttonStyle: 'filled'|'floating'|'onImage'|'toggle';
+  buttonStyle: 'filled'|'floating'|'toggle';
   /** @export */
   size: 'small'|'default'|'large';
+  /** @export */
+  shape: 'circle'|'square';
+  /**
+   * @export
+   * The background the icon button sits on. This will change the background and
+   * icon color of the icon-button.
+   */
+  surface: 'base'|'prominent'|'subtle'|'image';
   /** @export */
   disabled: boolean;
   /** @export */
@@ -100,7 +102,7 @@ export class IconButton extends LitElement {
       margin: 0;
       width: 80px;
     }
-    :host([prominent]) md-icon-button {
+    :host([surface="prominent"]) md-icon-button {
       --md-icon-button-focus-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
       --md-icon-button-hover-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
       --md-icon-button-icon-color: ${ICON_ON_SELECTABLE_PROMINENT};
@@ -173,6 +175,8 @@ export class IconButton extends LitElement {
     prominent: {type: Boolean, reflect: true},
     buttonStyle: {type: String},
     size: {type: String, reflect: true},
+    shape: {type: String, reflect: true},
+    surface: {type: String, reflect: true},
     disabled: {type: Boolean},
     selected: {type: Boolean},
   };
@@ -180,9 +184,10 @@ export class IconButton extends LitElement {
   constructor() {
     super();
     this.a11yLabel = '';
-    this.prominent = false;
     this.buttonStyle = 'filled';
     this.size = 'default';
+    this.shape = 'circle';
+    this.surface = 'base';
     this.disabled = false;
     this.selected = false;
   }
@@ -202,7 +207,6 @@ export class IconButton extends LitElement {
         <slot name="icon"></slot>
       </md-icon-button>`;
     } else {
-      // Both filled & onImage use the md-filled-tonal-icon-button.
       return html`<md-filled-tonal-icon-button ?disabled=${
           this.disabled} aria-label=${this.a11yLabel}>
         <slot name="icon"></slot>
