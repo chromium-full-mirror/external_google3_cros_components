@@ -34,6 +34,10 @@ export class Icon extends LitElement {
         transform: scaleX(-1);
       }
 
+      ::slotted(*) {
+        fill: var(--icon-color);
+      }
+
       svg {
         fill: var(--icon-color);
       }
