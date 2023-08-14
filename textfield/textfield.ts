@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import 'google3/third_party/javascript/cros_components/icon_button/icon-button';
 import '@material/web/textfield/filled-text-field';
 
 import {MdFilledTextField, TextFieldType as MdTextfieldType} from '@material/web/textfield/filled-text-field';
@@ -104,6 +105,10 @@ export class Textfield extends LitElement {
       font: var(--cros-label-1-font);
       padding-bottom: 8px;
     }
+
+    cros-icon-button {
+      --cros-icon-button-color-override: var(--cros-sys-secondary);
+    }
   `;
 
   /** @nocollapse */
@@ -117,6 +122,8 @@ export class Textfield extends LitElement {
     hint: {type: String, attribute: true},
     maxLength: {type: Number, attribute: true},
     placeholder: {type: String, attribute: true},
+    hasLeadingIcon: {type: Boolean},
+    hasTrailingIcon: {type: Boolean},
   };
 
   private valueInternal = '';
@@ -188,6 +195,7 @@ export class Textfield extends LitElement {
 
   override async firstUpdated(changedProperties: PropertyValues<Textfield>) {
     this.mdTextfield!.value = this.valueInternal;
+    this.handleIconChange();
   }
 
   override update(changedProperties: PropertyValues<Textfield>) {
@@ -203,6 +211,32 @@ export class Textfield extends LitElement {
   }
 
   override render() {
+    const leadingIcon = html`
+      <cros-icon-button
+          slot="leadingicon"
+          id="leading"
+          buttonStyle='floating'
+          size='small'>
+        <slot
+            name="leading-icon"
+            slot="icon"
+            @slotchange=${this.handleIconChange}>
+        </slot>
+      </cros-icon-button>
+      `;
+    const trailingIcon = html`
+      <cros-icon-button
+          slot="trailingicon"
+          id="trailing"
+          buttonStyle='floating'
+          size='small'>
+        <slot
+            name="trailing-icon"
+            slot="icon"
+            @slotchange=${this.handleIconChange}>
+        </slot>
+      </cros-icon-button>
+      `;
     return html`
       <div id="visibleLabel">${this.label}</div>
       <md-filled-text-field
@@ -218,8 +252,33 @@ export class Textfield extends LitElement {
         @blur=${this.toggleFocusStyle}
         @change=${this.onChange}
         @invalid=${() => void this.toggleErrorStyles(true)}>
+        ${leadingIcon}
+        ${trailingIcon}
       </md-filled-text-field>
     `;
+  }
+  private handleIconChange() {
+    const hasLeadingIcon =
+        (this.querySelector('*[slot="leading-icon"]') !== null);
+    const hasTrailingIcon =
+        (this.querySelector('*[slot="trailing-icon"]') !== null);
+    // When no icon in slot is given, we need to remove the slot attribute from
+    // cros-icon-button, otherwise md-textfield will still render an empty space.
+    const leadingIconButton =
+        this.shadowRoot!.querySelector('cros-icon-button[id="leading"]');
+    const trailingIconButton =
+        this.shadowRoot!.querySelector('cros-icon-button[id="trailing"]');
+    if (hasLeadingIcon) {
+      leadingIconButton!.setAttribute('slot', 'leadingicon');
+    } else {
+      leadingIconButton!.removeAttribute('slot');
+    }
+    if (hasTrailingIcon) {
+      trailingIconButton!.setAttribute('slot', 'trailingicon');
+    } else {
+      trailingIconButton!.removeAttribute('slot');
+    }
+    this.requestUpdate();
   }
 
   private checkAndUpdateValidity() {
