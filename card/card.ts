@@ -5,12 +5,13 @@
  */
 
 import '@material/web/ripple/ripple.js';
+import '@material/web/focus/md-focus-ring.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /** A chromeOS compliant card. */
 export class Card extends LitElement {
-  /* TODO(b/288189513): Implement disabled and focus states. */
+  /* TODO(b/288189513): Implement disabled state. */
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -26,9 +27,12 @@ export class Card extends LitElement {
       border: 1px solid var(--cros-sys-separator);
       border-radius: 12px;
       box-sizing: border-box;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
       display: grid;
+      outline:none;
       padding: var(--cros-card-padding, 16px);
       position: relative;
+      --md-focus-ring-shape: 12px;
     }
 
     /* TODO(b/288189513): Make hover and pressed colors customizable. */
@@ -41,6 +45,12 @@ export class Card extends LitElement {
     }
   `;
 
+  /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
   /** @export */
   disabled = false;
 
@@ -51,8 +61,9 @@ export class Card extends LitElement {
 
   override render() {
     return html`
-        <div id="container">
+        <div id="container" tabindex=${this.tabIndex}>
           <md-ripple for="container"></md-ripple>
+          <md-focus-ring for="container"></md-focus-ring>
           <slot></slot>
         </div>
     `;
