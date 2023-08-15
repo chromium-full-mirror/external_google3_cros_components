@@ -24,13 +24,17 @@ export class Menu extends LitElement {
       --cros-menu-width: 96px;
     }
     md-menu {
-      --md-list-container-color: var(--cros-sys-on_primary);
+      --md-menu-container-color: var(--cros-bg-color-elevation-3);
       --md-menu-item-list-item-container-color: var(--cros-sys-on_primary);
       --md-list-item-list-item-label-text-type: var(--cros-button-2-font);
       --md-list-item-list-item-one-line-container-height: 36px;
       --md-menu-container-shape: 8px;
       --md-menu-container-surface-tint-layer-color: white;
       min-width: max(var(--cros-menu-width), 96px);
+    }
+    md-menu::part(elevation) {
+      --md-menu-container-elevation: 0;
+      box-shadow: 0px 12px 12px 0px rgba(var(--cros-sys-shadow-rgb), 0.2);
     }
     md-menu::part(focus-ring) {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
