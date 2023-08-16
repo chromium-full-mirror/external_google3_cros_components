@@ -21,26 +21,26 @@ export class MenuItem extends LitElement implements MenuItemType {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-menu-item {
-      --md-list-item-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-list-item-list-item-hover-state-layer-opacity: 1;
-      --md-list-item-list-item-label-text-type: var(--cros-button-2-font);
-      --md-list-item-list-item-leading-icon-color: var(--cros-sys-on_surface);
-      --md-list-item-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
-      --md-list-item-list-item-pressed-state-layer-opacity: 1;
-      --md-list-item-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-list-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
-      --md-list-item-list-item-trailing-space: 16px;
+      --md-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-list-item-hover-state-layer-opacity: 1;
+      --md-list-item-label-text-type: var(--cros-button-2-font);
+      --md-list-item-leading-icon-color: var(--cros-sys-on_surface);
+      --md-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-list-item-pressed-state-layer-opacity: 1;
+      --md-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-trailing-element-headline-trailing-element-space: 48px;
+      --md-list-item-trailing-space: 16px;
     }
     md-menu-item([itemEnd=null]) {
       --md-list-itwm-list-item-trailing-space: 48px;
     }
     :host([itemEnd="icon"]) md-menu-item {
-      --md-list-item-list-item-trailing-space: 12px;
+      --md-list-item-trailing-space: 12px;
     }
     :host([checked]) md-menu-item {
-      --md-list-item-list-item-trailing-space: 12px;
+      --md-list-item-trailing-space: 12px;
     }
     md-menu-item::part(focus-ring) {
       --md-focus-ring-active-width: 2px;

@@ -28,12 +28,12 @@ export class SubMenuItem extends LitElement {
   // selected state.
   static override styles: CSSResultGroup = css`
     md-sub-menu-item {
-      --md-list-item-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-list-item-label-text-type: var(--cros-button-2-font);
-      --md-menu-item-list-item-selected-container-color: #00000000;
-      --md-list-item-list-item-trailing-space: 16px;
-      --md-list-item-list-item-trailing-element-headline-trailing-element-space: 48px;
+      --md-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-label-text-type: var(--cros-button-2-font);
+      --md-menu-item-selected-container-color: #00000000;
+      --md-list-item-trailing-space: 16px;
+      --md-list-item-trailing-element-headline-trailing-element-space: 48px;
     }
     #icon {
       width: 20px;
