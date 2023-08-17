@@ -9,7 +9,6 @@ import '../icon/icon';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
-// From google3/chrome/apps/common/client/icons/chromeos/ic_chevron-right.svg
 const CHEVRON_ICON =
     html`<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" id="icon">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66669 13.825L10.7872 10L6.66669 6.175L7.93524 5L13.3334 10L7.93524 15L6.66669 13.825Z"/>

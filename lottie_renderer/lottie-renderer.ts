@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {waitForEvent} from 'google3/third_party/javascript/cros_components/async_helpers/async_helpers';
-import {assertExists, hexToRgb} from 'google3/third_party/javascript/cros_components/helpers/helpers';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+
+// TODO(b/295990177): Make these absolute.
+import {waitForEvent} from '../async_helpers/async_helpers';
+import {assertExists, hexToRgb} from '../helpers/helpers';
 
 import {addColorSchemeChangeListener, removeColorSchemeChangeListener} from './event_binders';
 import {getWorker} from './worker';
@@ -447,7 +449,7 @@ export class LottieRenderer extends LitElement {
     }
 
     if (!this.animationData) {
-      console.log('cros-lottie-renderer fetched null animation data');
+      console.info('cros-lottie-renderer fetched null animation data');
       return;
     }
 
