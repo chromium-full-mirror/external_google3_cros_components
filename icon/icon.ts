@@ -26,8 +26,8 @@ export class Icon extends LitElement {
       :host {
         --icon-color: currentcolor;
         display: inline-block;
-        height: 100%;
-        width: 100%;
+        height: 20px;
+        width: 20px;
       }
 
       :host([dir="rtl"][rtlflip]) {
