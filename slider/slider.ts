@@ -23,6 +23,8 @@ const renderTrack = (MdSlider.prototype as any).renderTrack;
  * Width is calculated given slider lower/upper fraction (the part of the
  * track that is currently active/inactive depending on value) minus the handle
  * gap (half of the handle width + width of transparent gap on one side).
+ *
+ * TODO(b/285172083): do not use md-slider's `--_private` custom properties
  */
 const DISABLED_STATE_OVERRIDES = css`
   md-slider[disabled] > [slot="track"] {
@@ -41,12 +43,12 @@ const DISABLED_STATE_OVERRIDES = css`
   .lower {
       border-radius: 9999px 0 0 9999px;
       left: 0;
-      width: calc((var(--slider-end-fraction)) * 100% - var(--handle-gap));
+      width: calc((var(--_end-fraction)) * 100% - var(--handle-gap));
   }
   .upper {
       border-radius: 0 9999px 9999px 0;
       right: 0;
-      width: calc((1 - var(--slider-end-fraction)) * 100% - var(--handle-gap));
+      width: calc((1 - var(--_end-fraction)) * 100% - var(--handle-gap));
   }
 `;
 /**
