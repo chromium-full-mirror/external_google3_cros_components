@@ -65,6 +65,7 @@ const ICON_SIZE = css`20px`;
 const ICON_LABEL_GAP = css`8px`;
 const ICON_LEADING_MARGIN = css`8px`;
 const LABEL_ONLY_MARGIN = css`24px`;
+const LABEL_TRAILING_MARGIN = css`12px`;
 
 const ITEM_GAP = css`8px`;
 
@@ -182,7 +183,7 @@ export class SidenavItem extends LitElement {
     .tree-label {
       display: block;
       flex: auto;
-      margin-inline-end: ${LABEL_ONLY_MARGIN};
+      margin-inline-end: ${LABEL_TRAILING_MARGIN};
       margin-inline-start: calc(${LABEL_ONLY_MARGIN} - ${ICON_SIZE} - ${
       ICON_LEADING_MARGIN});
       overflow: hidden;
@@ -202,7 +203,7 @@ export class SidenavItem extends LitElement {
       border-radius: 4px;
       color: var(--cros-sys-on_surface);
       height: 20px;
-      margin-inline-end: ${LABEL_ONLY_MARGIN};
+      margin-inline-end: ${LABEL_TRAILING_MARGIN};
       margin-inline-start: ${ICON_LABEL_GAP};
       outline: 2px solid var(--cros-sys-focus_ring);
       overflow: hidden;
