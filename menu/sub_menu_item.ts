@@ -30,7 +30,7 @@ export class SubMenuItem extends LitElement {
       --md-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-label-text-type: var(--cros-button-2-font);
-      --md-menu-item-selected-container-color: #00000000;
+      --md-menu-item-selected-container-color: var(--cros-sys-hover_on_subtle);
       --md-list-item-trailing-space: 16px;
       --md-list-item-trailing-element-headline-trailing-element-space: 48px;
     }
@@ -46,6 +46,9 @@ export class SubMenuItem extends LitElement {
       --md-focus-ring-active-width: 2px;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-focus-ring-width: 2px;
+    }
+    md-sub-menu-item[selected]:hover::part(ripple) {
+      --md-ripple-hover-opacity: 0;
     }
   `;
 
