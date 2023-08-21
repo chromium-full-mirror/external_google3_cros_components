@@ -178,6 +178,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     super.updated(changedProperties);
     if (changedProperties.has('itemEnd') && this.itemEnd === 'switch') {
       this.addEventListener('keydown', this.switchKeyDownListener);
+      this.setAttribute('role', 'menuitemcheckbox');
     }
     if (changedProperties.has('itemStart') && this.itemStart === 'icon' &&
         this.startSlot) {
@@ -223,7 +224,8 @@ export class MenuItem extends LitElement implements MenuItemType {
           <cros-icon
               slot="end"
               class="slot-end"
-              data-variant="icon">
+              data-variant="icon"
+              aria-hidden="true">
           </cros-icon>`;
     }
     let endSlot;
@@ -243,7 +245,8 @@ export class MenuItem extends LitElement implements MenuItemType {
           <slot
               name="end"
               slot="end"
-              class="slot-end">
+              class="slot-end"
+              aria-hidden="true">
           </slot>`;
         break;
       case 'switch':
@@ -272,7 +275,8 @@ export class MenuItem extends LitElement implements MenuItemType {
     const keepOpen = this.itemEnd === 'switch';
     let startSlot = null;
     if (this.itemStart === 'icon') {
-      startSlot = html`<slot name="start" slot="start"></slot>`;
+      startSlot =
+          html`<slot name="start" slot="start" aria-hidden="true"></slot>`;
     }
     return html`
       <md-menu-item
