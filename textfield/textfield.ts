@@ -8,7 +8,7 @@ import 'google3/third_party/javascript/cros_components/icon_button/icon-button';
 import '@material/web/textfield/filled-text-field';
 
 import {MdFilledTextField, TextFieldType as MdTextfieldType} from '@material/web/textfield/filled-text-field';
-import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 
 /**
  * Textfields have two variants that differ only by the container background,
@@ -238,7 +238,7 @@ export class Textfield extends LitElement {
       </cros-icon-button>
       `;
     return html`
-      <div id="visibleLabel">${this.label}</div>
+      ${this.label ? html`<div id="visibleLabel">${this.label}</div>` : nothing}
       <md-filled-text-field
         ?disabled=${this.disabled}
         type=${this.type}
