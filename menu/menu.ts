@@ -44,7 +44,7 @@ export class Menu extends LitElement {
   `;
   /** @nocollapse */
   static override properties = {
-    anchor: {type: Object, attribute: false},
+    anchor: {type: String},
     anchorCorner: {type: String, attribute: 'anchor-corner'},
     hasOverflow: {type: Boolean, attribute: 'has-overflow'},
     open: {type: Boolean},
@@ -84,7 +84,7 @@ export class Menu extends LitElement {
   }
 
   /** @export */
-  anchor: HTMLElement|null;
+  anchor: string;
   /** @export */
   anchorCorner: Corner;
   /** @export */
@@ -135,9 +135,29 @@ export class Menu extends LitElement {
     return this.renderRoot.querySelector('md-menu') as MdMenu;
   }
 
+  /** @private */
+  currentAnchorElement: HTMLElement|null = null;
+
+  /** @export */
+  get anchorElement(): HTMLElement|null {
+    if (this.anchor) {
+      return (this.getRootNode() as Document | ShadowRoot)
+          .querySelector(`#${this.anchor}`);
+    }
+
+    return this.currentAnchorElement;
+  }
+
+  /** @export */
+  set anchorElement(element: HTMLElement|null) {
+    this.currentAnchorElement = element;
+    this.requestUpdate('anchorElement');
+  }
+
   constructor() {
     super();
-    this.anchor = null;
+    this.anchor = '';
+    this.anchorElement = null;
     this.anchorCorner = 'END_START';
     this.hasOverflow = false;
     this.open = false;
@@ -163,17 +183,23 @@ export class Menu extends LitElement {
   // menu render.
   override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
-    if (changedProperties.has('anchor') && this.anchor) {
-      this.anchor.addEventListener('keydown', this.anchorKeydownListener);
-      this.anchor?.setAttribute('aria-expanded', 'false');
-      this.anchor?.setAttribute('role', 'button');
-      this.anchor?.setAttribute('aria-haspopup', 'menu');
+
+    const anchorElement = this.anchorElement;
+
+    if ((changedProperties.has('anchor') ||
+         changedProperties.has('anchorElement')) &&
+        anchorElement) {
+      anchorElement.addEventListener('keydown', this.anchorKeydownListener);
+      anchorElement.setAttribute('aria-expanded', 'false');
+      anchorElement.setAttribute('role', 'button');
+      anchorElement.setAttribute('aria-haspopup', 'menu');
     }
   }
 
   override disconnectedCallback() {
-    if (this.anchor) {
-      this.anchor.removeEventListener('keydown', this.anchorKeydownListener);
+    const anchorElement = this.anchorElement;
+    if (anchorElement) {
+      anchorElement.removeEventListener('keydown', this.anchorKeydownListener);
     }
     super.disconnectedCallback();
   }
@@ -194,7 +220,7 @@ export class Menu extends LitElement {
   override render() {
     return html`
       <md-menu
-          .anchor=${this.anchor}
+          .anchorElement=${this.anchorElement}
           .open=${this.open}
           .hasOverflow=${this.hasOverflow}
           .anchorCorner=${this.anchorCorner}
@@ -218,7 +244,7 @@ export class Menu extends LitElement {
     // these non-bubbling events need to be re-dispatched for keyboard
     // navigation to work on submenus.
     this.dispatchEvent(new Event('opened'));
-    this.anchor?.setAttribute('aria-expanded', 'true');
+    this.anchorElement?.setAttribute('aria-expanded', 'true');
   }
 
   close() {
@@ -228,7 +254,7 @@ export class Menu extends LitElement {
     // apart from arrow up/down. We avoid doing this in focusFirstItem() to
     // avoid race conditions with menu open.
     this.renderRoot.querySelector('md-menu')!.defaultFocus = 'LIST_ROOT';
-    this.anchor?.setAttribute('aria-expanded', 'false');
+    this.anchorElement?.setAttribute('aria-expanded', 'false');
   }
 
   private onClosing() {
