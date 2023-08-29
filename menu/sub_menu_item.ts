@@ -27,9 +27,14 @@ export class SubMenuItem extends LitElement {
   // selected state.
   static override styles: CSSResultGroup = css`
     md-sub-menu-item {
+      --md-list-item-disabled-label-text-color: var(--cros-sys-on_surface);
       --md-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-list-item-focus-label-text-color: var(--cros-sys-on_surface);
+      --md-list-item-hover-label-text-color: var(--cros-sys-on_surface);
+      --md-list-item-label-text-color: var(--cros-sys-on_surface);
       --md-list-item-label-text-type: var(--cros-button-2-font);
+      --md-list-item-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-menu-item-selected-container-color: var(--cros-sys-hover_on_subtle);
       --md-list-item-trailing-space: 16px;
       --md-list-item-trailing-element-headline-trailing-element-space: 48px;
@@ -37,7 +42,7 @@ export class SubMenuItem extends LitElement {
     #icon {
       width: 20px;
       height: 20px;
-      fill: black;
+      fill: var(--cros-sys-on_surface);
     }
     :host-context([dir=rtl]) #icon {
       transform: scaleX(-1);
