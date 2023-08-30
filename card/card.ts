@@ -11,7 +11,6 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /** A chromeOS compliant card. */
 export class Card extends LitElement {
-  /* TODO(b/288189513): Implement disabled state. */
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -43,6 +42,10 @@ export class Card extends LitElement {
       /* TODO(b/288189513): cros-sys-neutral_ripple_on_subtle does not exist */
       --md-ripple-pressed-color: var(--cros-sys-neutral_ripple_on_subtle);
     }
+
+    :host([disabled]) {
+      opacity: var(--cros-disabled-opacity);
+    }
   `;
 
   /** @nocollapse */
@@ -57,13 +60,20 @@ export class Card extends LitElement {
   /** @nocollapse */
   static override properties = {
     disabled: {type: Boolean, reflect: true},
+    tabIndex: {type: Number},
   };
 
   override render() {
     return html`
         <div id="container" tabindex=${this.tabIndex}>
-          <md-ripple for="container"></md-ripple>
-          <md-focus-ring for="container"></md-focus-ring>
+          <md-ripple
+              for="container"
+              ?disabled=${this.disabled}>
+          </md-ripple>
+          <md-focus-ring
+              for="container"
+              ?disabled=${this.disabled}>
+          </md-focus-ring>
           <slot></slot>
         </div>
     `;
