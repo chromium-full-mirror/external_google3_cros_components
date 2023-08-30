@@ -8,6 +8,7 @@ import '@material/web/ripple/ripple.js';
 
 import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {classMap} from 'lit/directives/class-map';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
 
@@ -50,24 +51,45 @@ const ICON_SIZE = css`20px`;
 
 /**
  * Spacing between items in the a row (in LTR):
- *   1. [ICON_LEADING_MARGIN]<icon...>[ICON_LABEL_GAP]<label>[LABEL_ONLY_MARGIN]
- *   2. [LABEL_ONLY_MARGIN]<label>[LABEL_ONLY_MARGIN]
  *
- *   1. With any icon:
- *     * 8px from left
- *     * If the expand icon is invisible but there is another icon, the expand
- *       icon still takes space.
- *     * 0px between icons
- *     * 8px from icon to label
- *   2. Without any icon:
- *     * 24px from left
+ * In flat Sidenavs:
+ *
+ *   1. [ICON_LEADING_MARGIN]
+ *      <icon>
+ *      [ICON_LABEL_GAP]
+ *      <label>
+ *      [LABEL_TRAILING_MARGIN]
+ *
+ *   2. [LABEL_ONLY_MARGIN]
+ *      <label>
+ *      [LABEL_TRAILING_MARGIN]
+ *
+ * In layered sidenavs:
+ * (the expand icon takes space even when a layered item has no children)
+ *
+ *   3. [EXPAND_LEADING_MARGIN]
+ *      <expand icon>
+ *      <icon>
+ *      [ICON_LABEL_GAP]
+ *      <label>
+ *      [LABEL_TRAILING_MARGIN]
+ *
+ *   4. [EXPAND_LEADING_MARGIN]
+ *      <expand icon>
+ *      [EXPAND_LABEL_GAP]
+ *      <label>
+ *      [LABEL_TRAILING_MARGIN]
  */
 const ICON_LABEL_GAP = css`8px`;
-const ICON_LEADING_MARGIN = css`8px`;
+const EXPAND_LABEL_GAP = css`4px`;
+const ICON_LEADING_MARGIN = css`28px`;
+const EXPAND_LEADING_MARGIN = css`8px`;
 const LABEL_ONLY_MARGIN = css`24px`;
 const LABEL_TRAILING_MARGIN = css`12px`;
-
 const ITEM_GAP = css`8px`;
+
+/** Selects a host that is in a layered Sidenav. */
+const LAYERED_SELECTOR = css`:host(:is([inLayered], [may-have-children]))`;
 
 /** An item for a ChromeOS compliant sidenav element. */
 export class SidenavItem extends LitElement {
@@ -136,10 +158,10 @@ export class SidenavItem extends LitElement {
     }
 
     .expand-icon {
+      display: none;
       fill: currentcolor;
       flex: none;
       height: ${ICON_SIZE};
-      margin-inline-start: ${ICON_LEADING_MARGIN};
       -webkit-mask-position: center;
       -webkit-mask-repeat: no-repeat;
       position: relative;
@@ -149,8 +171,19 @@ export class SidenavItem extends LitElement {
       width: ${ICON_SIZE};
     }
 
+    ${LAYERED_SELECTOR} .expand-icon {
+      display: unset;
+    }
+
     li[aria-expanded] .expand-icon {
       visibility: visible;
+    }
+
+    .expand-icon,
+    slot[name="icon"]::slotted(*) {
+      width: 20px;
+      height: 20px;
+      align-items: center;
     }
 
     :host-context([dir=rtl]) .expand-icon {
@@ -165,6 +198,7 @@ export class SidenavItem extends LitElement {
       color: var(--cros-sys-on_surface);
       flex: none;
       height: ${ICON_SIZE};
+      margin-inline-start: ${ICON_LEADING_MARGIN};
       width: ${ICON_SIZE};
     }
 
@@ -184,16 +218,28 @@ export class SidenavItem extends LitElement {
       display: block;
       flex: auto;
       margin-inline-end: ${LABEL_TRAILING_MARGIN};
-      margin-inline-start: calc(${LABEL_ONLY_MARGIN} - ${ICON_SIZE} - ${
-      ICON_LEADING_MARGIN});
+      margin-inline-start: ${LABEL_ONLY_MARGIN};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: pre;
     }
 
+    ${LAYERED_SELECTOR} .expand-icon {
+      margin-inline-start: ${EXPAND_LEADING_MARGIN}
+    }
+
+    ${LAYERED_SELECTOR} slot[name="icon"]::slotted(*) {
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+    }
+
+    ${LAYERED_SELECTOR} .tree-label {
+      margin-inline-start: ${EXPAND_LABEL_GAP};
+    }
+
+    ${LAYERED_SELECTOR} .has-icon .tree-label,
     li[aria-expanded] .tree-label,
-    .has-icon + .tree-label,
-    :host(:not([layer="0"])) .tree-label {
+    .has-icon + .tree-label, {
       margin-inline-start: ${ICON_LABEL_GAP};
     }
 
@@ -204,10 +250,22 @@ export class SidenavItem extends LitElement {
       color: var(--cros-sys-on_surface);
       height: 20px;
       margin-inline-end: ${LABEL_TRAILING_MARGIN};
-      margin-inline-start: ${ICON_LABEL_GAP};
+      margin-inline-start: ${LABEL_ONLY_MARGIN};
       outline: 2px solid var(--cros-sys-focus_ring);
       overflow: hidden;
       font: var(--cros-button-2-font);
+    }
+
+    .has-icon :is(.tree-label, .rename) {
+      margin-inline-start: ${ICON_LABEL_GAP};
+    }
+
+    ${LAYERED_SELECTOR} .rename {
+      margin-inline-start: ${EXPAND_LABEL_GAP};
+    }
+
+    ${LAYERED_SELECTOR} .has-icon :is(.tree-label, .rename) {
+      margin-inline-start: ${ICON_LABEL_GAP};
     }
 
     /* We need to ensure that even empty labels take up space */
@@ -271,6 +329,7 @@ export class SidenavItem extends LitElement {
     tabIndex: {attribute: false},
     layer: {type: Number, reflect: true},
     inLayered: {type: Boolean, reflect: true},
+    hasIcon: {type: Boolean, reflect: true},
   };
 
   /** @nocollapse */
@@ -459,6 +518,8 @@ export class SidenavItem extends LitElement {
           `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.layer}px))`,
     };
 
+    const treeRowClasses = {'tree-row': true, 'has-icon': this.hasIcon};
+
     return html`
       <li
           class="tree-item"
@@ -469,7 +530,7 @@ export class SidenavItem extends LitElement {
           aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
           aria-disabled=${this.disabled}>
         <div
-            class="tree-row"
+            class=${classMap(treeRowClasses)}
             style=${styleMap(treeRowStyles)}>
           <md-ripple></md-ripple>
           <!-- TODO(b/262453851): Implement icon from spec -->
