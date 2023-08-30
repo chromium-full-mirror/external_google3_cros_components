@@ -270,6 +270,7 @@ export class SidenavItem extends LitElement {
     label: {type: String, reflect: true},
     tabIndex: {attribute: false},
     layer: {type: Number, reflect: true},
+    inLayered: {type: Boolean, reflect: true},
   };
 
   /** @nocollapse */
@@ -355,6 +356,13 @@ export class SidenavItem extends LitElement {
    */
   hasIcon: boolean;
 
+  /**
+   * Whether this item is in a Sidenav with nested SidenavItems. If this
+   * SidenavItem has a Sidenav parent, the parent will control this attribute.
+   * @export
+   */
+  inLayered: boolean;
+
   private get treeItemElement(): HTMLLIElement {
     return castExists(this.renderRoot.querySelector('li'));
   }
@@ -395,6 +403,7 @@ export class SidenavItem extends LitElement {
     this.tabIndex = -1;
     this.layer = 0;
     this.hasIcon = false;
+    this.inLayered = false;
   }
 
   /** The child tree items which can be tabbed to. */
