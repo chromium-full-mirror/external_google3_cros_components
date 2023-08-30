@@ -5,9 +5,9 @@
  */
 
 import 'google3/third_party/javascript/cros_components/icon_button/icon-button';
-import '@material/web/textfield/filled-text-field';
+import '@material/web/textfield/outlined-text-field';
 
-import {MdFilledTextField, TextFieldType as MdTextfieldType} from '@material/web/textfield/filled-text-field';
+import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 
 /**
@@ -38,76 +38,98 @@ export class Textfield extends LitElement {
       outline: none;
     }
 
-    :host(.focused) #visibleLabel {
-      color: var(--cros-sys-primary);
+    :host([disabled]) {
+      opacity: var(--cros-disabled-opacity);
     }
 
-    :host(.error) #visibleLabel {
-      color: var(--cros-sys-error)
-    }
-
-    :host([disabled]) #visibleLabel {
-      opacity: var(--cros-sys-opacity-disabled);
-    }
-
-    md-filled-text-field {
-      --md-filled-field-top-space: 8px;
-      --md-filled-field-bottom-space: 8px;
-      --md-filled-field-hover-supporting-text-color: var(--cros-sys-on_surface);
-      --md-filled-field-supporting-text-type: var(--cros-label-2-font);
-      --md-filled-field-supporting-text-leading-space: 0px;
-      --md-filled-field-supporting-text-trailing-space: 0px;
-      --md-filled-field-supporting-text-top-space: 8px;;
-      --md-filled-text-field-active-indicator-color: var(--cros-sys-primary);
-      --md-filled-text-field-active-indicator-height: 0;
-      --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_BASE};
-      --md-filled-text-field-top-space: 6px;
-      --md-filled-text-field-bottom-space: 6px;
-      --md-filled-text-field-container-shape-end-end: 8px;
-      --md-filled-text-field-container-shape-end-start: 8px;
-      --md-filled-text-field-container-shape-start-end: 8px;
-      --md-filled-text-field-container-shape-start-start: 8px;
-      --md-filled-text-field-disabled-active-indicator-height: 0;
-      --md-filled-text-field-disabled-input-text-color: var(--cros-sys-disabled);
-      --md-filled-text-field-error-focus-active-indicator-color: var(--cros-sys-error);
-      --md-filled-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-error-hover-state-layer-opacity: 0;
-      --md-filled-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
-      --md-filled-text-field-error-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-error-supporting-text-color: var(--cros-sys-error);
-      --md-filled-text-field-focus-active-indicator-color: var(--cros-sys-primary);
-      --md-filled-text-field-focus-active-indicator-height: 2px;
-      --md-filled-text-field-focus-caret-color: var(--cros-sys-primary);
-      --md-filled-text-field-focus-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-input-text-placeholder-color: var(--cros-sys-secondary);
-      --md-filled-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-input-text-suffix-leading-space: 16px;
-      --md-filled-text-field-input-text-type: var(--cros-body-2-font);
-      --md-filled-text-field-hover-active-indicator-height: 0;
-      --md-filled-text-field-hover-input-text-color: var(--cros-sys-on_surface);
-      --md-filled-text-field-hover-state-layer-opacity: 0;
-      --md-filled-text-field-label-text-type: var(--cros-body-2-font);
-      --md-filled-text-field-pressed-active-indicator-height: 2px;
-      --md-filled-text-field-pressed-active-indicator-color: var(--cros-sys-primary);
-      --md-filled-text-field-supporting-text-color: var(--cros-sys-on_surface);
+    md-outlined-text-field {
+      /** Base styles */
+      --md-outlined-field-leading-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-field-supporting-text-leading-space: 0px;
+      --md-outlined-field-supporting-text-trailing-space: 0px;
+      --md-outlined-field-supporting-text-top-space: 8px;;
+      --md-outlined-text-field-container-shape-end-end: 8px;
+      --md-outlined-text-field-container-shape-end-start: 8px;
+      --md-outlined-text-field-container-shape-start-end: 8px;
+      --md-outlined-text-field-container-shape-start-start: 8px;
+      --md-outlined-text-field-bottom-space: 8px;
+      --md-outlined-text-field-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-input-text-placeholder-color: var(--cros-sys-secondary);
+      --md-outlined-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-input-text-type: var(--cros-body-2-font);
+      --md-outlined-text-field-outline-width: 0px;
+      --md-outlined-text-field-supporting-text-type: var(--cros-label-2-font);
+      --md-outlined-text-field-top-space: 8px;
+      /** Disabled */
+      --md-outlined-field-disabled-leading-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-disabled-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-disabled-input-text-prefix-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-disabled-input-text-suffix-color: var(--cros-sys-on_surface);
+      /** Error */
+      --md-outlined-field-error-focus-leading-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-focus-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-leading-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-error-hover-state-layer-opacity: 0;
+      --md-outlined-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
+      --md-outlined-text-field-error-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-error-supporting-text-color: var(--cros-sys-error);
+      /** Focus */
+      --md-outlined-field-focus-leading-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-focus-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-focus-outline-color: var(--cros-sys-primary);
+      --md-outlined-text-field-focus-outline-color: var(--cros-sys-primary);
+      --md-outlined-text-field-focus-caret-color: var(--cros-sys-primary);
+      --md-outlined-text-field-focus-input-text-color: var(--cros-sys-on_surface);
+      /** Hover */
+      --md-outlined-field-hover-leading-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-hover-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-text-field-caret-color: var(--cros-sys-primary);
+      --md-outlined-text-field-hover-outline-width: 0px;
+      --md-outlined-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-hover-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-hover-state-layer-opacity: 0;
       width: 100%;
     }
 
-    :host([shaded]) md-filled-text-field {
-      --md-filled-text-field-container-color: ${TEXTFIELD_CONTAINER_ON_SHADED};
+    .text-labels {
+      color: var(--cros-sys-on_surface);
     }
 
-    #visibleLabel {
-      color: var(--cros-sys-on_surface);
+    :host(.focused) .text-labels {
+      color: var(--cros-sys-primary);
+    }
+
+    :host(.error) .text-labels {
+      color: var(--cros-sys-error)
+    }
+
+    #visible-label {
       font: var(--cros-label-1-font);
       padding-bottom: 8px;
     }
 
-    cros-icon-button {
-      --cros-icon-button-color-override: var(--cros-sys-secondary);
+    #main-container {
+      position: relative;
+    }
+
+    #textfield-background {
+      position:absolute;
+      min-height: 36px;
+      width: 100%;
+      border-radius: 8px;
+      background-color: ${TEXTFIELD_CONTAINER_ON_BASE};
+    }
+
+    :host([shaded]) #textfield-background {
+      background-color: ${TEXTFIELD_CONTAINER_ON_SHADED};
     }
   `;
 
@@ -122,15 +144,13 @@ export class Textfield extends LitElement {
     hint: {type: String, attribute: true},
     maxLength: {type: Number, attribute: true},
     placeholder: {type: String, attribute: true},
-    hasLeadingIcon: {type: Boolean},
-    hasTrailingIcon: {type: Boolean},
   };
 
   private valueInternal = '';
 
 
   /** @export */
-  type: MdTextfieldType = 'text';
+  type: TextFieldType = 'text';
   /**
    * When false, will use the darker container designed to sit on app-base. When
    * true, will use the lighter container colored designed for use with
@@ -143,6 +163,7 @@ export class Textfield extends LitElement {
   get value() {
     return this.mdTextfield?.value || '';
   }
+
   set value(value: string) {
     // On first render the initial value is lost because mwcTextfield is not yet
     // rendered. Store it in `valueInternal` and set it in firstUpdated().
@@ -178,8 +199,9 @@ export class Textfield extends LitElement {
   /** @export */
   placeholder = '';
 
-  get mdTextfield(): MdFilledTextField|undefined {
-    return this.renderRoot?.querySelector('md-filled-text-field') || undefined;
+  get mdTextfield(): MdOutlinedTextField|undefined {
+    return this.renderRoot?.querySelector('md-outlined-text-field') ||
+        undefined;
   }
 
   constructor() {
@@ -211,74 +233,59 @@ export class Textfield extends LitElement {
   }
 
   override render() {
-    const leadingIcon = html`
-      <cros-icon-button
-          slot="leadingicon"
-          id="leading"
-          buttonStyle='floating'
-          size='small'>
-        <slot
-            name="leading-icon"
-            slot="icon"
-            @slotchange=${this.handleIconChange}>
-        </slot>
-      </cros-icon-button>
-      `;
-    const trailingIcon = html`
-      <cros-icon-button
-          slot="trailingicon"
-          id="trailing"
-          buttonStyle='floating'
-          size='small'>
-        <slot
-            name="trailing-icon"
-            slot="icon"
-            @slotchange=${this.handleIconChange}>
-        </slot>
-      </cros-icon-button>
-      `;
     return html`
-      ${this.label ? html`<div id="visibleLabel">${this.label}</div>` : nothing}
-      <md-filled-text-field
-        ?disabled=${this.disabled}
-        type=${this.type}
-        data-aria-label=${this.label}
-        value=${this.value}
-        suffix-text=${this.suffix}
-        maxLength=${this.maxLength}
-        supporting-text=${this.hint}
-        placeholder=${this.placeholder}
-        @focus=${this.toggleFocusStyle}
-        @blur=${this.toggleFocusStyle}
-        @change=${this.onChange}
-        @invalid=${() => void this.toggleErrorStyles(true)}>
-        ${leadingIcon}
-        ${trailingIcon}
-      </md-filled-text-field>
+      ${this.maybeRenderLabel()}
+      <div id="main-container">
+        <div id="textfield-background"></div>
+        <md-outlined-text-field
+            ?disabled=${this.disabled}
+            type=${this.type}
+            data-aria-label=${this.label}
+            value=${this.value}
+            suffix-text=${this.suffix}
+            maxLength=${this.maxLength}
+            supporting-text=${this.hint}
+            placeholder=${this.placeholder}
+            @focus=${this.toggleFocusStyle}
+            @blur=${this.toggleFocusStyle}
+            @change=${this.onChange}
+            @invalid=${() => void this.toggleErrorStyles(true)}>
+          <slot name="leading-icon" @slotchange=${this.handleIconChange}></slot>
+          <slot
+              name="trailing-icon"
+              @slotchange=${this.handleIconChange}>
+          </slot>
+        </md-outlined-text-field>
+      </div>
     `;
   }
+
+  private maybeRenderLabel() {
+    return this.label ?
+        html`<div id="visible-label" class="text-labels">${this.label}</div>` :
+        nothing;
+  }
+
   private handleIconChange() {
-    const hasLeadingIcon =
-        (this.querySelector('*[slot="leading-icon"]') !== null);
-    const hasTrailingIcon =
-        (this.querySelector('*[slot="trailing-icon"]') !== null);
+    const {leadingIcon, trailingIcon} = this.queryIconSlots();
     // When no icon in slot is given, we need to remove the slot attribute from
-    // cros-icon-button, otherwise md-textfield will still render an empty space.
-    const leadingIconButton =
-        this.shadowRoot!.querySelector('cros-icon-button[id="leading"]');
-    const trailingIconButton =
-        this.shadowRoot!.querySelector('cros-icon-button[id="trailing"]');
-    if (hasLeadingIcon) {
-      leadingIconButton!.setAttribute('slot', 'leadingicon');
+    // cros-icon-button, otherwise md-textfield will still render an empty
+    // space.
+    const leadingSlot =
+        this.shadowRoot!.querySelector('slot[name="leading-icon"]');
+    const trailingSlot =
+        this.shadowRoot!.querySelector('slot[name="trailing-icon"]');
+
+    if (leadingIcon) {
+      leadingSlot!.setAttribute('slot', 'leadingicon');
     } else {
-      leadingIconButton!.removeAttribute('slot');
+      leadingSlot!.removeAttribute('slot');
     }
-    if (hasTrailingIcon) {
-      trailingIconButton!.setAttribute('slot', 'trailingicon');
+    if (trailingIcon) {
+      trailingSlot!.setAttribute('slot', 'trailingicon');
     } else {
-      trailingIconButton!.removeAttribute('slot');
+      trailingSlot!.removeAttribute('slot');
     }
-    this.requestUpdate();
   }
 
   private checkAndUpdateValidity() {
@@ -289,6 +296,7 @@ export class Textfield extends LitElement {
   private toggleErrorStyles(error: boolean) {
     this.classList.toggle('error', error);
   }
+
   private toggleFocusStyle() {
     this.classList.toggle('focused');
   }
@@ -296,6 +304,17 @@ export class Textfield extends LitElement {
   private onChange() {
     this.checkAndUpdateValidity();
     this.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  private getSlottedIcon(slotName: 'leading'|'trailing') {
+    return this.querySelector(`*[slot="${slotName}-icon"]`) !== null;
+  }
+
+  private queryIconSlots() {
+    return {
+      leadingIcon: this.getSlottedIcon('leading'),
+      trailingIcon: this.getSlottedIcon('trailing'),
+    };
   }
 }
 
