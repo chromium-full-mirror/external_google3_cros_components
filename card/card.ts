@@ -49,10 +49,14 @@ export class Card extends LitElement {
       box-sizing: border-box;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       display: grid;
-      outline:none;
+      outline: none;
       padding: var(--cros-card-padding, 16px);
       position: relative;
       --md-focus-ring-shape: 12px;
+    }
+
+    :host([cardStyle="filled"]) #container {
+      border: none;
     }
 
     /* TODO(b/288189513): Make container color customisable. */
@@ -101,8 +105,12 @@ export class Card extends LitElement {
   /** @export */
   selected = false;
 
+  /** @export */
+  cardStyle: 'outline'|'filled' = 'outline';
+
   /** @nocollapse */
   static override properties = {
+    cardStyle: {type: String, reflect: true},
     disabled: {type: Boolean, reflect: true},
     selected: {type: Boolean, reflect: true},
     tabIndex: {type: Number},
