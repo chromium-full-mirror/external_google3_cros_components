@@ -302,7 +302,7 @@ export class IconButton extends LitElement {
           this.a11yLabel} toggle ?selected=${this.selected} ?disabled=${
           this.disabled}>
         <slot name="icon"></slot>
-        <slot name="selectedIcon" slot="selectedIcon"></slot>
+        <slot name="selectedIcon" slot="selected"></slot>
       </md-filled-icon-button>`;
     } else if (this.buttonStyle === 'floating') {
       return html`<md-icon-button ?disabled=${this.disabled} aria-label=${
