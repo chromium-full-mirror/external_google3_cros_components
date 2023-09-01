@@ -17,7 +17,6 @@ const ICON_PADDING_START_END = css`12px`;
 const ICON_GAP = css`8px`;
 const CONTAINER_HEIGHT = css`36px`;
 const ICON_SIZE = css`20px`;
-const MAX_WIDTH = css`200px`;
 const MIN_WIDTH = css`64px`;
 
 /**
@@ -37,6 +36,7 @@ export class Button extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
+      --cros-button-max-width_ : var(--cros-button-max-width,200px);
     }
 
     ::slotted(*) {
@@ -68,7 +68,7 @@ export class Button extends LitElement {
     }
 
     md-filled-button {
-      max-width: ${MAX_WIDTH};
+      max-width: var(--cros-button-max-width_);
       min-width: ${MIN_WIDTH};
       --md-filled-button-container-height: ${CONTAINER_HEIGHT};
       --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
@@ -100,7 +100,7 @@ export class Button extends LitElement {
     }
 
     md-text-button {
-      max-width: ${MAX_WIDTH};
+      max-width: var(--cros-button-max-width_);
       min-width: ${MIN_WIDTH};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
