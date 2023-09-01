@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import 'google3/third_party/javascript/cros_components/icon_button/icon-button';
 import '@material/web/textfield/outlined-text-field';
 
 import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field';
@@ -221,8 +220,10 @@ export class Textfield extends LitElement {
     this.maxLength = -1;
   }
 
-  override async firstUpdated(changedProperties: PropertyValues<Textfield>) {
+  override async firstUpdated() {
     this.mdTextfield!.value = this.valueInternal;
+    // Run the logic to forward any slotted icons to the md-text-field internal
+    // icon slots.
     this.handleIconChange();
   }
 
