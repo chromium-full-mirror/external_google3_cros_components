@@ -250,9 +250,9 @@ export class Textfield extends LitElement {
             @blur=${this.toggleFocusStyle}
             @change=${this.onChange}
             @invalid=${() => void this.toggleErrorStyles(true)}>
-          <slot name="leading-icon" @slotchange=${this.handleIconChange}></slot>
+          <slot name="leading" @slotchange=${this.handleIconChange}></slot>
           <slot
-              name="trailing-icon"
+              name="trailing"
               @slotchange=${this.handleIconChange}>
           </slot>
         </md-outlined-text-field>
@@ -271,10 +271,9 @@ export class Textfield extends LitElement {
     // When no icon in slot is given, we need to remove the slot attribute from
     // cros-icon-button, otherwise md-textfield will still render an empty
     // space.
-    const leadingSlot =
-        this.shadowRoot!.querySelector('slot[name="leading-icon"]');
+    const leadingSlot = this.shadowRoot!.querySelector('slot[name="leading"]');
     const trailingSlot =
-        this.shadowRoot!.querySelector('slot[name="trailing-icon"]');
+        this.shadowRoot!.querySelector('slot[name="trailing"]');
 
     if (leadingIcon) {
       leadingSlot!.setAttribute('slot', 'leadingicon');
@@ -307,7 +306,7 @@ export class Textfield extends LitElement {
   }
 
   private getSlottedIcon(slotName: 'leading'|'trailing') {
-    return this.querySelector(`*[slot="${slotName}-icon"]`) !== null;
+    return this.querySelector(`*[slot="${slotName}"]`) !== null;
   }
 
   private queryIconSlots() {
