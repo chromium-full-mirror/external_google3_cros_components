@@ -59,6 +59,12 @@ export class Card extends LitElement {
       border: none;
     }
 
+    /* TODO(b/288189513): Make elevation shadow and color customizable. */
+    :host([cardStyle="elevated"]) #container {
+      background-color: var(--cros-sys-base_elevated);
+      box-shadow: var(--cros-elevation-1-shadow);
+    }
+
     /* TODO(b/288189513): Make container color customisable. */
     :host([selected]) #container {
       background-color: var(--cros-sys-primary_container) ;
@@ -106,7 +112,7 @@ export class Card extends LitElement {
   selected = false;
 
   /** @export */
-  cardStyle: 'outline'|'filled' = 'outline';
+  cardStyle: 'outline'|'filled'|'elevated' = 'outline';
 
   /** @nocollapse */
   static override properties = {
