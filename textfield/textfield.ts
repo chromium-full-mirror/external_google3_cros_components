@@ -146,6 +146,12 @@ export class Textfield extends LitElement {
     placeholder: {type: String, attribute: true},
   };
 
+  /** @nocollapse */
+  static events = {
+    /** The textfield value changed via user input. */
+    CHANGE: 'change',
+  } as const;
+
   private valueInternal = '';
 
 
@@ -320,6 +326,10 @@ export class Textfield extends LitElement {
 customElements.define('cros-textfield', Textfield);
 
 declare global {
+  interface HTMLElementEventMap {
+    [Textfield.events.CHANGE]: Event;
+  }
+
   interface HTMLElementTagNameMap {
     'cros-textfield': Textfield;
   }
