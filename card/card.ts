@@ -40,11 +40,10 @@ export class Card extends LitElement {
       font: var(--cros-body-0-font);
     }
 
-    /* TODO(b/288189513): Make border color and padding customizable. */
     #container {
       align-items: center;
-      background-color: var(--cros-sys-app_base);
-      border: 1px solid var(--cros-sys-separator);
+      background-color: var(--cros-card-background-color, var(--cros-sys-app_base));
+      border: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));
       border-radius: 12px;
       box-sizing: border-box;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
@@ -65,7 +64,7 @@ export class Card extends LitElement {
       box-shadow: var(--cros-elevation-1-shadow);
     }
 
-    /* TODO(b/288189513): Make container color customisable. */
+    /* TODO(b/288189513): Make selected container color customisable. */
     :host([selected]) #container {
       background-color: var(--cros-sys-primary_container) ;
     }
