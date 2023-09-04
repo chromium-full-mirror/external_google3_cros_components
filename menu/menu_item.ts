@@ -13,6 +13,8 @@ import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
  * A cros compliant menu-item component for use in cros-menu.
+ * @fires trigger Fired when the user clicks on or otherwise activates the menu
+ * item i.e. via a enter or space key.
  */
 export class MenuItem extends LitElement implements MenuItemType {
   /** @nocollapse */
@@ -39,7 +41,7 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-list-item-trailing-space: 16px;
     }
     md-menu-item([itemEnd=null]) {
-      --md-list-itwm-list-item-trailing-space: 48px;
+      --md-list-item-trailing-space: 48px;
     }
     :host([itemEnd="icon"]) md-menu-item {
       --md-list-item-trailing-space: 12px;
@@ -273,6 +275,11 @@ export class MenuItem extends LitElement implements MenuItemType {
     return endSlot;
   }
 
+  private fireTriggerEvent() {
+    this.dispatchEvent(
+        new CustomEvent<void>('trigger', {bubbles: true, composed: true}));
+  }
+
   override render() {
     const endSlot = this.getEndSlot();
     // `keep-open` property needs to be true in switch case so cros-switch can
@@ -285,6 +292,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     }
     return html`
       <md-menu-item
+          @close-menu=${() => void this.fireTriggerEvent()}
           headline=${this.headline}
           .keepOpen=${keepOpen}
           .disabled=${this.disabled}
