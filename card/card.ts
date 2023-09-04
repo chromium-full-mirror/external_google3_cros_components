@@ -63,9 +63,8 @@ export class Card extends LitElement {
       box-shadow: var(--cros-card-elevation-shadow, var(--cros-elevation-1-shadow));
     }
 
-    /* TODO(b/288189513): Make selected container color customisable. */
     :host([selected]) #container {
-      background-color: var(--cros-sys-primary_container) ;
+      background-color: var(--cros-card-selected-background-color, var(--cros-sys-primary_container));
     }
 
     /* TODO(b/288189513): Make hover and pressed colors customizable. */
