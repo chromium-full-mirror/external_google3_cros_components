@@ -67,12 +67,11 @@ export class Card extends LitElement {
       background-color: var(--cros-card-selected-background-color, var(--cros-sys-primary_container));
     }
 
-    /* TODO(b/288189513): Make hover and pressed colors customizable. */
     md-ripple {
       color: var(--cros-sys-ripple_primary);
-      --md-ripple-hover-color: var(--cros-sys-hover_on_subtle);
+      --md-ripple-hover-color: var(--cros-card-hover-color, var(--cros-sys-hover_on_subtle));
       --md-ripple-hover-opacity: 1;
-      --md-ripple-pressed-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-ripple-pressed-color: var(--cros-card-pressed-color, var(--cros-sys-ripple_neutral_on_subtle));
       --md-ripple-pressed-opacity: 1;
     }
 
