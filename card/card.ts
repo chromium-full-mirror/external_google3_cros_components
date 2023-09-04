@@ -72,8 +72,8 @@ export class Card extends LitElement {
       color: var(--cros-sys-ripple_primary);
       --md-ripple-hover-color: var(--cros-sys-hover_on_subtle);
       --md-ripple-hover-opacity: 1;
-      /* TODO(b/288189513): cros-sys-neutral_ripple_on_subtle does not exist */
-      --md-ripple-pressed-color: var(--cros-sys-neutral_ripple_on_subtle);
+      --md-ripple-pressed-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-ripple-pressed-opacity: 1;
     }
 
     :host([disabled]) {
