@@ -101,7 +101,7 @@ export class IconButton extends LitElement {
       FILLED_ICON_ON_BASE};
     }
     :host([size="small"]) md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-container-shape: 100%;
+      --md-filled-tonal-icon-button-container-shape: 10px;
       --md-filled-tonal-icon-button-container-size: 32px;
       --md-filled-tonal-icon-button-icon-size: 20px;
     }
@@ -125,6 +125,9 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-selected-pressed-icon-color: ${
       FILLED_ICON_ON_IMAGE};
     }
+    :host([shape="circle"]) md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-shape: 100vmax;
+    }
     md-icon-button {
       --md-icon-button-disabled-icon-color: ${FLOATING_ICON_ON_BASE};
       --md-icon-button-disabled-icon-opacity: var(--cros-sys-disabled-opacity);
@@ -142,7 +145,7 @@ export class IconButton extends LitElement {
     }
     :host([size="small"]) md-icon-button {
       --md-icon-button-icon-size: 20px;
-      --md-icon-button-state-layer-shape: 100%;
+      --md-icon-button-state-layer-shape: 10px;
       --md-icon-button-state-layer-size: 32px;
     }
     :host([size="large"]) md-icon-button {
@@ -176,6 +179,9 @@ export class IconButton extends LitElement {
       --md-icon-button-icon-color: ${FLOATING_ICON_ON_IMAGE};
       --md-icon-button-pressed-icon-color: ${FLOATING_ICON_ON_IMAGE};
       --md-icon-button-pressed-state-layer-color: rgba(255, 255, 255, 0.08);
+    }
+    :host([shape="circle"]) md-icon-button {
+      --md-icon-button-state-layer-shape: 100vmax;
     }
     md-filled-icon-button {
       --md-filled-icon-button-container-shape: 12px;
@@ -215,7 +221,7 @@ export class IconButton extends LitElement {
       width: 80px;
     }
     :host([size="small"]) md-filled-icon-button {
-      --md-filled-icon-button-container-shape: 100%;
+      --md-filled-icon-button-container-shape: 10px;
       --md-filled-icon-button-container-size: 32px;
       --md-filled-icon-button-icon-size: 20px;
     }
@@ -257,6 +263,9 @@ export class IconButton extends LitElement {
       TOGGLE_ICON_ON_PROMINENT};
       --md-filled-icon-button-toggle-selected-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
     }
+    :host([shape="circle"]) md-filled-icon-button {
+      --md-filled-icon-button-container-shape: 100vmax;
+    }
     md-filled-icon-button[selected] {
       --md-filled-icon-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
@@ -290,7 +299,7 @@ export class IconButton extends LitElement {
     this.a11yLabel = '';
     this.buttonStyle = 'filled';
     this.size = 'default';
-    this.shape = 'circle';
+    this.shape = 'square';
     this.surface = 'base';
     this.disabled = false;
     this.selected = false;
