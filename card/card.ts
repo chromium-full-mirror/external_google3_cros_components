@@ -58,10 +58,9 @@ export class Card extends LitElement {
       border: none;
     }
 
-    /* TODO(b/288189513): Make elevation shadow and color customizable. */
     :host([cardStyle="elevated"]) #container {
-      background-color: var(--cros-sys-base_elevated);
-      box-shadow: var(--cros-elevation-1-shadow);
+      background-color: var(--cros-card-background-color, var(--cros-sys-base_elevated));
+      box-shadow: var(--cros-card-elevation-shadow, var(--cros-elevation-1-shadow));
     }
 
     /* TODO(b/288189513): Make selected container color customisable. */
