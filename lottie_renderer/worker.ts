@@ -18,7 +18,7 @@ let workerLoaderPolicy: TrustedTypePolicy|null = null;
 function getLottieWorkerURL(): TrustedScriptURL {
   if (workerLoaderPolicy === null) {
     workerLoaderPolicy =
-        window.trustedTypes!.createPolicy('lottie-worker-script-loader', {
+        window.trustedTypes!.createPolicy('cros-lottie-worker-script-loader', {
           createScriptURL: (_ignore: string) => {
             const script =
                 `import 'chrome://resources/cros_components/lottie_renderer/lottie_worker.js';`;
