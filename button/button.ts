@@ -78,7 +78,10 @@ export class Button extends LitElement {
       --md-filled-button-focus-state-layer-opacity: 100%;
       --md-filled-button-hover-container-elevation: 0;
       --md-filled-button-hover-state-layer-opacity: 100%;
-      --md-filled-button-label-text-type: var(--cros-button-2-font);
+      --md-filled-button-label-text-font: var(--cros-button-2-font-family);
+      --md-filled-button-label-text-size: var(--cros-button-2-font-size);
+      --md-filled-button-label-text-line-height: var(--cros-button-2-line-height);
+      --md-filled-button-label-text-weight: var(--cros-button-2-font-weight);
       --md-filled-button-leading-space: ${LABEL_PADDING_START_END};
       --md-filled-button-pressed-state-layer-opacity: 100%;
       --md-filled-button-trailing-space: ${LABEL_PADDING_START_END};
@@ -110,7 +113,10 @@ export class Button extends LitElement {
       --md-text-button-focus-state-layer-opacity: 100%;
       --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-text-button-hover-state-layer-opacity: 100%;
-      --md-text-button-label-text-type: var(--cros-button-2-font);
+      --md-text-button-label-text-font: var(--cros-button-2-font-family);
+      --md-text-button-label-text-size: var(--cros-button-2-font-size);
+      --md-text-button-label-text-line-height: var(--cros-button-2-line-height);
+      --md-text-button-label-text-weight: var(--cros-button-2-font-weight);
       --md-text-button-leading-space: ${LABEL_PADDING_START_END};
       --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-text-button-pressed-state-layer-opacity: 100%;
