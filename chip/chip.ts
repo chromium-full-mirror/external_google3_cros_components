@@ -64,7 +64,10 @@ export class Chip extends LitElement {
       --md-filter-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filter-chip-hover-state-layer-opacity: 1;
       --md-filter-chip-icon-size: ${ICON_SIZE};
-      --md-filter-chip-label-text-type: var(--cros-button-1-font);
+      --md-filter-chip-label-text-font: var(--cros-button-1-font-family);
+      --md-filter-chip-label-text-size: var(--cros-button-1-font-size);
+      --md-filter-chip-label-text-line-height: var(--cros-button-1-line-height);
+      --md-filter-chip-label-text-weight: var(--cros-button-1-font-weight);
       --md-filter-chip-label-text-color: var(--cros-sys-on_surface);
       --md-filter-chip-leading-icon-color: var(--cros-sys-on_surface);
       --md-filter-chip-outline-color: var(--cros-sys-separator);
@@ -99,7 +102,10 @@ export class Chip extends LitElement {
       --md-suggestion-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-suggestion-chip-hover-state-layer-opacity: 1;
       --md-suggestion-chip-icon-size: ${ICON_SIZE};
-      --md-suggestion-chip-label-text-type: var(--cros-button-1-font);
+      --md-suggestion-chip-label-text-font: var(--cros-button-1-font-family);
+      --md-suggestion-chip-label-text-size: var(--cros-button-1-font-size);
+      --md-suggestion-chip-label-text-line-height: var(--cros-button-1-line-height);
+      --md-suggestion-chip-label-text-weight: var(--cros-button-1-font-weight);
       --md-suggestion-chip-label-text-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-leading-icon-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-outline-color: var(--cros-sys-separator);
@@ -123,7 +129,10 @@ export class Chip extends LitElement {
       --md-input-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-input-chip-hover-state-layer-opacity: 1;
       --md-input-chip-icon-size: ${ICON_SIZE};
-      --md-input-chip-label-text-type: var(--cros-button-1-font);
+      --md-input-chip-label-text-font: var(--cros-button-1-font-family);
+      --md-input-chip-label-text-size: var(--cros-button-1-font-size);
+      --md-input-chip-label-text-line-height: var(--cros-button-1-line-height);
+      --md-input-chip-label-text-weight: var(--cros-button-1-font-weight);
       --md-input-chip-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-leading-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-outline-color: var(--cros-sys-separator);
