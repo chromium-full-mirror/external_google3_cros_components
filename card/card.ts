@@ -83,12 +83,12 @@ export class Card extends LitElement {
       display: none;
     }
 
-    /* TODO(b/288189513): Make icon position and color customisable. */
+    /* TODO(b/288189513): Make icon position customisable. */
     :host([selected]) .selected-tick {
       display: unset;
       width: 20px;
       height: 20px;
-      fill: var(--cros-sys-on_primary_container);
+      fill: var(--cros-card-icon-color, var(--cros-sys-on_primary_container));
       position: absolute;
       inset-inline-end: 20px;
       bottom: 20px;
