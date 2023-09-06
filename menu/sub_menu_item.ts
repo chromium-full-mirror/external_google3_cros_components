@@ -33,7 +33,10 @@ export class SubMenuItem extends LitElement {
       --md-list-item-focus-label-text-color: var(--cros-sys-on_surface);
       --md-list-item-hover-label-text-color: var(--cros-sys-on_surface);
       --md-list-item-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-label-text-type: var(--cros-button-2-font);
+      --md-list-item-label-text-font: var(--cros-button-2-font-family);
+      --md-list-item-label-text-size: var(--cros-button-2-font-size);
+      --md-list-item-label-text-line-height: var(--cros-button-2-line-height);
+      --md-list-item-label-text-weight: var(--cros-button-2-font-weight);
       --md-list-item-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-menu-item-selected-container-color: var(--cros-sys-hover_on_subtle);
       --md-list-item-trailing-space: 16px;

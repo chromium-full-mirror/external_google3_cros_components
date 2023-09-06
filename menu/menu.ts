@@ -26,7 +26,10 @@ export class Menu extends LitElement {
     md-menu {
       --md-menu-container-color: var(--cros-bg-color-elevation-3);
       --md-menu-item-container-color: var(--cros-bg-color-elevation-3);
-      --md-list-item-label-text-type: var(--cros-button-2-font);
+      --md-list-item-label-text-font: var(--cros-button-2-font-family);
+      --md-list-item-label-text-size: var(--cros-button-2-font-size);
+      --md-list-item-label-text-line-height: var(--cros-button-2-line-height);
+      --md-list-item-label-text-weight: var(--cros-button-2-font-weight);
       --md-list-item-one-line-container-height: 36px;
       --md-menu-container-shape: 8px;
       --md-menu-container-surface-tint-layer-color: white;

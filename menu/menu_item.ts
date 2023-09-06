@@ -32,7 +32,10 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-list-item-hover-state-layer-opacity: 1;
       --md-list-item-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-label-text-type: var(--cros-button-2-font);
+      --md-list-item-label-text-font: var(--cros-button-2-font-family);
+      --md-list-item-label-text-size: var(--cros-button-2-font-size);
+      --md-list-item-label-text-line-height: var(--cros-button-2-line-height);
+      --md-list-item-label-text-weight: var(--cros-button-2-font-weight);
       --md-list-item-leading-icon-color: var(--cros-sys-on_surface);
       --md-list-item-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
