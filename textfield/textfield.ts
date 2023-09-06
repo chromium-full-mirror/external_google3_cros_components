@@ -49,6 +49,7 @@ export class Textfield extends LitElement {
       --md-outlined-field-supporting-text-leading-space: 0px;
       --md-outlined-field-supporting-text-trailing-space: 0px;
       --md-outlined-field-supporting-text-top-space: 8px;;
+      --md-outlined-text-field-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-container-shape-end-end: 8px;
       --md-outlined-text-field-container-shape-end-start: 8px;
       --md-outlined-text-field-container-shape-start-end: 8px;
@@ -57,7 +58,8 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-input-text-placeholder-color: var(--cros-sys-secondary);
       --md-outlined-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
-      --md-outlined-text-field-input-text-suffix-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-input-text-suffix-color: var(--cros-sys-secondary);
+      --md-outlined-text-field-input-text-suffix-leading-space: 8px;
       --md-outlined-text-field-input-text-type: var(--cros-body-2-font);
       --md-outlined-text-field-outline-width: 0px;
       --md-outlined-text-field-supporting-text-type: var(--cros-label-2-font);
@@ -68,12 +70,13 @@ export class Textfield extends LitElement {
       --md-outlined-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-prefix-color: var(--cros-sys-on_surface);
-      --md-outlined-text-field-disabled-input-text-suffix-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-disabled-input-text-suffix-color: var(--cros-sys-secondary);
       /** Error */
       --md-outlined-field-error-focus-leading-content-color: var(--cros-sys-secondary);
       --md-outlined-field-error-focus-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-field-error-leading-content-color: var(--cros-sys-secondary);
       --md-outlined-field-error-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-text-field-error-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-error-hover-state-layer-opacity: 0;
@@ -85,12 +88,10 @@ export class Textfield extends LitElement {
       --md-outlined-field-focus-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-field-focus-outline-color: var(--cros-sys-primary);
       --md-outlined-text-field-focus-outline-color: var(--cros-sys-primary);
-      --md-outlined-text-field-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       /** Hover */
       --md-outlined-field-hover-leading-content-color: var(--cros-sys-secondary);
       --md-outlined-field-hover-trailing-content-color: var(--cros-sys-secondary);
-      --md-outlined-text-field-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-hover-outline-width: 0px;
       --md-outlined-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-hover-input-text-color: var(--cros-sys-on_surface);
