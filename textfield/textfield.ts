@@ -60,9 +60,15 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-input-text-suffix-color: var(--cros-sys-secondary);
       --md-outlined-text-field-input-text-suffix-leading-space: 8px;
-      --md-outlined-text-field-input-text-type: var(--cros-body-2-font);
+      --md-outlined-text-field-input-text-font: var(--cros-body-2-font-family);
+      --md-outlined-text-field-input-text-size: var(--cros-body-2-font-size);
+      --md-outlined-text-field-input-text-line-height: var(--cros-body-2-line-height);
+      --md-outlined-text-field-input-text-weight: var(--cros-body-2-font-weight);
       --md-outlined-text-field-outline-width: 0px;
-      --md-outlined-text-field-supporting-text-type: var(--cros-label-2-font);
+      --md-outlined-text-field-supporting-text-font: var(--cros-label-2-font-family);
+      --md-outlined-text-field-supporting-text-size: var(--cros-label-2-font-size);
+      --md-outlined-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
+      --md-outlined-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
       --md-outlined-text-field-top-space: 8px;
       /** Disabled */
       --md-outlined-field-disabled-leading-content-color: var(--cros-sys-secondary);
