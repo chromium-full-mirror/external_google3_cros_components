@@ -138,14 +138,14 @@ export class SidenavItem extends LitElement {
       z-index: 2;
     }
 
-    :host([disabled]) .tree-row {
-      pointer-events: none;
-      color: var(--cros-sys-disabled);
-    }
-
     :host([enabled]) .tree-row {
       background-color: var(--cros-sys-primary);
       color: var(--cros-sys-on_primary);
+    }
+
+    :host([disabled]) .tree-row {
+      color: var(--cros-sys-disabled);
+      pointer-events: none;
     }
 
     :host([error]) .tree-row {

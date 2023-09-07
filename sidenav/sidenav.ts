@@ -112,9 +112,14 @@ export class Sidenav extends LitElement {
                 Array.from(e.querySelectorAll('cros-sidenav-item'))));
   }
 
-  /** The child tree items which can be selected, e.g. using the arrow keys. */
+  /**
+   * The child tree items which can be selected, e.g. using the arrow keys.
+   * This set always includes the selected item, even if it is not selectable.
+   * For example, this could happen if the item was selected before being
+   * disabled.
+   */
   get selectableItems(): SidenavItem[] {
-    return this.items.filter(isSelectable);
+    return this.items.filter(e => isSelectable(e) || e === this.selectedItem);
   }
 
   /** The default unnamed slot to let consumer pass children tree items. */
