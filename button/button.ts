@@ -122,6 +122,10 @@ export class Button extends LitElement {
       --md-text-button-pressed-state-layer-opacity: 100%;
       --md-text-button-trailing-space: ${LABEL_PADDING_START_END};
     }
+
+    ::slotted(ea-icon) {
+      --ea-icon-size: 20px;
+    }
   `;
 
   /** @export */
