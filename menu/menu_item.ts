@@ -189,6 +189,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     if (changedProperties.has('itemEnd') && this.itemEnd === 'switch') {
       this.addEventListener('keydown', this.switchKeyDownListener);
       this.setAttribute('role', 'menuitemcheckbox');
+      this.addEventListener('click', this.switchClickListener);
     }
     if (changedProperties.has('itemStart') && this.itemStart === 'icon' &&
         this.startSlot) {
@@ -210,6 +211,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     super.disconnectedCallback();
     if (this.itemEnd === 'switch') {
       this.removeEventListener('keydown', this.switchKeyDownListener);
+      this.removeEventListener('click', this.switchClickListener);
     }
   }
 
@@ -220,6 +222,14 @@ export class MenuItem extends LitElement implements MenuItemType {
       crosSwitch.selected = !crosSwitch.selected;
     }
   };
+
+  // Toggles switch item within the end slot if any part of menu-item is
+  // clicked.
+  private readonly switchClickListener =
+      (e: MouseEvent) => {
+        const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
+        crosSwitch.selected = !crosSwitch.selected;
+      };
 
   // Set item to be placed in `end` slot of menu item (if any).
   // Checked property (check mark) will always take precedence over any icon
