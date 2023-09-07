@@ -27,7 +27,7 @@ const ATTRIBUTE_OBSERVER_CONFIG = {
   attributes: true,
   childList: true,
   subtree: true,
-  attributeFilter: ['may-have-children']
+  attributeFilter: ['mayHaveChildren', 'mayhavechildren']
 };
 
 /**
@@ -76,8 +76,7 @@ export class Sidenav extends LitElement {
   /** @nocollapse */
   static override properties = {
     ariaSetSize: {type: String},
-    doubleclickExpands:
-        {type: Boolean, reflect: true, attribute: 'doubleclick-expands'},
+    doubleclickExpands: {type: Boolean, reflect: true},
   };
 
   /** @nocollapse */
@@ -155,7 +154,7 @@ export class Sidenav extends LitElement {
         for (const mutation of mutationList) {
           if (mutation.type === 'attributes' &&
               (mutation.target as Element).tagName === 'CROS-SIDENAV-ITEM' &&
-              mutation.attributeName === 'may-have-children') {
+              mutation.attributeName?.toLowerCase() === 'mayhavechildren') {
             this.updateLayered();
             return;
           }
@@ -227,7 +226,7 @@ export class Sidenav extends LitElement {
   private updateLayered() {
     const layered = this.querySelectorAll(
                             'cros-sidenav-item cros-sidenav-item, ' +
-                            'cros-sidenav-item[may-have-children]')
+                            'cros-sidenav-item[mayHaveChildren]')
                         .length > 0;
     for (const item of this.querySelectorAll('cros-sidenav-item')) {
       item.inLayered = layered;

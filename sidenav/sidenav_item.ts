@@ -89,7 +89,7 @@ const LABEL_TRAILING_MARGIN = css`12px`;
 const ITEM_GAP = css`8px`;
 
 /** Selects a host that is in a layered Sidenav. */
-const LAYERED_SELECTOR = css`:host(:is([inLayered], [may-have-children]))`;
+const LAYERED_SELECTOR = css`:host(:is([inLayered], [mayHaveChildren]))`;
 
 /** An item for a ChromeOS compliant sidenav element. */
 export class SidenavItem extends LitElement {
@@ -323,8 +323,7 @@ export class SidenavItem extends LitElement {
     expanded: {type: Boolean, reflect: true},
     renaming: {type: Boolean, reflect: true},
     error: {type: Boolean, reflect: true},
-    mayHaveChildren:
-        {type: Boolean, reflect: true, attribute: 'may-have-children'},
+    mayHaveChildren: {type: Boolean, reflect: true},
     label: {type: String, reflect: true},
     tabIndex: {attribute: false},
     layer: {type: Number, reflect: true},
