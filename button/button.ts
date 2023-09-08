@@ -37,6 +37,7 @@ export class Button extends LitElement {
     :host {
       display: inline-block;
       --cros-button-max-width_ : var(--cros-button-max-width,200px);
+      width: fit-content;
     }
 
     ::slotted(*) {
@@ -86,6 +87,7 @@ export class Button extends LitElement {
       --md-filled-button-pressed-state-layer-opacity: 100%;
       --md-filled-button-trailing-space: ${LABEL_PADDING_START_END};
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
+      width: 100%;
     }
 
     :host([button-style="primary"]) md-filled-button {
@@ -121,6 +123,7 @@ export class Button extends LitElement {
       --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-text-button-pressed-state-layer-opacity: 100%;
       --md-text-button-trailing-space: ${LABEL_PADDING_START_END};
+      width: 100%;
     }
 
     ::slotted(ea-icon) {
