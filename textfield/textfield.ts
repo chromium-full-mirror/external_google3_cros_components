@@ -290,12 +290,12 @@ export class Textfield extends LitElement {
         this.shadowRoot!.querySelector('slot[name="trailing"]');
 
     if (leadingIcon) {
-      leadingSlot!.setAttribute('slot', 'leadingicon');
+      leadingSlot!.setAttribute('slot', 'leading-icon');
     } else {
       leadingSlot!.removeAttribute('slot');
     }
     if (trailingIcon) {
-      trailingSlot!.setAttribute('slot', 'trailingicon');
+      trailingSlot!.setAttribute('slot', 'trailing-icon');
     } else {
       trailingSlot!.removeAttribute('slot');
     }
