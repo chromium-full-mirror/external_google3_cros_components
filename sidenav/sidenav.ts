@@ -313,7 +313,7 @@ export class Sidenav extends LitElement {
     let itemToSelect: SidenavItem|null|undefined = null;
     switch (e.key) {
       case 'Enter':
-      case 'Space':
+      case ' ':
         this.enableItem(selectedItem);
         break;
       case 'ArrowUp':
