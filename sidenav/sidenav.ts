@@ -354,6 +354,13 @@ export class Sidenav extends LitElement {
       case 'End':
         itemToSelect = this.selectableItems[this.selectableItems.length - 1];
         break;
+      case '*':
+        for (const item of this.selectableItems) {
+          if (item.parentItem === selectedItem.parentItem) {
+            item.expanded = true;
+          }
+        }
+        break;
       default:
         break;
     }
