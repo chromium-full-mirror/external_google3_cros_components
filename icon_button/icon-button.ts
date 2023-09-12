@@ -30,7 +30,8 @@ const FILLED_ICON_ON_IMAGE =
 const FILLED_CONTAINER_ON_BASE = css`var(--cros-sys-surface_variant)`;
 const FILLED_CONTAINER_ON_IMAGE = css`var(--cros-sys-surface)`;
 
-const FLOATING_ICON_ON_BASE = css`var(--cros-sys-on_surface)`;
+const FLOATING_ICON_ON_BASE =
+    css`var(--cros-icon-button-color-override, var(--cros-sys-on_surface))`;
 const FLOATING_ICON_ON_SUBTLE = css`var(--cros-sys-on_primary_container)`;
 const FLOATING_ICON_ON_PROMINENT = css`var(--cros-sys-on_primary)`;
 const FLOATING_ICON_ON_IMAGE = css`white`;

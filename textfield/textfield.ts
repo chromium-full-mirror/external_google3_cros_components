@@ -21,6 +21,8 @@ import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'li
 const TEXTFIELD_CONTAINER_ON_BASE = css`var(--cros-sys-input_field_on_base)`;
 const TEXTFIELD_CONTAINER_ON_SHADED =
     css`var(--cros-sys-input_field_on_shaded)`;
+const ICON_COLOR =
+    css`var(--cros-textfield-icon-color, var(--cros-sys-secondary))`;
 
 /**
  * Textfield component. See the specs here:
@@ -43,8 +45,6 @@ export class Textfield extends LitElement {
 
     md-outlined-text-field {
       /** Base styles */
-      --md-outlined-field-leading-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-field-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-field-supporting-text-leading-space: 0px;
       --md-outlined-field-supporting-text-trailing-space: 0px;
@@ -71,17 +71,11 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
       --md-outlined-text-field-top-space: 8px;
       /** Disabled */
-      --md-outlined-field-disabled-leading-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-disabled-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-suffix-color: var(--cros-sys-secondary);
       /** Error */
-      --md-outlined-field-error-focus-leading-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-error-focus-trailing-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-error-leading-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-error-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-text-field-error-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
@@ -90,14 +84,10 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-error-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-error-supporting-text-color: var(--cros-sys-error);
       /** Focus */
-      --md-outlined-field-focus-leading-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-focus-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-field-focus-outline-color: var(--cros-sys-primary);
       --md-outlined-text-field-focus-outline-color: var(--cros-sys-primary);
       --md-outlined-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       /** Hover */
-      --md-outlined-field-hover-leading-content-color: var(--cros-sys-secondary);
-      --md-outlined-field-hover-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-text-field-hover-outline-width: 0px;
       --md-outlined-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-hover-input-text-color: var(--cros-sys-on_surface);
@@ -136,6 +126,22 @@ export class Textfield extends LitElement {
 
     :host([shaded]) #textfield-background {
       background-color: ${TEXTFIELD_CONTAINER_ON_SHADED};
+    }
+
+    /**
+     * Some md styling can override the color provided to the md-textfield, so
+     * so we explicitly set it here as well.
+     */
+    ::slotted(cros-icon-button) {
+      --cros-icon-button-color-override: ${ICON_COLOR};
+    }
+
+    ::slotted(svg) {
+      fill: ${ICON_COLOR};
+    }
+
+    ::slotted(*) {
+      color: ${ICON_COLOR};
     }
   `;
 
