@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../../material/web/iconbutton/filled-icon-button';
+import '@material/web/iconbutton/filled-icon-button';
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '@material/web/iconbutton/icon-button.js';
 
@@ -54,8 +54,6 @@ const TOGGLE_CONTAINER_ON_PROMINENT = css`var(--cros-sys-highlight_shape)`;
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2447%3A5928
  */
 export class IconButton extends LitElement {
-  /** @export */
-  a11yLabel: string;
   /** @export */
   buttonStyle: 'filled'|'floating'|'toggle';
   /** @export */
@@ -285,7 +283,7 @@ export class IconButton extends LitElement {
 
   /** @nocollapse */
   static override properties = {
-    a11yLabel: {type: String, reflect: true},
+    ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     prominent: {type: Boolean, reflect: true},
     buttonStyle: {type: String},
     size: {type: String, reflect: true},
@@ -297,7 +295,7 @@ export class IconButton extends LitElement {
 
   constructor() {
     super();
-    this.a11yLabel = '';
+    this.ariaLabel = '';
     this.buttonStyle = 'filled';
     this.size = 'default';
     this.shape = 'square';
@@ -307,24 +305,34 @@ export class IconButton extends LitElement {
   }
 
   override render() {
+    const ariaLabel = this.ariaLabel || '';
     if (this.buttonStyle === 'toggle') {
-      return html`<md-filled-icon-button aria-label=${
-          this.a11yLabel} toggle ?selected=${this.selected} ?disabled=${
-          this.disabled}>
-        <slot name="icon"></slot>
-        <slot name="selectedIcon" slot="selected"></slot>
-      </md-filled-icon-button>`;
-    } else if (this.buttonStyle === 'floating') {
-      return html`<md-icon-button ?disabled=${this.disabled} aria-label=${
-          this.a11yLabel}>
-        <slot name="icon"></slot>
-      </md-icon-button>`;
-    } else {
-      return html`<md-filled-tonal-icon-button ?disabled=${
-          this.disabled} aria-label=${this.a11yLabel}>
-        <slot name="icon"></slot>
-      </md-filled-tonal-icon-button>`;
+      return html`
+          <md-filled-icon-button
+              aria-label=${ariaLabel}
+              toggle
+              ?selected=${this.selected}
+              ?disabled=${this.disabled}>
+            <slot name="icon"></slot>
+            <slot name="selectedIcon" slot="selected"></slot>
+          </md-filled-icon-button>`;
     }
+
+    if (this.buttonStyle === 'floating') {
+      return html`
+          <md-icon-button
+              ?disabled=${this.disabled}
+              aria-label=${ariaLabel}>
+            <slot name="icon"></slot>
+          </md-icon-button>`;
+    }
+
+    return html`
+          <md-filled-tonal-icon-button
+              ?disabled=${this.disabled}
+              aria-label=${ariaLabel}>
+            <slot name="icon"></slot>
+          </md-filled-tonal-icon-button>`;
   }
 }
 
