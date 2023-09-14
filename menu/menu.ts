@@ -166,6 +166,8 @@ export class Menu extends LitElement {
     this.open = false;
     this.quick = false;
     this.menuCorner = 'START_START';
+    // TODO(b/300001060): confirm whether should change to FIRST_ITEM
+    // NOTE this comment also applies to the list-tabindex=0 in the template
     this.defaultFocus = 'LIST_ROOT';
     this.skipRestoreFocus = false;
     this.stayOpenOnFocusout = false;
@@ -231,6 +233,7 @@ export class Menu extends LitElement {
           .quick=${this.quick}
           .defaultFocus=${this.defaultFocus}
           .skipRestoreFocus=${this.skipRestoreFocus}
+          list-tabindex="0"
           @closed=${this.close}
           @opened=${this.show}
           @closing=${this.onClosing}
