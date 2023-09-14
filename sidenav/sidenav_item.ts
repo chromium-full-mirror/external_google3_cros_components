@@ -5,6 +5,7 @@
  */
 
 import '@material/web/ripple/ripple.js';
+import '@material/web/focus/md-focus-ring.js';
 
 import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
@@ -132,10 +133,11 @@ export class SidenavItem extends LitElement {
       white-space: nowrap;
     }
 
-    li:focus-visible .tree-row {
-      outline: 2px solid var(--cros-sys-focus_ring);
-      outline-offset: 2px;
-      z-index: 2;
+    md-focus-ring {
+      animation-duration: 0s;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-shape: 20px;
+      --md-focus-ring-width: 2px;
     }
 
     :host([enabled]) .tree-row {
@@ -521,7 +523,7 @@ export class SidenavItem extends LitElement {
 
     return html`
       <li
-          class="tree-item"
+          id="tree-item"
           role="treeitem"
           tabindex=${this.tabIndex}
           aria-labelledby="tree-label"
@@ -531,7 +533,14 @@ export class SidenavItem extends LitElement {
         <div
             class=${classMap(treeRowClasses)}
             style=${styleMap(treeRowStyles)}>
-          <md-ripple></md-ripple>
+          <md-ripple
+              for="tree-item"
+              ?disabled=${this.disabled}>
+          </md-ripple>
+          <md-focus-ring
+              for="tree-item"
+              ?disabled=${this.disabled}>
+          </md-focus-ring>
           <!-- TODO(b/262453851): Implement icon from spec -->
           <span
               class="expand-icon"
