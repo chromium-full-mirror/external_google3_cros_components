@@ -39,6 +39,7 @@ export class SubMenuItem extends LitElement {
       --md-list-item-label-text-weight: var(--cros-button-2-font-weight);
       --md-list-item-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-menu-item-selected-container-color: var(--cros-sys-hover_on_subtle);
+      --md-menu-item-selected-label-text-color: var(--cros-sys-on_surface);
       --md-list-item-trailing-space: 16px;
       --md-list-item-trailing-element-headline-trailing-element-space: 48px;
     }
