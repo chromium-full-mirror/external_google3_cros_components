@@ -68,7 +68,8 @@ export class SubMenuItem extends LitElement {
   /** @nocollapse */
   static override properties = {
     headline: {type: String},
-    active: {type: Boolean, reflect: true},
+    // Use a lit property to handle reflecting with preset attributes
+    tabIndex: {type: Number, reflect: true},
     disabled: {type: Boolean},
     isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
     isListItem: {type: Boolean, reflect: true, attribute: 'md-list-item'},
@@ -87,24 +88,6 @@ export class SubMenuItem extends LitElement {
   disabled: boolean;
   readonly isMenuItem: boolean;
   readonly isListItem: boolean;
-
-  /**
-   * Whether or not the element is actively being interacted with by md-list.
-   * When active, tabindex is set to 0, and focuses the underlying item.
-   */
-  get active() {
-    // NOTE: md-sub-menu-item changes .active inside its implementation, so the
-    // easiest way to keep this.active in sync with md-sub-menu.active is just
-    // to create accessors.
-    return this.renderRoot.querySelector('md-sub-menu-item')?.active ?? false;
-  }
-
-  set active(value: boolean) {
-    const item = this.renderRoot.querySelector('md-sub-menu-item');
-    if (item) {
-      item.active = value;
-    }
-  }
 
   /**
    * Sets the item in the selected visual state when a submenu is opened.
@@ -126,6 +109,7 @@ export class SubMenuItem extends LitElement {
   constructor() {
     super();
 
+    this.tabIndex = 0;
     this.headline = '';
     this.disabled = false;
     this.isMenuItem = true;
@@ -137,6 +121,7 @@ export class SubMenuItem extends LitElement {
       <md-sub-menu-item
           .headline=${this.headline}
           .disabled=${this.disabled}
+          .tabIndex=${this.tabIndex}
           aria-haspopup='menu'
         >
       ${chevronIcon}<slot name='submenu' slot='submenu'></slot>

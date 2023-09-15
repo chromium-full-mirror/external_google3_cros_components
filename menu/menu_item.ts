@@ -99,7 +99,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     headline: {type: String},
     itemStart: {type: String},
     itemEnd: {type: String},
-    active: {type: Boolean, reflect: true},
+    tabIndex: {type: Boolean, reflect: true},
     disabled: {type: Boolean},
     isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
     isListItem: {type: Boolean, reflect: true, attribute: 'md-list-item'},
@@ -138,12 +138,6 @@ export class MenuItem extends LitElement implements MenuItemType {
   /** @export */
   readonly isListItem: boolean;
   /**
-   * Whether or not the element is actively being interacted with by md-list.
-   * When active, tabindex is set to 0, and focuses the underlying item.
-   * @export
-   */
-  active: boolean;
-  /**
    * If true, this will result in a checkmark icon used in the end slot. This
    * overrides any other components in end slot if otherwise specified.
    * @export
@@ -166,10 +160,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     this.disabled = false;
     this.isMenuItem = true;
     this.isListItem = true;
-    // NOTE: unlike md-sub-menu-item md-menu-item does not internally set
-    // `.active`, so we do not require accessors to synchronize `this.active`
-    // with `md-menu-item.active`
-    this.active = false;
+    this.tabIndex = 0;
     this.checked = false;
     this.shortcutText = 'Shortcut';
   }
@@ -309,7 +300,7 @@ export class MenuItem extends LitElement implements MenuItemType {
           headline=${this.headline}
           .keepOpen=${keepOpen}
           .disabled=${this.disabled}
-          .active=${this.active}>
+          .tabIndex=${this.tabIndex}>
         ${startSlot}
         ${endSlot}
       </md-menu-item>
