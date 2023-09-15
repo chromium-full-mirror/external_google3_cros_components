@@ -67,7 +67,12 @@ export class MenuItem extends LitElement implements MenuItemType {
       width: 20px;
     }
 
-    ::slotted([slot="start"]), ::slotted([slot="end"]) {
+    ::slotted(:is(
+      [slot="start"],
+      [slot="start-icon"],
+      [slot="end"],
+      [slot="end-icon"]
+    )) {
       color: var(--cros-sys-on_surface);
       height: 20px;
       width: 20px;
@@ -186,14 +191,14 @@ export class MenuItem extends LitElement implements MenuItemType {
         this.startSlot) {
       const startItems = this.startSlot.assignedElements();
       startItems.forEach((startItem) => {
-        startItem.setAttribute('data-variant', 'icon');
+        startItem.setAttribute('slot', 'start-icon');
       });
     }
     if (changedProperties.has('itemEnd') && this.itemEnd === 'icon' &&
         this.endSlot) {
       const endItems = this.endSlot.assignedElements();
       endItems.forEach((endItem) => {
-        endItem.setAttribute('data-variant', 'icon');
+        endItem.setAttribute('slot', 'end-icon');
       });
     }
   }
@@ -216,11 +221,10 @@ export class MenuItem extends LitElement implements MenuItemType {
 
   // Toggles switch item within the end slot if any part of menu-item is
   // clicked.
-  private readonly switchClickListener =
-      (e: MouseEvent) => {
-        const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
-        crosSwitch.selected = !crosSwitch.selected;
-      };
+  private readonly switchClickListener = (e: MouseEvent) => {
+    const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
+    crosSwitch.selected = !crosSwitch.selected;
+  };
 
   // Set item to be placed in `end` slot of menu item (if any).
   // Checked property (check mark) will always take precedence over any icon
@@ -233,9 +237,8 @@ export class MenuItem extends LitElement implements MenuItemType {
     if (this.checked) {
       return html`
           <cros-icon
-              slot="end"
+              slot="end-icon"
               class="slot-end"
-              data-variant="icon"
               aria-hidden="true">
           </cros-icon>`;
     }
@@ -244,18 +247,17 @@ export class MenuItem extends LitElement implements MenuItemType {
       case 'shortcut':
         endSlot = html`
           <span
-              slot="end"
+              slot="end-icon"
               class="slot-end"
-              id="shortcut"
-              data-variant="icon">
+              id="shortcut">
             ${this.shortcutText}
           </span>`;
         break;
       case 'icon':
         endSlot = html`
           <slot
-              name="end"
-              slot="end"
+              name="end-icon"
+              slot="end-icon"
               class="slot-end"
               aria-hidden="true">
           </slot>`;
@@ -263,20 +265,20 @@ export class MenuItem extends LitElement implements MenuItemType {
       case 'switch':
         endSlot = html`
           <cros-switch
-              slot="end"
-              class="slot-end"
-              data-variant="icon">
+              slot="end-icon"
+              class="slot-end">
           </cros-switch>`;
         break;
       default:
-        // md-list-item has a ::slotted(*) selector which will never select
-        // the children of a <slot> or a <slot> itself which is why default
-        // content is not set as children of slot.
-        // i.e. <slot slot="end">${slotEnd}</slot>
-        endSlot = html`<slot slot="end"></slot>`;
+        endSlot = html``;
         break;
     }
-    return endSlot;
+
+    // md-list-item has a ::slotted(*) selector which will never select
+    // the children of a <slot> or a <slot> itself which is why default
+    // content is not set as children of slot.
+    // i.e. <slot slot="end">${slotEnd}</slot>
+    return [html`<slot name="end" slot="end"></slot>`, endSlot];
   }
 
   private fireTriggerEvent() {
@@ -291,8 +293,10 @@ export class MenuItem extends LitElement implements MenuItemType {
     const keepOpen = this.itemEnd === 'switch';
     let startSlot = null;
     if (this.itemStart === 'icon') {
-      startSlot =
-          html`<slot name="start" slot="start" aria-hidden="true"></slot>`;
+      startSlot = html`
+        <slot name="start" slot="start"></slot>
+        <slot name="start-icon" slot="start-icon" aria-hidden="true"></slot>
+      `;
     }
     return html`
       <md-menu-item

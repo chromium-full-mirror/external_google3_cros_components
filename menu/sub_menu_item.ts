@@ -12,7 +12,7 @@ import './menu_item';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 const chevronIcon =
-    html`<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" slot="end" id="icon" data-variant="icon">
+    html`<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" slot="end-icon" id="icon">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66669 13.825L10.7872 10L6.66669 6.175L7.93524 5L13.3334 10L7.93524 15L6.66669 13.825Z"/>
     </svg>`;
 /**
