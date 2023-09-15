@@ -66,11 +66,22 @@ export class Menu extends LitElement {
     delegatesFocus: true
   };
 
-  private readonly anchorKeydownListener = (e: KeyboardEvent) => {
+  private readonly anchorKeydownListener = async (e: KeyboardEvent) => {
+    // We need to let this propagate and see if another listener has handled
+    // this event. e.g. in the case of a submenu anchoring to a sub-menu-item
+    // we do not want to open this menu if the user is just pressing down to
+    // navigate past that menu item.
+    await new Promise(resolve => {
+      setTimeout(resolve);
+    });
+
+    // This was handled by another listener e.g. md-menu
+    if (e.defaultPrevented) return;
+
     if (e.key === 'ArrowDown') {
-      this.focusFirstItem();
+      await this.focusFirstItem();
     } else if (e.key === 'ArrowUp') {
-      this.focusLastItem();
+      await this.focusLastItem();
     }
   };
 
