@@ -331,6 +331,7 @@ export class SidenavItem extends LitElement {
     layer: {type: Number, reflect: true},
     inLayered: {type: Boolean, reflect: true},
     hasIcon: {type: Boolean, reflect: true},
+    role: {type: String, reflect: true},
   };
 
   /** @nocollapse */
@@ -464,6 +465,7 @@ export class SidenavItem extends LitElement {
     this.layer = 0;
     this.hasIcon = false;
     this.inLayered = false;
+    this.role = 'none';
   }
 
   /** The child tree items which can be tabbed to. */
@@ -544,6 +546,7 @@ export class SidenavItem extends LitElement {
           <!-- TODO(b/262453851): Implement icon from spec -->
           <span
               class="expand-icon"
+              aria-hidden="true"
               @click=${this.onExpandIconClicked}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
               <polyline points="6 8 10 12 14 8 6 8"/>
@@ -552,6 +555,7 @@ export class SidenavItem extends LitElement {
           <slot
               name="icon"
               class=${this.hasIcon ? 'has-icon' : ''}
+              aria-hidden="true"
               @slotchange=${this.onIconSlotChanged}>
           </slot>
           ${this.renderTreeLabel()}
@@ -676,6 +680,12 @@ export class SidenavItem extends LitElement {
   }
 
   private onEnabledChanged() {
+    if (this.enabled) {
+      this.setAttribute('aria-current', 'page');
+    } else {
+      this.removeAttribute('aria-current');
+    }
+
     const event: SidenavItemEnabledChangedEvent =
         new CustomEvent(SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED, {
           bubbles: true,

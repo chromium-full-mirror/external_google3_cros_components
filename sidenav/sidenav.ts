@@ -77,6 +77,7 @@ export class Sidenav extends LitElement {
   static override properties = {
     ariaSetSize: {type: String},
     doubleclickExpands: {type: Boolean, reflect: true},
+    role: {type: String, reflect: true},
   };
 
   /** @nocollapse */
@@ -173,24 +174,25 @@ export class Sidenav extends LitElement {
   constructor() {
     super();
     this.doubleclickExpands = false;
+    this.role = 'navigation';
 
     // Listen for changes to children, to update the Sidenav's state if
     // necessary.
     this.itemAttributeObserver.observe(this, ATTRIBUTE_OBSERVER_CONFIG);
+
   }
 
   override render() {
     return html`
       <ul
-        class="tree"
-        role="tree"
-        aria-setsize=${this.ariaSetSize}
-        @dblclick=${this.onTreeDblClicked}
-        @keydown=${this.onTreeKeyDown}
-        @sidenav_item_expanded=${this.onSidenavItemExpanded}
-        @sidenav_item_collapsed=${this.onSidenavItemCollapsed}
-        @sidenav_item_enabled_changed=${this.onSidenavItemEnabledChanged}
-      >
+          class="tree"
+          role="tree"
+          aria-setsize=${this.ariaSetSize}
+          @dblclick=${this.onTreeDblClicked}
+          @keydown=${this.onTreeKeyDown}
+          @sidenav_item_expanded=${this.onSidenavItemExpanded}
+          @sidenav_item_collapsed=${this.onSidenavItemCollapsed}
+          @sidenav_item_enabled_changed=${this.onSidenavItemEnabledChanged}>
         <slot @slotchange=${this.onSlotChanged}></slot>
       </ul>
     `;
