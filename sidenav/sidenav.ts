@@ -364,6 +364,20 @@ export class Sidenav extends LitElement {
       default:
         break;
     }
+    // Select the next item whose label starts with the pressed key.
+    if (e.key.match('^[A-Za-z]$')) {
+      // Search after the current item, then continue searching from the
+      // beginning of the items list.
+      for (let searchIndex = (currentIndex + 1) % selectableItems.length;
+           searchIndex !== currentIndex;
+           searchIndex = (searchIndex + 1) % selectableItems.length) {
+        const searchItem: SidenavItem = selectableItems[searchIndex];
+        if (searchItem.label.toLowerCase().startsWith(e.key.toLowerCase())) {
+          itemToSelect = searchItem;
+          break;
+        }
+      }
+    }
 
     if (itemToSelect) {
       this.selectItem(itemToSelect);
