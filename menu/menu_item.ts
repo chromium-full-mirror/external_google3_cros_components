@@ -185,6 +185,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     if (changedProperties.has('itemEnd') && this.itemEnd === 'switch') {
       this.addEventListener('keydown', this.switchKeyDownListener);
       this.setAttribute('role', 'menuitemcheckbox');
+      this.setAttribute('aria-checked', 'false');
       this.addEventListener('click', this.switchClickListener);
     }
     if (changedProperties.has('itemStart') && this.itemStart === 'icon' &&
@@ -224,6 +225,11 @@ export class MenuItem extends LitElement implements MenuItemType {
   private readonly switchClickListener = (e: MouseEvent) => {
     const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
     crosSwitch.selected = !crosSwitch.selected;
+    if (crosSwitch.selected) {
+      this.setAttribute('aria-checked', 'true');
+    } else {
+      this.setAttribute('aria-checked', 'false');
+    }
   };
 
   // Set item to be placed in `end` slot of menu item (if any).
