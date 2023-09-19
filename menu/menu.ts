@@ -6,10 +6,10 @@
 
 import '@material/web/menu/menu.js';
 
-import {Corner, DefaultFocusState, MdMenu} from '@material/web/menu/menu.js';
+import {Corner, FocusState, MdMenu} from '@material/web/menu/menu.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
-export {Corner, DefaultFocusState} from '@material/web/menu/menu.js';
+export {Corner, FocusState} from '@material/web/menu/menu.js';
 
 /**
  * A chromeOS menu component.
@@ -86,13 +86,13 @@ export class Menu extends LitElement {
   };
 
   async focusFirstItem() {
-    this.mdMenu.defaultFocus = 'FIRST_ITEM';
+    this.mdMenu.defaultFocus = FocusState.FIRST_ITEM;
     await this.mdMenu.updateComplete;
     this.show();
   }
 
   async focusLastItem() {
-    this.mdMenu.defaultFocus = 'LAST_ITEM';
+    this.mdMenu.defaultFocus = FocusState.LAST_ITEM;
     await this.mdMenu.updateComplete;
     this.show();
   }
@@ -127,7 +127,7 @@ export class Menu extends LitElement {
    * The element that should be focused by default once opened.
    * @export
    */
-  defaultFocus: DefaultFocusState;
+  defaultFocus: FocusState;
   /**
    * After closing, does not restore focus to the last focused element before
    * the menu was opened.
@@ -172,14 +172,14 @@ export class Menu extends LitElement {
     super();
     this.anchor = '';
     this.anchorElement = null;
-    this.anchorCorner = 'END_START';
+    this.anchorCorner = Corner.END_START;
     this.hasOverflow = false;
     this.open = false;
     this.quick = false;
-    this.menuCorner = 'START_START';
+    this.menuCorner = Corner.START_START;
     // TODO(b/300001060): confirm whether should change to FIRST_ITEM
     // NOTE this comment also applies to the list-tabindex=0 in the template
-    this.defaultFocus = 'LIST_ROOT';
+    this.defaultFocus = FocusState.LIST_ROOT;
     this.skipRestoreFocus = false;
     this.stayOpenOnFocusout = false;
     this.stayOpenOnOutsideClick = false;
@@ -270,7 +270,8 @@ export class Menu extends LitElement {
     // Set default focus back to entire menu. Default for keyboard navigation
     // apart from arrow up/down. We avoid doing this in focusFirstItem() to
     // avoid race conditions with menu open.
-    this.renderRoot.querySelector('md-menu')!.defaultFocus = 'LIST_ROOT';
+    this.renderRoot.querySelector('md-menu')!.defaultFocus =
+        FocusState.LIST_ROOT;
     this.anchorElement?.setAttribute('aria-expanded', 'false');
   }
 
