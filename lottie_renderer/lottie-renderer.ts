@@ -11,7 +11,7 @@ import {waitForEvent} from '../async_helpers/async_helpers';
 import {assertExists, hexToRgb} from '../helpers/helpers';
 
 import {addColorSchemeChangeListener, removeColorSchemeChangeListener} from './event_binders';
-import {getWorker} from './worker';
+import {defaultGetWorker} from './worker';
 
 /**
  * The list of tokens that are used to identify shapes and colors in Lottie
@@ -201,6 +201,20 @@ export class LottieRenderer extends LitElement {
    */
   dynamic: boolean;
 
+  /**
+   * Function which returns a web worker loaded up with lottie worker js.
+   * If unspecified in chromium defaults to a standard web worker pulling from
+   * "chrome://resources/cros_components/lottie_renderer/lottie_worker.js". If
+   * unspecified in google3 defaults to a standard web worker pulling from
+   * "/js/lottie_worker.js".
+   * Must be set before attaching lottieRenderer to the DOM:
+   *   const renderer = new LottieRenderer();
+   *   renderer.getWorker = myCustomGetWorker();
+   *   document.body.append(renderer);
+   * @export
+   */
+  getWorker: () => Worker = defaultGetWorker;
+
   /** The onscreen canvas controlled by lottie_worker.js. */
   get onscreenCanvas(): HTMLCanvasElement|null {
     return this.renderRoot.querySelector('#onscreen-canvas');
@@ -296,7 +310,7 @@ export class LottieRenderer extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     if (!this.worker) {
-      this.worker = getWorker();
+      this.worker = this.getWorker();
       this.worker.onmessage = (e) => void this.onMessage(e);
     }
 

@@ -42,6 +42,6 @@ function getLottieWorkerURL(): TrustedScriptURL {
 }
 
 /** Construct a lottie web worker and return it. */
-export function getWorker() {
+export function defaultGetWorker() {
   return new Worker(getLottieWorkerURL() as unknown as URL, {type: 'module'});
 }
