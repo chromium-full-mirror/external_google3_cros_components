@@ -86,9 +86,11 @@ export class Chip extends LitElement {
       --md-filter-chip-selected-pressed-state-layer-opacity: 1;
       --md-filter-chip-selected-trailing-icon-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-trailing-icon-color: var(--cros-sys-on_surface);
+      --md-focus-ring-duration: 0s;
     }
 
     md-suggestion-chip {
+      --md-focus-ring-duration: 0s;
       --md-suggestion-chip-disabled-label-text-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-suggestion-chip-disabled-leading-icon-color: var(--cros-sys-disabled);
@@ -116,6 +118,7 @@ export class Chip extends LitElement {
     }
 
     md-input-chip {
+      --md-focus-ring-duration: 0s;
       --md-input-chip-disabled-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
       --md-input-chip-disabled-leading-icon-color: var(--cros-sys-disabled);

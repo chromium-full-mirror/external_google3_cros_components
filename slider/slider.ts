@@ -68,6 +68,7 @@ export class Slider extends LitElement {
       --active-disabled: var(--cros-ref-neutral10);
       --inactive-disabled: var(--cros-ref-neutral10);
       --disabled-color: var(--inactive-disabled);
+      --md-focus-ring-duration: 0s;
       --md-slider-active-track-color: var(--cros-sys-primary);
       --md-slider-disabled-active-track-color: var(--disabled-color);
       --md-slider-disabled-active-track-opacity: var(--cros-sys-opacity-disabled);

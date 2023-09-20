@@ -72,6 +72,8 @@ export class Checkbox extends LitElement {
       --md-checkbox-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-checkbox-pressed-state-layer-opacity: 100%;
 
+      --md-focus-ring-duration: 0s;
+
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
     }
 

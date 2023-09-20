@@ -68,6 +68,7 @@ export class Card extends LitElement {
     }
 
     md-ripple {
+      animation-duration: 0s;
       color: var(--cros-sys-ripple_primary);
       --md-ripple-hover-color: var(--cros-card-hover-color, var(--cros-sys-hover_on_subtle));
       --md-ripple-hover-opacity: 1;

@@ -55,6 +55,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     md-menu-item::part(focus-ring) {
       --md-focus-ring-active-width: 2px;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-duration: 0s;
       --md-focus-ring-width: 2px;
     }
     :host {

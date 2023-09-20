@@ -99,6 +99,7 @@ export class IconButton extends LitElement {
       FILLED_ICON_ON_BASE};
       --md-filled-tonal-icon-button-selected-pressed-icon-color: ${
       FILLED_ICON_ON_BASE};
+      --md-focus-ring-duration: 0s;
     }
     :host([size="small"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 10px;
@@ -129,6 +130,7 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-container-shape: 100vmax;
     }
     md-icon-button {
+      --md-focus-ring-duration: 0s;
       --md-icon-button-disabled-icon-color: ${FLOATING_ICON_ON_BASE};
       --md-icon-button-disabled-icon-opacity: var(--cros-sys-disabled-opacity);
       --md-icon-button-icon-size: 20px;
@@ -214,6 +216,7 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-toggle-pressed-icon-color: ${TOGGLE_ICON_ON_BASE};
       --md-filled-icon-button-toggle-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-filled-icon-button-unselected-container-color: #00000000;
+      --md-focus-ring-duration: 0s;
     }
     :host([size="large"]) md-filled-icon-button {
       --md-filled-icon-button-container-shape: 16px;

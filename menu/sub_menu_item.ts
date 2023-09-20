@@ -54,6 +54,7 @@ export class SubMenuItem extends LitElement {
     md-sub-menu-item::part(focus-ring) {
       --md-focus-ring-active-width: 2px;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-duration: 0s;
       --md-focus-ring-width: 2px;
     }
     md-sub-menu-item[selected]:hover::part(ripple) {

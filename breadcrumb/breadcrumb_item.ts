@@ -31,6 +31,7 @@ export class BreadcrumbItem extends LitElement {
       --padding-between: 2px;
     }
     md-text-button {
+      --md-focus-ring-duration: 0s;
       --md-sys-color-primary: var(--cros-sys-on_surface_variant);
       --md-text-button-container-height: var(--breadcrumb-size);
       --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);

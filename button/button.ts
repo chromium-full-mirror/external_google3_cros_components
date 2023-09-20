@@ -86,6 +86,7 @@ export class Button extends LitElement {
       --md-filled-button-leading-space: ${LABEL_PADDING_START_END};
       --md-filled-button-pressed-state-layer-opacity: 100%;
       --md-filled-button-trailing-space: ${LABEL_PADDING_START_END};
+      --md-focus-ring-duration: 0s;
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
       width: 100%;
     }
@@ -109,6 +110,7 @@ export class Button extends LitElement {
       min-width: ${MIN_WIDTH};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
+      --md-focus-ring-duration: 0s;
       --md-text-button-container-height: ${CONTAINER_HEIGHT};
       --md-text-button-disabled-label-text-color: var(--cros-sys-disabled);
       --md-text-button-disabled-label-text-opacity: 100%;
