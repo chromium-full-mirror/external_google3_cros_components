@@ -283,6 +283,10 @@ export class IconButton extends LitElement {
     :host([surface="prominent"]) md-icon-button::part(focus-ring) {
       --md-focus-ring-color: var(--cros-sys-inverse_focus_ring);
     }
+
+    ::slotted(ea-icon) {
+      --ea-icon-size: 20px;
+    }
   `;
 
   /** @nocollapse */
