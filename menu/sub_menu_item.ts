@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/menu/menu.js';
-import '@material/web/menu/sub-menu-item';
-import '@material/web/menu/menu-item';
+import '@material/web/google3/menu/menu.js';
+import '@material/web/google3/menu/sub-menu-item';
+import '@material/web/google3/menu/menu-item';
 import './menu_item';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';

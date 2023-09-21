@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/menu/menu.js';
+import '@material/web/google3/menu/menu.js';
 
-import {Corner, FocusState, MdMenu} from '@material/web/menu/menu.js';
+import {Corner, FocusState, MdMenu} from '@material/web/google3/menu/menu.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
-export {Corner, FocusState} from '@material/web/menu/menu.js';
+export {Corner, FocusState} from '@material/web/google3/menu/menu.js';
 
 /**
  * A chromeOS menu component.

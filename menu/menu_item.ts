@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/menu/menu-item';
+import '@material/web/google3/menu/menu-item';
 import '../icon/icon';
 import '../switch/switch';
 
-import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
+import {MenuItem as MenuItemType} from '@material/web/google3/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
