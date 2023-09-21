@@ -533,10 +533,11 @@ export class SidenavItem extends LitElement {
           aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
           aria-disabled=${this.disabled}>
         <div
+            id="tree-row"
             class=${classMap(treeRowClasses)}
             style=${styleMap(treeRowStyles)}>
           <md-ripple
-              for="tree-item"
+              for="tree-row"
               ?disabled=${this.disabled}>
           </md-ripple>
           <md-focus-ring
