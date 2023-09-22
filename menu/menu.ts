@@ -175,7 +175,7 @@ export class Menu extends LitElement {
     this.anchorCorner = Corner.END_START;
     this.hasOverflow = false;
     this.open = false;
-    this.quick = false;
+    this.quick = true;
     this.menuCorner = Corner.START_START;
     // TODO(b/300001060): confirm whether should change to FIRST_ITEM
     // NOTE this comment also applies to the list-tabindex=0 in the template
