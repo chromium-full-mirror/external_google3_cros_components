@@ -75,7 +75,6 @@ export class Sidenav extends LitElement {
   `;
   /** @nocollapse */
   static override properties = {
-    ariaSetSize: {type: String},
     doubleclickExpands: {type: Boolean, reflect: true},
     role: {type: String, reflect: true},
   };
@@ -100,7 +99,10 @@ export class Sidenav extends LitElement {
     if (item) this.enableItem(item);
   }
 
-  /** Get all the SidenavItems in the Sidenav. */
+  /**
+   * Get all the SidenavItems in the Sidenav. The items are in the order that
+   * they are shown, top to bottom.
+   */
   get items(): SidenavItem[] {
     return this.childrenSlot.assignedElements()
         .filter(isSidenavItem)
@@ -127,13 +129,6 @@ export class Sidenav extends LitElement {
   private get childrenSlot(): HTMLSlotElement {
     return castExists(this.renderRoot.querySelector('slot'));
   }
-
-  /**
-   * Value to set aria-setsize, which is the number of the top level child tree
-   * items.
-   * @export
-   */
-  override ariaSetSize = '0';
 
   /**
    * Whether double-clicking expands the tree.
@@ -187,7 +182,6 @@ export class Sidenav extends LitElement {
       <ul
           class="tree"
           role="tree"
-          aria-setsize=${this.ariaSetSize}
           @dblclick=${this.onTreeDblClicked}
           @keydown=${this.onTreeKeyDown}
           @sidenav_item_expanded=${this.onSidenavItemExpanded}
@@ -214,7 +208,13 @@ export class Sidenav extends LitElement {
    * new tree structure.
    */
   private onSlotChanged() {
-    this.ariaSetSize = this.selectableItems.length.toString();
+    const rootChildren =
+        this.childrenSlot.assignedElements().filter(isSidenavItem);
+    rootChildren.forEach((child: SidenavItem, i: number) => {
+      child.layer = 0;
+      child.ariaSetSize = `${rootChildren.length}`;
+      child.ariaPosInSet = `${i + 1}`;
+    });
 
     // The sidenav must always have an enabled item. This also ensures that it
     // has a selected/tabbable item.

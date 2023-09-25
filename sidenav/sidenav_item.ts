@@ -8,7 +8,7 @@ import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
 import {MdRipple} from '@material/web/ripple/ripple.js';
-import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {classMap} from 'lit/directives/class-map';
 import {ifDefined} from 'lit/directives/if-defined';
 import {styleMap} from 'lit/directives/style-map';
@@ -332,6 +332,10 @@ export class SidenavItem extends LitElement {
     inLayered: {type: Boolean, reflect: true},
     hasIcon: {type: Boolean, reflect: true},
     role: {type: String, reflect: true},
+    // Aria properties are forwarded to the `li` element and should not be
+    // reflected on `cros-sidenav-item`.
+    ariaSetSize: {type: String},
+    ariaPosInSet: {type: String},
   };
 
   /** @nocollapse */
@@ -505,7 +509,7 @@ export class SidenavItem extends LitElement {
   }
 
   /**
-   * The child tree items.
+   * The tree items that are direct children of this.
    * TODO(b/262453851): Should be private, and accessible to tests.
    */
   items: SidenavItem[] = [];
@@ -528,6 +532,9 @@ export class SidenavItem extends LitElement {
           id="tree-item"
           role="treeitem"
           tabindex=${this.tabIndex}
+          aria-setsize=${this.ariaSetSize ?? nothing}
+          aria-posinset=${this.ariaPosInSet ?? nothing}
+          aria-level=${this.layer + 1}
           aria-labelledby="tree-label"
           aria-selected=${this.enabled}
           aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
@@ -584,6 +591,11 @@ export class SidenavItem extends LitElement {
     }
     if (changedProperties.has('renaming')) {
       this.onRenamingChanged();
+    }
+    if (changedProperties.has('layer')) {
+      for (const item of this.items) {
+        item.layer = this.layer + 1;
+      }
     }
   }
 
@@ -650,9 +662,11 @@ export class SidenavItem extends LitElement {
       updateScheduled = true;
     }
 
-    for (const item of this.items) {
+    this.items.forEach((item: SidenavItem, i: number) => {
       item.layer = this.layer + 1;
-    }
+      item.ariaSetSize = `${this.items.length}`;
+      item.ariaPosInSet = `${i + 1}`;
+    });
 
     // Explicitly trigger an update because render() relies on hasChildren().
     if (!updateScheduled) {
