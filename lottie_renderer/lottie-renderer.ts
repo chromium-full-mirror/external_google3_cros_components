@@ -52,7 +52,7 @@ const CROS_TOKENS = new Set<string>([
   'cros.sys.illo.card.on_color1',
 ]);
 
-interface MessageData {
+declare interface MessageData {
   animationData: JSON;
   drawSize: {width: number, height: number};
   params: {loop: boolean, autoplay: boolean};
@@ -63,7 +63,7 @@ interface MessageData {
  * This definition of this type is taken from
  * https://lottiefiles.github.io/lottie-docs/concepts/#colors
  */
-interface LottieShape {
+declare interface LottieShape {
   /**
    * The name of a shape. For Material3 compliant animations, this will be the
    * token name of the color to apply.
@@ -87,7 +87,7 @@ const LOTTIE_NAME_KEY = 'nm';
  * will be one of these structures per token in CROS_TOKENS that appears in the
  * animation data.
  */
-interface TokenColor {
+declare interface TokenColor {
   cssVar: string;
   locations: LottieShape[];
 }
@@ -343,7 +343,7 @@ export class LottieRenderer extends LitElement {
   override updated(changedProperties: PropertyValues<LottieRenderer>) {
     super.updated(changedProperties);
     const prop = changedProperties.get('assetUrl');
-    if (prop && prop !== undefined && this.worker) {
+    if (this.assetUrl && prop !== undefined && this.worker) {
       this.assetUrlChanged();
     }
   }
