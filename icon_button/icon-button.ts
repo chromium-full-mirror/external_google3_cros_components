@@ -32,18 +32,26 @@ const FILLED_CONTAINER_ON_IMAGE = css`var(--cros-sys-surface)`;
 
 const FLOATING_ICON_ON_BASE =
     css`var(--cros-icon-button-color-override, var(--cros-sys-on_surface))`;
-const FLOATING_ICON_ON_SUBTLE = css`var(--cros-sys-on_primary_container)`;
-const FLOATING_ICON_ON_PROMINENT = css`var(--cros-sys-on_primary)`;
-const FLOATING_ICON_ON_IMAGE = css`white`;
+const FLOATING_ICON_ON_SUBTLE =
+    css`var(--cros-icon-button-color-override, var(--cros-sys-on_primary_container))`;
+const FLOATING_ICON_ON_PROMINENT =
+    css`var(--cros-icon-button-color-override, var(--cros-sys-on_primary))`;
+const FLOATING_ICON_ON_IMAGE =
+    css`var(--cros-icon-button-color-override, white)`;
 
-const TOGGLE_ICON_ON_BASE = css`var(--cros-sys-on_surface)`;
-const TOGGLE_ICON_ON_SUBTLE = css`var(--cros-sys-on_primary_container)`;
-const TOGGLE_ICON_ON_PROMINENT = css`var(--cros-sys-on_primary)`;
+const TOGGLE_ICON_ON_BASE =
+    css`var(--cros-icon-button-color-override, var(--cros-sys-on_surface))`;
+const TOGGLE_ICON_ON_SUBTLE =
+    css`var(--cros-icon-button-color-override, var(--cros-sys-on_primary_container))`;
+const TOGGLE_ICON_ON_PROMINENT =
+    css`var(--cros-icon-button-color-override, var(--cros-sys-on_primary))`;
 
-const TOGGLE_SELECTED_ICON_ON_BASE = css`var(--cros-sys-on_primary_container)`;
+const TOGGLE_SELECTED_ICON_ON_BASE =
+    css`var(--cros-icon-button-selected-color-override, var(--cros-sys-on_primary_container))`;
 const TOGGLE_SELECTED_ICON_ON_SUBTLE =
-    css`var(--cros-sys-on_primary_container)`;
-const TOGGLE_SELECTED_ICON_ON_PROMINENT = css`var(--cros-sys-on_primary)`;
+    css`var(--cros-icon-button-selected-color-override, var(--cros-sys-on_primary_container))`;
+const TOGGLE_SELECTED_ICON_ON_PROMINENT =
+    css`var(--cros-icon-button-selected-color-override, var(--cros-sys-on_primary))`;
 
 const TOGGLE_CONTAINER_ON_BASE = css`var(--cros-sys-primary_container)`;
 const TOGGLE_CONTAINER_ON_SUBTLE = css`var(--cros-sys-highlight_shape)`;
