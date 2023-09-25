@@ -43,25 +43,23 @@ export class Card extends LitElement {
     #container {
       align-items: center;
       background-color: var(--cros-card-background-color, var(--cros-sys-app_base));
-      border: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));
       border-radius: 12px;
-      box-sizing: border-box;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       display: grid;
-      outline: none;
+      outline: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));;
       padding: var(--cros-card-padding, 16px);
       position: relative;
       --md-focus-ring-shape: 12px;
     }
 
     :host([cardStyle="filled"]) #container {
-      border: none;
+      outline: none;
     }
 
     :host([cardStyle="elevated"]) #container {
-      border: none;
       background-color: var(--cros-card-background-color, var(--cros-sys-base_elevated));
       box-shadow: var(--cros-card-elevation-shadow, var(--cros-elevation-1-shadow));
+      outline: none;
     }
 
     :host([selected]) #container {
