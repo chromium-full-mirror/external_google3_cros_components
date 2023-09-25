@@ -59,6 +59,7 @@ export class Card extends LitElement {
     }
 
     :host([cardStyle="elevated"]) #container {
+      border: none;
       background-color: var(--cros-card-background-color, var(--cros-sys-base_elevated));
       box-shadow: var(--cros-card-elevation-shadow, var(--cros-elevation-1-shadow));
     }
