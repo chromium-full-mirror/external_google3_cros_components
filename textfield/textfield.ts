@@ -25,6 +25,23 @@ const ICON_COLOR =
     css`var(--cros-textfield-icon-color, var(--cros-sys-secondary))`;
 
 /**
+ * We need the outline to render on the outside of the textfield filled
+ * container, which is an element we control. This adds an extra
+ * 2px padding to the text to accomodate the extra space, as the
+ * md-textfield does not support changing it's height, only line height.
+ * These values are computed from the default values at
+ * https://carbon.googleplex.com/google-material-3/pages/text-fields/specs
+ * and adding on the outline width. Computed to
+ */
+const MD_TEXTFIELD_OUTLINE_WIDTH = 2;
+const DEFAULT_TOP_BOTTOM_SPACE = 8;
+const DEFAULT_LEFT_RIGHT_SPACE = 16;
+const MD_FIELD_TOP_BOTTOM_SPACE_PX =
+    css`${DEFAULT_TOP_BOTTOM_SPACE + MD_TEXTFIELD_OUTLINE_WIDTH}px`;
+const MD_FIELD_LEFT_RIGHT_SPACE_PX =
+    css`${DEFAULT_LEFT_RIGHT_SPACE + MD_TEXTFIELD_OUTLINE_WIDTH}px`;
+
+/**
  * Textfield component. See the specs here:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3227%3A25882&t=50tDpMdSJky6eT9O-0
  */
@@ -70,6 +87,10 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
       --md-outlined-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
       --md-outlined-text-field-top-space: 8px;
+      --md-outlined-field-bottom-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
+      --md-outlined-field-leading-space: ${MD_FIELD_LEFT_RIGHT_SPACE_PX};
+      --md-outlined-field-top-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
+      --md-outlined-field-trailing-space: ${MD_FIELD_LEFT_RIGHT_SPACE_PX};
       /** Disabled */
       --md-outlined-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
@@ -85,6 +106,7 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-error-supporting-text-color: var(--cros-sys-error);
       /** Focus */
       --md-outlined-field-focus-outline-color: var(--cros-sys-primary);
+      --md-outlined-field-focus-outline-width: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
       --md-outlined-text-field-focus-outline-color: var(--cros-sys-primary);
       --md-outlined-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       /** Hover */
@@ -117,11 +139,13 @@ export class Textfield extends LitElement {
     }
 
     #textfield-background {
-      position:absolute;
-      min-height: 36px;
-      width: 100%;
-      border-radius: 8px;
       background-color: ${TEXTFIELD_CONTAINER_ON_BASE};
+      border-radius: 8px;
+      left: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
+      min-height: 36px;
+      position:absolute;
+      right: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
+      top: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
     }
 
     :host([shaded]) #textfield-background {
