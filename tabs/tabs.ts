@@ -6,8 +6,12 @@
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
-/** A chromeOS compliant tab. */
-export class Tab extends LitElement {
+/**
+ * A chromeOS compliant tabs component.
+ * See spec
+ * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?type=design&node-id=4020-63202
+ */
+export class Tabs extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -21,10 +25,10 @@ export class Tab extends LitElement {
   }
 }
 
-customElements.define('cros-tab', Tab);
+customElements.define('cros-tabs', Tabs);
 
 declare global {
   interface HTMLElementTagNameMap {
-    'cros-tab': Tab;
+    'cros-tabs': Tabs;
   }
 }
