@@ -66,7 +66,7 @@ export class Textfield extends LitElement {
       --md-outlined-field-supporting-text-leading-space: 0px;
       --md-outlined-field-supporting-text-trailing-space: 0px;
       --md-outlined-field-supporting-text-top-space: 8px;;
-      --md-outlined-text-field-caret-color: var(--cros-sys-primary);
+      --md-outlined-text-field-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-container-shape-end-end: 8px;
       --md-outlined-text-field-container-shape-end-start: 8px;
       --md-outlined-text-field-container-shape-start-end: 8px;
