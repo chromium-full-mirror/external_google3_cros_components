@@ -130,7 +130,7 @@ export class MenuItem extends LitElement implements MenuItemType {
    * slot.
    * @export
    */
-  itemEnd: 'shortcut'|'icon'|'switch'|null;
+  itemEnd: 'shortcut'|'icon'|'switch'|'';
 
   // The following properties are necessary for wrapping and keyboard
   // navigation
@@ -161,7 +161,7 @@ export class MenuItem extends LitElement implements MenuItemType {
 
     this.headline = '';
     this.itemStart = '';
-    this.itemEnd = null;
+    this.itemEnd = '';
 
     this.disabled = false;
     this.isMenuItem = true;
