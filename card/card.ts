@@ -9,6 +9,8 @@ import '@material/web/focus/md-focus-ring.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+const DEFAULT_TICK_MARGIN = css`14px`;
+
 function renderTick() {
   return html`
       <svg
@@ -88,11 +90,12 @@ export class Card extends LitElement {
     }
 
     :host([selected]) .selected-tick {
-      bottom: var(--cros-card-icon-bottom, 20px);
+      bottom: var(--cros-card-icon-bottom, ${DEFAULT_TICK_MARGIN});
       display: unset;
       fill: var(--cros-card-icon-color, var(--cros-sys-on_primary_container));
       height: 20px;
-      inset-inline-end: var(--cros-card-icon-inline-end, 20px);
+      inset-inline-end: var(--cros-card-icon-inline-end, ${
+      DEFAULT_TICK_MARGIN});
       position: absolute;
       width: 20px;
     }
