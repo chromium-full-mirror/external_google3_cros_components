@@ -99,6 +99,7 @@ export class Textfield extends LitElement {
       /** Error */
       --md-outlined-text-field-error-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-text-field-error-focus-outline-color: var(--cros-sys-error);
       --md-outlined-text-field-error-hover-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-error-hover-state-layer-opacity: 0;
       --md-outlined-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
