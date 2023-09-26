@@ -44,12 +44,10 @@ export class Card extends LitElement {
       align-items: center;
       background-color: var(--cros-card-background-color, var(--cros-sys-app_base));
       border-radius: 12px;
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
       display: grid;
       outline: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));;
       padding: var(--cros-card-padding, 16px);
       position: relative;
-      --md-focus-ring-shape: 12px;
     }
 
     :host([cardStyle="filled"]) #container {
@@ -67,12 +65,18 @@ export class Card extends LitElement {
     }
 
     md-ripple {
-      animation-duration: 0s;
       color: var(--cros-sys-ripple_primary);
       --md-ripple-hover-color: var(--cros-card-hover-color, var(--cros-sys-hover_on_subtle));
       --md-ripple-hover-opacity: 1;
       --md-ripple-pressed-color: var(--cros-card-pressed-color, var(--cros-sys-ripple_neutral_on_subtle));
       --md-ripple-pressed-opacity: 1;
+    }
+
+    md-focus-ring {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-duration: 0s;
+      --md-focus-ring-outward-offset: 0px;
+      --md-focus-ring-shape: 12px;
     }
 
     :host([disabled]) {
