@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/tabs/tabs';
+
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
@@ -20,8 +22,29 @@ export class Tabs extends LitElement {
     }
   `;
 
+  /**
+   * The index of the active tab.
+   * @export
+   */
+  activeTabIndex: number;
+
+  /** @nocollapse */
+  static override properties = {
+    activeTabIndex: {type: Number, reflect: true},
+  };
+
+  constructor() {
+    super();
+    this.activeTabIndex = 0;
+  }
+
   override render() {
-    return html``;
+    return html`
+      <md-tabs
+        .activeTabIndex=${this.activeTabIndex}>
+        <slot></slot>
+      </md-tabs>
+    `;
   }
 }
 
