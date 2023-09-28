@@ -4,19 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/google3/menu/menu.js';
+import '@material/web/menu/menu.js';
+import '@material/web/focus/md-focus-ring.js';
 
-import {Corner, FocusState, MdMenu} from '@material/web/google3/menu/menu.js';
-import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-
-export {Corner, FocusState} from '@material/web/google3/menu/menu.js';
+import {Corner, FocusState, MdMenu, Menu as MenuInterface} from '@material/web/menu/menu.js';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 
 /**
  * A chromeOS menu component.
  * See spec
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2650%3A7994&t=01NOG3FTGuaigSvB-0
  */
-export class Menu extends LitElement {
+export class Menu extends LitElement implements MenuInterface {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -26,23 +25,31 @@ export class Menu extends LitElement {
     md-menu {
       --md-menu-container-color: var(--cros-bg-color-elevation-3);
       --md-menu-item-container-color: var(--cros-bg-color-elevation-3);
-      --md-list-item-label-text-font: var(--cros-button-2-font-family);
-      --md-list-item-label-text-size: var(--cros-button-2-font-size);
-      --md-list-item-label-text-line-height: var(--cros-button-2-line-height);
-      --md-list-item-label-text-weight: var(--cros-button-2-font-weight);
-      --md-list-item-one-line-container-height: 36px;
+      --md-menu-item-label-text-font: var(--cros-button-2-font-family);
+      --md-menu-item-label-text-size: var(--cros-button-2-font-size);
+      --md-menu-item-label-text-line-height: var(--cros-button-2-line-height);
+      --md-menu-item-label-text-weight: var(--cros-button-2-font-weight);
+      --md-menu-item-one-line-container-height: 36px;
+      --md-menu-item-top-space: 0px;
+      --md-menu-item-bottom-space: 0px;
       --md-menu-container-shape: 8px;
       --md-menu-container-surface-tint-layer-color: white;
       min-width: max(var(--cros-menu-width), 96px);
+      /*
+       * By default menu is display:contents. To make it focusable, it must be
+       * something visible.
+       */
+      display: flex;
+    }
+    md-focus-ring {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: 2px;
+      --md-focus-ring-active-width: 2px;
+      --md-focus-ring-shape: 8px;
     }
     md-menu::part(elevation) {
       --md-menu-container-elevation: 0;
       box-shadow: 0px 12px 12px 0px rgba(var(--cros-sys-shadow-rgb), 0.2);
-    }
-    md-menu::part(focus-ring) {
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-focus-ring-width: 2px;
-      --md-focus-ring-active-width: 2px;
     }
   `;
   /** @nocollapse */
@@ -58,6 +65,7 @@ export class Menu extends LitElement {
     stayOpenOnFocusout: {type: Boolean, attribute: 'stay-open-on-focus-out'},
     stayOpenOnOutsideClick:
         {type: Boolean, attribute: 'stay-open-on-outside-click'},
+    isSubmenu: {type: Boolean, attribute: 'is-submenu'},
   };
 
   /** @nocollapse */
@@ -144,6 +152,12 @@ export class Menu extends LitElement {
    * @export
    */
   stayOpenOnOutsideClick: boolean;
+  /**
+   * Set automatically by `cros-sub-menu-item`. Whether or not this menu is a
+   * submenu and should defer handling left keyboard navigations to the parent
+   * `cros-sub-menu-item`.
+   */
+  isSubmenu: boolean;
 
   get mdMenu(): MdMenu {
     return this.renderRoot.querySelector('md-menu') as MdMenu;
@@ -178,11 +192,12 @@ export class Menu extends LitElement {
     this.quick = true;
     this.menuCorner = Corner.START_START;
     // TODO(b/300001060): confirm whether should change to FIRST_ITEM
-    // NOTE this comment also applies to the list-tabindex=0 in the template
+    // NOTE this comment also applies to the tabindex=0 in the template
     this.defaultFocus = FocusState.LIST_ROOT;
     this.skipRestoreFocus = false;
     this.stayOpenOnFocusout = false;
     this.stayOpenOnOutsideClick = false;
+    this.isSubmenu = false;
   }
 
   override firstUpdated() {
@@ -235,6 +250,8 @@ export class Menu extends LitElement {
   override render() {
     return html`
       <md-menu
+          id="menu"
+          tabindex=${this.open ? 0 : nothing}
           .anchorElement=${this.anchorElement}
           .open=${this.open}
           .hasOverflow=${this.hasOverflow}
@@ -243,7 +260,7 @@ export class Menu extends LitElement {
           .quick=${this.quick}
           .defaultFocus=${this.defaultFocus}
           .skipRestoreFocus=${this.skipRestoreFocus}
-          list-tabindex="0"
+          .isSubmenu=${this.isSubmenu}
           @closed=${this.close}
           @opened=${this.show}
           @closing=${this.onClosing}
@@ -251,6 +268,7 @@ export class Menu extends LitElement {
           .stayOpenOnFocusout=${this.stayOpenOnFocusout}
           .stayOpenOnOutsideClick=${this.stayOpenOnOutsideClick}>
         <slot></slot>
+        <md-focus-ring for="menu"></md-focus-ring>
       </md-menu>
     `;
   }

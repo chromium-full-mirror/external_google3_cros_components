@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/google3/menu/menu-item';
+import '@material/web/menu/menu-item';
 import '../icon/icon';
 import '../switch/switch';
 
-import {MenuItem as MenuItemType} from '@material/web/google3/menu/menu-item';
+import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
@@ -23,34 +23,34 @@ export class MenuItem extends LitElement implements MenuItemType {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     md-menu-item {
-      --md-list-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
-      --md-list-item-disabled-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-focus-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-hover-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
-      --md-list-item-hover-state-layer-opacity: 1;
-      --md-list-item-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-label-text-font: var(--cros-button-2-font-family);
-      --md-list-item-label-text-size: var(--cros-button-2-font-size);
-      --md-list-item-label-text-line-height: var(--cros-button-2-line-height);
-      --md-list-item-label-text-weight: var(--cros-button-2-font-weight);
-      --md-list-item-leading-icon-color: var(--cros-sys-on_surface);
-      --md-list-item-pressed-label-text-color: var(--cros-sys-on_surface);
-      --md-list-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
-      --md-list-item-pressed-state-layer-opacity: 1;
-      --md-list-item-trailing-element-headline-trailing-element-space: 48px;
-      --md-list-item-trailing-space: 16px;
+      --md-menu-item-disabled-label-text-opacity: var(--cros-sys-opacity-disabled);
+      --md-menu-item-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-menu-item-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
+      --md-menu-item-disabled-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-focus-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-hover-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-menu-item-hover-state-layer-opacity: 1;
+      --md-menu-item-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-label-text-font: var(--cros-button-2-font-family);
+      --md-menu-item-label-text-size: var(--cros-button-2-font-size);
+      --md-menu-item-label-text-line-height: var(--cros-button-2-line-height);
+      --md-menu-item-label-text-weight: var(--cros-button-2-font-weight);
+      --md-menu-item-leading-icon-color: var(--cros-sys-on_surface);
+      --md-menu-item-pressed-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-menu-item-pressed-state-layer-opacity: 1;
+      --md-menu-item-trailing-element-headline-trailing-element-space: 48px;
+      --md-menu-item-trailing-space: 16px;
     }
     md-menu-item([itemEnd=null]) {
-      --md-list-item-trailing-space: 48px;
+      --md-menu-item-trailing-space: 48px;
     }
     :host([itemEnd="icon"]) md-menu-item {
-      --md-list-item-trailing-space: 12px;
+      --md-menu-item-trailing-space: 12px;
     }
     :host([checked]) md-menu-item {
-      --md-list-item-trailing-space: 12px;
+      --md-menu-item-trailing-space: 12px;
     }
     md-menu-item::part(focus-ring) {
       --md-focus-ring-active-width: 2px;
@@ -66,6 +66,10 @@ export class MenuItem extends LitElement implements MenuItemType {
       color: var(--cros-sys-primary);
       height: 20px;
       width: 20px;
+    }
+
+    md-menu-item[selected]:hover::part(ripple) {
+      --md-ripple-hover-opacity: 0;
     }
 
     ::slotted(:is(
@@ -105,12 +109,14 @@ export class MenuItem extends LitElement implements MenuItemType {
     headline: {type: String},
     itemStart: {type: String},
     itemEnd: {type: String},
-    tabIndex: {type: Boolean, reflect: true},
+    tabIndex: {type: Number, reflect: true},
     disabled: {type: Boolean},
     isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
-    isListItem: {type: Boolean, reflect: true, attribute: 'md-list-item'},
     checked: {type: Boolean, reflect: true},
     shortcutText: {type: String},
+    typeaheadText: {type: String, attribute: 'typeahead-text'},
+    selected: {type: Boolean},
+    type: {type: String},
   };
 
   /**
@@ -141,8 +147,6 @@ export class MenuItem extends LitElement implements MenuItemType {
   disabled: boolean;
   /** @export */
   readonly isMenuItem: boolean;
-  /** @export */
-  readonly isListItem: boolean;
   /**
    * If true, this will result in a checkmark icon used in the end slot. This
    * overrides any other components in end slot if otherwise specified.
@@ -155,6 +159,14 @@ export class MenuItem extends LitElement implements MenuItemType {
    * @export
    */
   shortcutText: string;
+  /**
+   * Whether or not to display the menu item in the selected visual state.
+   */
+  selected: boolean;
+  /**
+   * Sets the behavior and role of the menu item, defaults to "menuitem".
+   */
+  type: 'menuitem'|'option'|'button'|'link';
 
   constructor() {
     super();
@@ -165,10 +177,11 @@ export class MenuItem extends LitElement implements MenuItemType {
 
     this.disabled = false;
     this.isMenuItem = true;
-    this.isListItem = true;
     this.tabIndex = 0;
     this.checked = false;
     this.shortcutText = 'Shortcut';
+    this.selected = false;
+    this.type = 'menuitem';
   }
 
   // Start slot should exist when `itemStart` is  `icon`.
@@ -203,6 +216,20 @@ export class MenuItem extends LitElement implements MenuItemType {
         endItem.setAttribute('slot', 'end-icon');
       });
     }
+  }
+
+  /**
+   * The text that is selectable via typeahead. If not set, defaults to the
+   * `headline` property.
+   */
+  get typeaheadText() {
+    return this.renderRoot.querySelector('md-menu-item')?.typeaheadText ?? '';
+  }
+
+  set typeaheadText(text: string) {
+    const item = this.renderRoot.querySelector('md-menu-item');
+    if (!item) return;
+    item.typeaheadText = text;
   }
 
   override disconnectedCallback() {
@@ -244,7 +271,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     if (this.checked) {
       return html`
           <cros-icon
-              slot="end-icon"
+              slot="end"
               class="slot-end"
               aria-hidden="true">
           </cros-icon>`;
@@ -254,7 +281,7 @@ export class MenuItem extends LitElement implements MenuItemType {
       case 'shortcut':
         endSlot = html`
           <span
-              slot="end-icon"
+              slot="end"
               class="slot-end"
               id="shortcut">
             ${this.shortcutText}
@@ -264,7 +291,7 @@ export class MenuItem extends LitElement implements MenuItemType {
         endSlot = html`
           <slot
               name="end-icon"
-              slot="end-icon"
+              slot="end"
               class="slot-end"
               aria-hidden="true">
           </slot>`;
@@ -272,7 +299,7 @@ export class MenuItem extends LitElement implements MenuItemType {
       case 'switch':
         endSlot = html`
           <cros-switch
-              slot="end-icon"
+              slot="end"
               class="slot-end">
           </cros-switch>`;
         break;
@@ -302,16 +329,18 @@ export class MenuItem extends LitElement implements MenuItemType {
     if (this.itemStart === 'icon') {
       startSlot = html`
         <slot name="start" slot="start"></slot>
-        <slot name="start-icon" slot="start-icon" aria-hidden="true"></slot>
+        <slot name="start-icon" slot="start" aria-hidden="true"></slot>
       `;
     }
     return html`
       <md-menu-item
           @close-menu=${() => void this.fireTriggerEvent()}
-          headline=${this.headline}
           .keepOpen=${keepOpen}
           .disabled=${this.disabled}
-          .tabIndex=${this.tabIndex}>
+          .tabIndex=${this.tabIndex}
+          ?selected=${this.selected}
+          .type=${this.type}>
+        <div slot="headline">${this.headline}</div>
         ${startSlot}
         ${endSlot}
       </md-menu-item>
