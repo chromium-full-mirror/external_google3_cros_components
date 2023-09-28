@@ -10,7 +10,6 @@ import '@material/web/iconbutton/icon-button.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
-
 /**
  * Icon buttons have different variants depending on the container
  * background, designed to improve contrast depending on the color of the
@@ -331,7 +330,8 @@ export class IconButton extends LitElement {
               aria-label=${ariaLabel}
               toggle
               ?selected=${this.selected}
-              ?disabled=${this.disabled}>
+              ?disabled=${this.disabled}
+              aria-disabled=${this.disabled}>
             <slot name="icon"></slot>
             <slot name="selectedIcon" slot="selected"></slot>
           </md-filled-icon-button>`;
@@ -341,7 +341,8 @@ export class IconButton extends LitElement {
       return html`
           <md-icon-button
               ?disabled=${this.disabled}
-              aria-label=${ariaLabel}>
+              aria-label=${ariaLabel}
+              aria-disabled=${this.disabled}>
             <slot name="icon"></slot>
           </md-icon-button>`;
     }
@@ -349,7 +350,8 @@ export class IconButton extends LitElement {
     return html`
           <md-filled-tonal-icon-button
               ?disabled=${this.disabled}
-              aria-label=${ariaLabel}>
+              aria-label=${ariaLabel}
+              aria-disabled=${this.disabled}>
             <slot name="icon"></slot>
           </md-filled-tonal-icon-button>`;
   }
