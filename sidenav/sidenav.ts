@@ -373,7 +373,7 @@ export class Sidenav extends LitElement {
       for (let searchIndex = (currentIndex + 1) % selectableItems.length;
            searchIndex !== currentIndex;
            searchIndex = (searchIndex + 1) % selectableItems.length) {
-        const searchItem: SidenavItem = selectableItems[searchIndex];
+        const searchItem: SidenavItem = selectableItems[searchIndex]!;
         if (searchItem.label.toLowerCase().startsWith(e.key.toLowerCase())) {
           itemToSelect = searchItem;
           break;
