@@ -56,7 +56,7 @@ export class Textfield extends LitElement {
       outline: none;
     }
 
-    :host([disabled]) {
+    :host([disabled]) .text-labels {
       opacity: var(--cros-disabled-opacity);
     }
 
@@ -96,6 +96,7 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-disabled-input-text-suffix-color: var(--cros-sys-secondary);
+      --md-outlined-text-field-disabled-outline-width: 0px;
       /** Error */
       --md-outlined-text-field-error-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-error-focus-input-text-color: var(--cros-sys-on_surface);
