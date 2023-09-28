@@ -87,7 +87,7 @@ const ICON_LEADING_MARGIN = css`28px`;
 const EXPAND_LEADING_MARGIN = css`8px`;
 const LABEL_ONLY_MARGIN = css`24px`;
 const LABEL_TRAILING_MARGIN = css`12px`;
-const ITEM_GAP = css`4px`;
+const ITEM_GAP = css`8px`;
 
 /** Selects a host that is in a layered Sidenav. */
 const LAYERED_SELECTOR = css`:host(:is([inLayered], [mayHaveChildren]))`;
