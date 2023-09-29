@@ -177,6 +177,7 @@ export class Textfield extends LitElement {
     shaded: {type: Boolean, reflect: true},
     value: {type: String, attribute: true},
     label: {type: String, attribute: true},
+    ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     suffix: {type: String, attribute: true},
     disabled: {type: Boolean, reflect: true},
     hint: {type: String, attribute: true},
@@ -279,6 +280,7 @@ export class Textfield extends LitElement {
   }
 
   override render() {
+    const ariaLabel = this.ariaLabel || this.label;
     return html`
       ${this.maybeRenderLabel()}
       <div id="main-container">
@@ -286,7 +288,7 @@ export class Textfield extends LitElement {
         <md-outlined-text-field
             ?disabled=${this.disabled}
             type=${this.type}
-            data-aria-label=${this.label}
+            aria-label=${ariaLabel}
             value=${this.value}
             suffix-text=${this.suffix}
             maxLength=${this.maxLength}
