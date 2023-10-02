@@ -97,6 +97,10 @@ export class MenuItem extends LitElement implements MenuItemType {
     #shortcut {
       color: var(--cros-sys-secondary);
     }
+
+    #headline {
+      white-space: nowrap;
+    }
   `;
 
   static override shadowRootOptions = {
@@ -111,6 +115,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     itemEnd: {type: String},
     tabIndex: {type: Number, reflect: true},
     disabled: {type: Boolean},
+    keepOpen: {type: Boolean, attribute: 'keep-open'},
     isMenuItem: {type: Boolean, reflect: true, attribute: 'md-menu-item'},
     checked: {type: Boolean, reflect: true},
     shortcutText: {type: String},
@@ -138,6 +143,12 @@ export class MenuItem extends LitElement implements MenuItemType {
    */
   itemEnd: 'shortcut'|'icon'|'switch'|'';
 
+  /**
+   * If true, keeps the menu open when clicked. (used by submenu)
+   *
+   * @export
+   */
+  keepOpen: boolean;
   // The following properties are necessary for wrapping and keyboard
   // navigation
   /**
@@ -175,6 +186,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     this.itemStart = '';
     this.itemEnd = '';
 
+    this.keepOpen = false;
     this.disabled = false;
     this.isMenuItem = true;
     this.tabIndex = 0;
@@ -324,7 +336,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     const endSlot = this.getEndSlot();
     // `keep-open` property needs to be true in switch case so cros-switch can
     // be selected/unselected without menu closing.
-    const keepOpen = this.itemEnd === 'switch';
+    const keepOpen = this.itemEnd === 'switch' || this.keepOpen;
     let startSlot = null;
     if (this.itemStart === 'icon') {
       startSlot = html`
@@ -340,7 +352,7 @@ export class MenuItem extends LitElement implements MenuItemType {
           .tabIndex=${this.tabIndex}
           ?selected=${this.selected}
           .type=${this.type}>
-        <div slot="headline">${this.headline}</div>
+        <div slot="headline" id="headline">${this.headline}</div>
         ${startSlot}
         ${endSlot}
       </md-menu-item>

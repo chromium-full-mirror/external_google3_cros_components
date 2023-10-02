@@ -19,7 +19,9 @@ export class Menu extends LitElement implements MenuInterface {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
-      display: inline-block;
+      display: flex;
+      /* Do not affect parent width */
+      width: 0px;
       --cros-menu-width: 96px;
     }
     md-menu {
