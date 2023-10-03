@@ -20,11 +20,6 @@ const chevronIcon =
  * Hovering or clicking element will open a second submenu.
  */
 export class SubMenuItem extends LitElement {
-  // TODO(b/276045973): Currently elevation layer is on top of selected state
-  // color making it darker than hover. Per chrome spec we want hover/selected
-  // to be the same. Once opacities are flattened & colors updated, update
-  // screenshot tests for components. For now we remove color altogether for
-  // selected state.
   static override styles: CSSResultGroup = css`
     md-sub-menu {
       --md-list-item-disabled-label-text-color: var(--cros-sys-on_surface);

@@ -9,7 +9,7 @@ import {customElement} from 'lit/decorators';
 
 /**
  * Example checked icon.
- * TODO(b/231672472): Delete once icon system is in place.
+ * TODO: b/231672472 - Delete once icon system is in place.
  */
 export const CHECKED_ICON = html`
   <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

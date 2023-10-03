@@ -6,7 +6,7 @@
 
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
-// TODO(b/295990177): Make these absolute.
+// TODO: b/295990177 - Make these absolute.
 import {waitForEvent} from '../async_helpers/async_helpers';
 import {assertExists, hexToRgb} from '../helpers/helpers';
 
@@ -222,7 +222,7 @@ export class LottieRenderer extends LitElement {
 
   /**
    * Temporary public API to ensure component color resolution works.
-   * TODO(b/290864323): Remove legacy usages of this function and then make
+   * TODO: b/274998765 - Remove legacy usages of this function and then make
    * private.
    */
   onColorSchemeChanged = () => {
@@ -386,7 +386,7 @@ export class LottieRenderer extends LitElement {
   private async refreshAnimationColors() {
     // We must await update here to ensure the computed style will be up to date
     // with the new color scheme.
-    // TODO(b/276079531): Investigate if this can be removed when using events.
+    // TODO: b/274998765 - Investigate if this can be removed when using events.
     this.requestUpdate();
     await this.updateComplete;
     if (!this.animationData) {
@@ -420,8 +420,6 @@ export class LottieRenderer extends LitElement {
     // once, when we first initialize an animation. On subsequent
     // initializations (such as when the asset URL has changed), we avoid
     // re-transferring the canvas and just send across the animation data.
-    // TODO(b/268419751): Add hooks for updating when the animation URL has
-    // changed.
     if (this.hasTransferredCanvas) {
       this.worker.postMessage(animationConfig);
       return;

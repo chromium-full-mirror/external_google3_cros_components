@@ -28,7 +28,6 @@ export class Button extends LitElement {
   static override shadowRootOptions:
       ShadowRootInit = {mode: 'open', delegatesFocus: true};
 
-  // TODO(b/258982831): Centre icon. See spec.
   // Note that theme colours have opacity defined in the colour, but default
   // colours have opacities set separately. As a consequence, styles are broken
   // unless a cros theme is present.

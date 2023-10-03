@@ -193,7 +193,7 @@ export class Menu extends LitElement implements MenuInterface {
     this.open = false;
     this.quick = true;
     this.menuCorner = Corner.START_START;
-    // TODO(b/300001060): confirm whether should change to FIRST_ITEM
+    // TODO: b/300001060 - confirm whether should change to FIRST_ITEM
     // NOTE this comment also applies to the tabindex=0 in the template
     this.defaultFocus = FocusState.LIST_ROOT;
     this.skipRestoreFocus = false;

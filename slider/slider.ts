@@ -24,7 +24,7 @@ const renderTrack = (MdSlider.prototype as any).renderTrack;
  * track that is currently active/inactive depending on value) minus the handle
  * gap (half of the handle width + width of transparent gap on one side).
  *
- * TODO(b/285172083): do not use md-slider's `--_private` custom properties
+ * TODO: b/285172083 - do not use md-slider's `--_private` custom properties
  */
 const DISABLED_STATE_OVERRIDES = css`
   md-slider[disabled] > [slot="track"] {
@@ -57,7 +57,7 @@ const DISABLED_STATE_OVERRIDES = css`
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2978%3A19626
  */
 export class Slider extends LitElement {
-  // TODO(b/279854770): check disabled styling.
+  // TODO: b/285172083 - check disabled styling.
   static override styles: CSSResultGroup = [
     css`
     :host {

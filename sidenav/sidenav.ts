@@ -18,7 +18,7 @@ import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
  * go/typescript-reopening
  */
 declare interface ExtendedElement extends Element {
-  // TODO(b/262453851): Investigate if we can use a standard approved method
+  // TODO: b/302632076 - Investigate if we can use a standard approved method
   // instead of this. Perhaps a mix of intersection observer and scrollTo.
   scrollIntoViewIfNeeded: (centerIfNeeded: boolean) => void;
 }
@@ -445,12 +445,7 @@ customElements.define('cros-sidenav', Sidenav);
 
 /** Type of the tree item enabling custom event. */
 export type SidenavEnabledChangedEvent = CustomEvent<{
-  /**
-   * The tree item which has been enabled previously.
-   * TODO(b/262453851): Figure out if we need this event at all, and if we do if
-   * we need the prev selected field. In files I don't think this is ever used:
-   * https://source.chromium.org/search?q=previousSelectedItem%20f:file_manager&sq=
-   */
+  /** The tree item which has been enabled previously. */
   previousEnabledItem: SidenavItem | null,
   /** The tree item which has been enabled now. */
   enabledItem: SidenavItem | null,

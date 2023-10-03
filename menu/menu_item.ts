@@ -18,7 +18,7 @@ import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
  */
 export class MenuItem extends LitElement implements MenuItemType {
   /** @nocollapse */
-  // TODO(b/198759625): Remove negative margin-inline-end when mwc token
+  // TODO: b/198759625 - Remove negative margin-inline-end when mwc token
   // available (padding 16px)
   /** @nocollapse */
   static override styles: CSSResultGroup = css`

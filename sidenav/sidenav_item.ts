@@ -508,10 +508,7 @@ export class SidenavItem extends LitElement {
     }
   }
 
-  /**
-   * The tree items that are direct children of this.
-   * TODO(b/262453851): Should be private, and accessible to tests.
-   */
+  /** The tree items that are direct children of this. */
   items: SidenavItem[] = [];
 
   /** Indicate if we should commit the rename on input blur or not. */
@@ -551,7 +548,7 @@ export class SidenavItem extends LitElement {
               for="tree-item"
               ?disabled=${this.disabled}>
           </md-focus-ring>
-          <!-- TODO(b/262453851): Implement icon from spec -->
+          <!-- TODO: b/231672472 - Implement icon from spec -->
           <span
               class="expand-icon"
               aria-hidden="true"
@@ -635,7 +632,7 @@ export class SidenavItem extends LitElement {
     });
   }
 
-  // TODO(b/262453851): There's probably a nicer way to implement this.
+  // TODO: b/302632527 - Refactor this to avoid storing a copy of children.
   private onSlotChanged() {
     // Whether the old set of children contained the enabled item.
     const oldItemsContainEnabledItem =
