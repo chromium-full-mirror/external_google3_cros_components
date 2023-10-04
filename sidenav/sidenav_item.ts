@@ -22,11 +22,13 @@ export type SidenavItemExpandedEvent = CustomEvent<{
   /** The tree item which has been expanded. */
   item: SidenavItem,
 }>;
+
 /** Type of the tree item collapsed custom event. */
 export type SidenavItemCollapsedEvent = CustomEvent<{
   /** The tree item which has been collapsed. */
   item: SidenavItem,
 }>;
+
 /** Type of the tree item collapsed custom event. */
 export type SidenavItemRenamedEvent = CustomEvent<{
   /** The tree item which has been renamed. */
@@ -36,12 +38,19 @@ export type SidenavItemRenamedEvent = CustomEvent<{
   /** The label after rename. */
   newLabel: string,
 }>;
+
 /** Type of the tree item enabled changed custom event. */
 export type SidenavItemEnabledChangedEvent = CustomEvent<{
   /** The tree item which has been (un)enabled. */
   item: SidenavItem,
   /** The new enabled value. */
   enabled: boolean,
+}>;
+
+/** Type of the tree item triggered custom event. */
+export type SidenavItemTriggeredEvent = CustomEvent<{
+  /** The tree item which has been triggered. */
+  item: SidenavItem,
 }>;
 
 /** The number of pixels to indent per level. */
@@ -349,6 +358,8 @@ export class SidenavItem extends LitElement {
       SIDENAV_ITEM_RENAMED: 'sidenav_item_renamed',
       /** Triggers when a sidenav item's changed status changed. */
       SIDENAV_ITEM_ENABLED_CHANGED: 'sidenav_item_enabled_changed',
+      /** Triggers when a sidenav item is clicked or equivalent. */
+      SIDENAV_ITEM_TRIGGERED: 'sidenav_item_triggered',
     } as const;
   }
 
@@ -718,6 +729,12 @@ export class SidenavItem extends LitElement {
     e.stopPropagation();
     if (this.disabled) return;
     this.enabled = true;
+
+    this.dispatchEvent(
+        new CustomEvent(SidenavItem.events.SIDENAV_ITEM_TRIGGERED, {
+          bubbles: false,
+          detail: {item: this},
+        }));
   }
 
   private onRenamingChanged() {
@@ -793,6 +810,7 @@ declare global {
     [SidenavItem.events.SIDENAV_ITEM_RENAMED]: SidenavItemRenamedEvent;
     [SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED]:
         SidenavItemEnabledChangedEvent;
+    [SidenavItem.events.SIDENAV_ITEM_TRIGGERED]: SidenavItemTriggeredEvent;
   }
 
   interface HTMLElementTagNameMap {
