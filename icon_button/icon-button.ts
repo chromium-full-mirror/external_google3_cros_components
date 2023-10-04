@@ -98,7 +98,7 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filled-tonal-icon-button-hover-state-layer-opacity: 1;
       --md-filled-tonal-icon-button-icon-color: ${FILLED_ICON_ON_BASE};
-      --md-filled-tonal-icon-button-icon-size: 20px;
+      --md-filled-tonal-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
       --md-filled-tonal-icon-button-pressed-icon-color: ${FILLED_ICON_ON_BASE};
       --md-filled-tonal-icon-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-filled-tonal-icon-button-pressed-state-layer-opacity: 1;
@@ -112,13 +112,13 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-container-shape: 10px;
       --md-filled-tonal-icon-button-container-width: 32px;
       --md-filled-tonal-icon-button-container-height: 32px;
-      --md-filled-tonal-icon-button-icon-size: 20px;
+      --md-filled-tonal-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
     }
     :host([size="large"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 16px;
       --md-filled-tonal-icon-button-container-height: 64px;
       --md-filled-tonal-icon-button-container-width: 80px;
-      --md-filled-tonal-icon-button-icon-size: 24px;
+      --md-filled-tonal-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       margin: 0;
     }
     :host([surface="image"]) md-filled-tonal-icon-button {
@@ -140,7 +140,7 @@ export class IconButton extends LitElement {
       --md-focus-ring-duration: 0s;
       --md-icon-button-disabled-icon-color: ${FLOATING_ICON_ON_BASE};
       --md-icon-button-disabled-icon-opacity: var(--cros-sys-disabled-opacity);
-      --md-icon-button-icon-size: 20px;
+      --md-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
       --md-icon-button-state-layer-shape: 12px;
       --md-icon-button-state-layer-width: 40px;
       --md-icon-button-state-layer-height: 40px;
@@ -154,13 +154,13 @@ export class IconButton extends LitElement {
       --md-icon-button-pressed-state-layer-opacity: 1;
     }
     :host([size="small"]) md-icon-button {
-      --md-icon-button-icon-size: 20px;
+      --md-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
       --md-icon-button-state-layer-shape: 10px;
       --md-icon-button-state-layer-width: 32px;
       --md-icon-button-state-layer-height: 32px;
     }
     :host([size="large"]) md-icon-button {
-      --md-icon-button-icon-size: 24px;
+      --md-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       --md-icon-button-state-layer-shape: 16px;
       height: 64px;
       margin: 0;
@@ -203,7 +203,7 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-disabled-icon-color: var(--cros-sys-disabled);
       --md-filled-icon-button-disabled-icon-opacity: 1;
       --md-filled-icon-button-hover-state-layer-opacity: 1;
-      --md-filled-icon-button-icon-size: 20px;
+      --md-filled-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
       --md-filled-icon-button-selected-container-color: ${
       TOGGLE_CONTAINER_ON_BASE};
       --md-filled-icon-button-toggle-selected-focus-icon-color: ${
@@ -229,14 +229,14 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-container-shape: 16px;
       --md-filled-icon-button-container-width: 80px;
       --md-filled-icon-button-container-height: 64px;
-      --md-filled-icon-button-icon-size: 24px;
+      --md-filled-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       margin: 0;
     }
     :host([size="small"]) md-filled-icon-button {
       --md-filled-icon-button-container-shape: 10px;
       --md-filled-icon-button-container-width: 32px;
       --md-filled-icon-button-container-height: 32px;
-      --md-filled-icon-button-icon-size: 20px;
+      --md-filled-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
     }
     :host([surface="subtle"]) md-filled-icon-button {
       --md-filled-icon-button-selected-container-color: ${
@@ -295,7 +295,7 @@ export class IconButton extends LitElement {
     }
 
     ::slotted(ea-icon) {
-      --ea-icon-size: 20px;
+      --ea-icon-size: var(--cros-icon-button-icon-size, 20px);
     }
   `;
 
