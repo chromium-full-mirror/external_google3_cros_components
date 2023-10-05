@@ -351,15 +351,15 @@ export class SidenavItem extends LitElement {
   static get events() {
     return {
       /** Triggers when a sidenav item has been expanded. */
-      SIDENAV_ITEM_EXPANDED: 'sidenav_item_expanded',
+      SIDENAV_ITEM_EXPANDED: 'sidenav-item-expanded',
       /** Triggers when a sidenav item has been collapsed. */
-      SIDENAV_ITEM_COLLAPSED: 'sidenav_item_collapsed',
+      SIDENAV_ITEM_COLLAPSED: 'sidenav-item-collapsed',
       /** Triggers when a sidenav item's label has been renamed. */
-      SIDENAV_ITEM_RENAMED: 'sidenav_item_renamed',
+      SIDENAV_ITEM_RENAMED: 'sidenav-item-renamed',
       /** Triggers when a sidenav item's changed status changed. */
-      SIDENAV_ITEM_ENABLED_CHANGED: 'sidenav_item_enabled_changed',
+      SIDENAV_ITEM_ENABLED_CHANGED: 'sidenav-item-enabled-changed',
       /** Triggers when a sidenav item is clicked or equivalent. */
-      SIDENAV_ITEM_TRIGGERED: 'sidenav_item_triggered',
+      SIDENAV_ITEM_TRIGGERED: 'sidenav-item-triggered',
     } as const;
   }
 

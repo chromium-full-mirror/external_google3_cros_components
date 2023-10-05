@@ -83,7 +83,7 @@ export class Sidenav extends LitElement {
   static get events() {
     return {
       /** Triggers when a tree item has been enabled. */
-      SIDENAV_ENABLED_CHANGED: 'sidenav_enabled_changed',
+      SIDENAV_ENABLED_CHANGED: 'sidenav-enabled-changed',
     } as const;
   }
 
@@ -184,9 +184,9 @@ export class Sidenav extends LitElement {
           role="tree"
           @dblclick=${this.onTreeDblClicked}
           @keydown=${this.onTreeKeyDown}
-          @sidenav_item_expanded=${this.onSidenavItemExpanded}
-          @sidenav_item_collapsed=${this.onSidenavItemCollapsed}
-          @sidenav_item_enabled_changed=${this.onSidenavItemEnabledChanged}>
+          @sidenav-item-expanded=${this.onSidenavItemExpanded}
+          @sidenav-item-collapsed=${this.onSidenavItemCollapsed}
+          @sidenav-item-enabled-changed=${this.onSidenavItemEnabledChanged}>
         <slot @slotchange=${this.onSlotChanged}></slot>
       </ul>
     `;
