@@ -114,10 +114,6 @@ export class SidenavItem extends LitElement {
       font: var(--cros-button-2-font);
     }
 
-    li:focus-visible {
-      outline: none;
-    }
-
     :host([separator])::before {
       border-bottom: 1px solid var(--cros-separator-color);
       content: '';
@@ -129,17 +125,27 @@ export class SidenavItem extends LitElement {
     .tree-row,
     .md-ripple {
       align-items: center;
+      background: none;
+      border: none;
       border-inline-start-width: 0 !important;
       border-radius: 20px;
       box-sizing: border-box;
       color: var(--cros-sys-on_surface);
       cursor: pointer;
       display: flex;
+      font: var(--cros-button-2-font);
       height: 40px;
       margin-top: ${ITEM_GAP};
+      padding-inline-end: ${LABEL_TRAILING_MARGIN};
       position: relative;
+      text-align: start;
       user-select: none;
       white-space: nowrap;
+      width: 100%;
+    }
+
+    .tree-row:focus-visible {
+      outline: none;
     }
 
     md-focus-ring {
@@ -228,7 +234,6 @@ export class SidenavItem extends LitElement {
     .tree-label {
       display: block;
       flex: auto;
-      margin-inline-end: ${LABEL_TRAILING_MARGIN};
       margin-inline-start: ${LABEL_ONLY_MARGIN};
       overflow: hidden;
       text-overflow: ellipsis;
@@ -260,7 +265,6 @@ export class SidenavItem extends LitElement {
       border-radius: 4px;
       color: var(--cros-sys-on_surface);
       height: 20px;
-      margin-inline-end: ${LABEL_TRAILING_MARGIN};
       margin-inline-start: ${LABEL_ONLY_MARGIN};
       outline: 2px solid var(--cros-sys-focus_ring);
       overflow: hidden;
@@ -439,8 +443,8 @@ export class SidenavItem extends LitElement {
    */
   inLayered: boolean;
 
-  private get treeItemElement(): HTMLLIElement {
-    return castExists(this.renderRoot.querySelector('li'));
+  private get treeRowElement(): HTMLButtonElement {
+    return castExists(this.renderRoot.querySelector('button'));
   }
 
   private get renameInputElement(): HTMLInputElement {
@@ -539,7 +543,6 @@ export class SidenavItem extends LitElement {
       <li
           id="tree-item"
           role="treeitem"
-          tabindex=${this.tabIndex}
           aria-setsize=${this.ariaSetSize ?? nothing}
           aria-posinset=${this.ariaPosInSet ?? nothing}
           aria-level=${this.layer + 1}
@@ -548,17 +551,19 @@ export class SidenavItem extends LitElement {
           aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
           aria-disabled=${this.disabled}>
         <!-- TODO: b/302435119 - Use cros-tooltip instead of title. -->
-        <div
+        <button
             id="tree-row"
+            tabindex=${this.tabIndex}
             class=${classMap(treeRowClasses)}
             style=${styleMap(treeRowStyles)}
-            title="${this.label}">
+            title="${this.label}"
+            @click=${this.onRowClicked}>
           <md-ripple
               for="tree-row"
               ?disabled=${this.disabled}>
           </md-ripple>
           <md-focus-ring
-              for="tree-item"
+              for="tree-row"
               ?disabled=${this.disabled}>
           </md-focus-ring>
           <!-- TODO: b/231672472 - Implement icon from spec -->
@@ -577,7 +582,7 @@ export class SidenavItem extends LitElement {
               @slotchange=${this.onIconSlotChanged}>
           </slot>
           ${this.renderTreeLabel()}
-        </div>
+        </button>
         <ul
             class="tree-children"
             role="group">
@@ -588,6 +593,8 @@ export class SidenavItem extends LitElement {
   }
 
   override firstUpdated() {
+    // This is needed in addition to a listener on #tree-row, so that we can
+    // react to clicks on a slotted icon.
     this.addEventListener('click', this.onRowClicked);
   }
 
@@ -759,16 +766,16 @@ export class SidenavItem extends LitElement {
     switch (e.key) {
       case 'Escape':
         // By default blur() will trigger the rename, but when ESC is pressed
-        // we don't want the blur() (triggered by treeItemElement.focus() below)
+        // we don't want the blur() (triggered by treeRowElement.focus() below)
         // to commit the rename.
         this.shouldRenameOnBlur = false;
-        this.treeItemElement.focus();
+        this.treeRowElement.focus();
         e.preventDefault();
         break;
       case 'Enter':
-        // treeItemElement.focus() will trigger blur() for the rename input
+        // treeRowElement.focus() will trigger blur() for the rename input
         // which will commit the rename.
-        this.treeItemElement.focus();
+        this.treeRowElement.focus();
         e.preventDefault();
         break;
       default:

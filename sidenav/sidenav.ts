@@ -314,10 +314,6 @@ export class Sidenav extends LitElement {
 
     let itemToSelect: SidenavItem|null|undefined = null;
     switch (e.key) {
-      case 'Enter':
-      case ' ':
-        this.enableItem(selectedItem);
-        break;
       case 'ArrowUp':
         if (currentIndex > 0) {
           itemToSelect = selectableItems[currentIndex - 1];
