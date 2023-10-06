@@ -27,7 +27,7 @@ const FILLED_ICON_ON_IMAGE =
     css`var(--cros-icon-button-color-override, var(--cros-sys-on_surface))`;
 
 const FILLED_CONTAINER_ON_BASE = css`var(--cros-sys-surface_variant)`;
-const FILLED_CONTAINER_ON_IMAGE = css`var(--cros-sys-surface)`;
+const FILLED_CONTAINER_ON_IMAGE = css`var(--cros-sys-surface3)`;
 
 const FLOATING_ICON_ON_BASE =
     css`var(--cros-icon-button-color-override, var(--cros-sys-on_surface))`;
