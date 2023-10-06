@@ -166,7 +166,7 @@ export class IconButton extends LitElement {
       margin: 0;
       width: 80px;
     }
-    :host([surface="surface"]) md-icon-button {
+    :host([surface="subtle"]) md-icon-button {
       --md-icon-button-disabled-icon-color: ${FLOATING_ICON_ON_SUBTLE};
       --md-icon-button-focus-icon-color: ${FLOATING_ICON_ON_SUBTLE};
       --md-icon-button-hover-icon-color: ${FLOATING_ICON_ON_SUBTLE};
