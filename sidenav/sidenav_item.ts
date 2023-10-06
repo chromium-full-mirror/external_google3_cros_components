@@ -547,10 +547,12 @@ export class SidenavItem extends LitElement {
           aria-selected=${this.enabled}
           aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
           aria-disabled=${this.disabled}>
+        <!-- TODO: b/302435119 - Use cros-tooltip instead of title. -->
         <div
             id="tree-row"
             class=${classMap(treeRowClasses)}
-            style=${styleMap(treeRowStyles)}>
+            style=${styleMap(treeRowStyles)}
+            title="${this.label}">
           <md-ripple
               for="tree-row"
               ?disabled=${this.disabled}>
