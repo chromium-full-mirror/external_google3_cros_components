@@ -83,6 +83,10 @@ export class MenuItem extends LitElement implements MenuItemType {
       width: 20px;
     }
 
+    ::slotted(ea-icon) {
+      --ea-icon-size: 20px;
+    }
+
     cros-switch {
       height: 18px;
       width: 32px;
