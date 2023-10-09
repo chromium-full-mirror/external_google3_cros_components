@@ -55,6 +55,9 @@ const TOGGLE_SELECTED_ICON_ON_PROMINENT =
 const TOGGLE_CONTAINER_ON_BASE = css`var(--cros-sys-primary_container)`;
 const TOGGLE_CONTAINER_ON_SUBTLE = css`var(--cros-sys-highlight_shape)`;
 const TOGGLE_CONTAINER_ON_PROMINENT = css`var(--cros-sys-highlight_shape)`;
+
+const LARGE_CONTAINER_WIDTH = css`72px`;
+const LARGE_CONTAINER_HEIGHT = css`56px`;
 /**
  * A cros compliant icon-button component.
  * See spec:
@@ -116,8 +119,8 @@ export class IconButton extends LitElement {
     }
     :host([size="large"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 16px;
-      --md-filled-tonal-icon-button-container-height: 64px;
-      --md-filled-tonal-icon-button-container-width: 80px;
+      --md-filled-tonal-icon-button-container-height: ${LARGE_CONTAINER_HEIGHT};
+      --md-filled-tonal-icon-button-container-width: ${LARGE_CONTAINER_WIDTH};
       --md-filled-tonal-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       margin: 0;
     }
@@ -162,9 +165,9 @@ export class IconButton extends LitElement {
     :host([size="large"]) md-icon-button {
       --md-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       --md-icon-button-state-layer-shape: 16px;
-      height: 64px;
+      height: ${LARGE_CONTAINER_HEIGHT};
       margin: 0;
-      width: 80px;
+      width: ${LARGE_CONTAINER_WIDTH};
     }
     :host([surface="subtle"]) md-icon-button {
       --md-icon-button-disabled-icon-color: ${FLOATING_ICON_ON_SUBTLE};
@@ -227,8 +230,8 @@ export class IconButton extends LitElement {
     }
     :host([size="large"]) md-filled-icon-button {
       --md-filled-icon-button-container-shape: 16px;
-      --md-filled-icon-button-container-width: 80px;
-      --md-filled-icon-button-container-height: 64px;
+      --md-filled-icon-button-container-width: ${LARGE_CONTAINER_WIDTH};
+      --md-filled-icon-button-container-height: ${LARGE_CONTAINER_HEIGHT};
       --md-filled-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       margin: 0;
     }
