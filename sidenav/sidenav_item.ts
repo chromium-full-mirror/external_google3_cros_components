@@ -349,6 +349,7 @@ export class SidenavItem extends LitElement {
     tabIndex: {attribute: false},
     layer: {type: Number, reflect: true},
     inLayered: {type: Boolean, reflect: true},
+    ignoreLayer: {type: Boolean},
     hasIcon: {type: Boolean, reflect: true},
     role: {type: String, reflect: true},
     // Aria properties are forwarded to the `li` element and should not be
@@ -436,6 +437,12 @@ export class SidenavItem extends LitElement {
   layer: number;
 
   /**
+   * Always render as if layer is 0.
+   * @export
+   */
+  ignoreLayer: boolean;
+
+  /**
    * Whether an icon has been slotted. CSS cannot distinguish slots that have
    * slotted items, so we check manually and set a class.
    * @export
@@ -488,6 +495,7 @@ export class SidenavItem extends LitElement {
     this.label = '';
     this.tabIndex = -1;
     this.layer = 0;
+    this.ignoreLayer = false;
     this.hasIcon = false;
     this.inLayered = false;
     this.role = 'none';
@@ -537,10 +545,11 @@ export class SidenavItem extends LitElement {
 
   override render() {
     const showExpandIcon = this.hasChildren();
+    const effectiveLayer = this.ignoreLayer ? 0 : this.layer;
     const treeRowStyles = {
       /** @export */
       paddingInlineStart:
-          `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${this.layer}px))`,
+          `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${effectiveLayer}px))`,
     };
 
     const treeRowClasses = {'tree-row': true, 'has-icon': this.hasIcon};
