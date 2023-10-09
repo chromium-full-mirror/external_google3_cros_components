@@ -101,6 +101,12 @@ const ITEM_GAP = css`8px`;
 /** Selects a host that is in a layered Sidenav. */
 const LAYERED_SELECTOR = css`:host(:is([inLayered], [mayHaveChildren]))`;
 
+// The #tree-item blocks clicks from reaching the host, to prevent clicks on
+// empty space between children from triggering the item.
+function stopPropagation(e: Event) {
+  e.stopPropagation();
+}
+
 /** An item for a ChromeOS compliant sidenav element. */
 export class SidenavItem extends LitElement {
   /** @nocollapse */
@@ -549,7 +555,8 @@ export class SidenavItem extends LitElement {
           aria-labelledby="tree-label"
           aria-selected=${this.enabled}
           aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
-          aria-disabled=${this.disabled}>
+          aria-disabled=${this.disabled}
+          @click=${stopPropagation}>
         <!-- TODO: b/302435119 - Use cros-tooltip instead of title. -->
         <button
             id="tree-row"
