@@ -8,7 +8,7 @@ import '@material/web/menu/menu.js';
 import '@material/web/focus/md-focus-ring.js';
 
 import {Corner, FocusState, MdMenu, Menu as MenuInterface} from '@material/web/menu/menu.js';
-import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
  * A chromeOS menu component.
@@ -42,6 +42,18 @@ export class Menu extends LitElement implements MenuInterface {
        * something visible.
        */
       display: flex;
+    }
+    md-menu:not([open]) {
+      /*
+       * Makes menu non-tab-focusable when closed. We can do this as long as
+       * there  is no animation set on menu as this might interfere with the
+       * animation.
+       *
+       * Additionally we don't set tabindex on the menu when open as submenus
+       * programmatically call .focus() when this.open still might not reflect
+       * the actual state of the menu being open.
+       */
+      display: none;
     }
     md-focus-ring {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
@@ -253,7 +265,7 @@ export class Menu extends LitElement implements MenuInterface {
     return html`
       <md-menu
           id="menu"
-          tabindex=${this.open ? 0 : nothing}
+          tabindex="0"
           .anchorElement=${this.anchorElement}
           .open=${this.open}
           .hasOverflow=${this.hasOverflow}
