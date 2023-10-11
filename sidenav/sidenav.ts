@@ -76,6 +76,7 @@ export class Sidenav extends LitElement {
   /** @nocollapse */
   static override properties = {
     doubleclickExpands: {type: Boolean, reflect: true},
+    allowNoEnabled: {type: Boolean, reflect: true},
     role: {type: String, reflect: true},
   };
 
@@ -89,14 +90,17 @@ export class Sidenav extends LitElement {
 
   /**
    * Return the enabled tree item. If there are items, an enabled item always
-   * exists.
+   * exists, unless `allowNoEnabled` is true.
    */
   get enabledItem(): SidenavItem|null {
     return this.items.find(item => item.enabled) || null;
   }
-  /** Setting this to null is a noop. */
+  /** Setting this to null is a noop, unless `allowNoEnabled` is true. */
   set enabledItem(item: SidenavItem|null) {
-    if (item) this.enableItem(item);
+    if (!item && !this.allowNoEnabled) {
+      throw new Error('Setting enabledItem to null is disallowed.');
+    }
+    this.enableItem(item);
   }
 
   /**
@@ -137,6 +141,12 @@ export class Sidenav extends LitElement {
   doubleclickExpands: boolean;
 
   /**
+   * Whether double-clicking expands the tree.
+   * @export
+   */
+  allowNoEnabled: boolean;
+
+  /**
    * The `selectedItem` is the item that the user navigated to. If the user
    * hasn't navigated, this is the enabled item. The `selectedItem` is the item
    * that should receive focus when the sidenav receives focus. There should
@@ -169,12 +179,12 @@ export class Sidenav extends LitElement {
   constructor() {
     super();
     this.doubleclickExpands = false;
+    this.allowNoEnabled = false;
     this.role = 'navigation';
 
     // Listen for changes to children, to update the Sidenav's state if
     // necessary.
     this.itemAttributeObserver.observe(this, ATTRIBUTE_OBSERVER_CONFIG);
-
   }
 
   override render() {
@@ -216,11 +226,16 @@ export class Sidenav extends LitElement {
       child.ariaPosInSet = `${i + 1}`;
     });
 
-    // The sidenav must always have an enabled item. This also ensures that it
-    // has a selected/tabbable item.
+    // The sidenav must always have a selected item, unless `allowNoEnabled`.
     if (!this.items.some(item => item.enabled) &&
-        this.selectableItems.length > 0) {
+        this.selectableItems.length > 0 && !this.allowNoEnabled) {
+      // Enabling an item also makes it the selected item.
       this.enableItem(castExists(this.selectableItems[0]));
+    }
+
+    // The sidenav must always have a selected item.
+    if (!this.selectedItem && this.selectableItems.length > 0) {
+      this.selectItem(castExists(this.selectableItems[0]));
     }
 
     this.updateLayered();
@@ -388,7 +403,7 @@ export class Sidenav extends LitElement {
    * also un-enable the previously enabled tree item to make sure at most
    * one tree item is enabled in the tree.
    */
-  private enableItem(itemToEnable: SidenavItem) {
+  private enableItem(itemToEnable: SidenavItem|null) {
     const previousEnabledItem =
         this.items.find(item => item.enabled && item !== itemToEnable) || null;
 
@@ -396,9 +411,12 @@ export class Sidenav extends LitElement {
       previousEnabledItem.enabled = false;
     }
 
-    itemToEnable.enabled = true;
-    this.selectItem(itemToEnable);
-    (itemToEnable as unknown as ExtendedElement).scrollIntoViewIfNeeded(false);
+    if (itemToEnable) {
+      itemToEnable.enabled = true;
+      this.selectItem(itemToEnable);
+      (itemToEnable as unknown as ExtendedElement)
+          .scrollIntoViewIfNeeded(false);
+    }
 
     const enabledChangeEvent: SidenavEnabledChangedEvent =
         new CustomEvent(Sidenav.events.SIDENAV_ENABLED_CHANGED, {
