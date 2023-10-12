@@ -11,7 +11,7 @@ import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {classMap} from 'lit/directives/class-map';
 import {ifDefined} from 'lit/directives/if-defined';
-import {styleMap} from 'lit/directives/style-map';
+import {StyleInfo, styleMap} from 'lit/directives/style-map';
 
 import {castExists} from '../helpers/helpers';
 
@@ -128,7 +128,7 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    .tree-row,
+    #tree-row,
     .md-ripple {
       align-items: center;
       background: none;
@@ -150,7 +150,7 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    .tree-row:focus-visible {
+    #tree-row:focus-visible {
       outline: none;
     }
 
@@ -161,22 +161,22 @@ export class SidenavItem extends LitElement {
       --md-focus-ring-width: 2px;
     }
 
-    :host([enabled]) .tree-row {
+    :host([enabled]) #tree-row {
       background-color: var(--cros-sys-primary);
       color: var(--cros-sys-on_primary);
     }
 
-    :host([disabled]) .tree-row {
+    :host([disabled]) #tree-row {
       color: var(--cros-sys-disabled);
       pointer-events: none;
     }
 
-    :host([error]) .tree-row {
+    :host([error]) #tree-row {
       background-color: var(--cros-sys-error_container);
       color: var(--cros-sys-on_error_container);
     }
 
-    :host-context(.pointer-active) .tree-row:not(:active) {
+    :host-context(.pointer-active) #tree-row:not(:active) {
       cursor: default;
     }
 
@@ -290,7 +290,7 @@ export class SidenavItem extends LitElement {
     }
 
     /* We need to ensure that even empty labels take up space */
-    .tree-label:empty::after {
+    #tree-label:empty::after {
       content: ' ';
       white-space: pre;
     }
@@ -546,13 +546,13 @@ export class SidenavItem extends LitElement {
   override render() {
     const showExpandIcon = this.hasChildren();
     const effectiveLayer = this.ignoreLayer ? 0 : this.layer;
-    const treeRowStyles = {
+    const treeRowStyles: StyleInfo = {
       /** @export */
-      paddingInlineStart:
+      'paddingInlineStart':
           `max(0px, calc(${TREE_ITEM_INDENT_PX} * ${effectiveLayer}px))`,
     };
 
-    const treeRowClasses = {'tree-row': true, 'has-icon': this.hasIcon};
+    const treeRowClasses = {'has-icon': this.hasIcon};
 
     return html`
       <li
