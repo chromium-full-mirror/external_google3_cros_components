@@ -113,6 +113,7 @@ export class SidenavItem extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: block;
+      margin-top: ${ITEM_GAP};
     }
 
     li {
@@ -124,7 +125,6 @@ export class SidenavItem extends LitElement {
       border-bottom: 1px solid var(--cros-separator-color);
       content: '';
       display: block;
-      margin: ${ITEM_GAP} 0;
       width: 100%;
     }
 
@@ -141,7 +141,6 @@ export class SidenavItem extends LitElement {
       display: flex;
       font: var(--cros-button-2-font);
       height: 40px;
-      margin-top: ${ITEM_GAP};
       padding-inline-end: ${LABEL_TRAILING_MARGIN};
       position: relative;
       text-align: start;
@@ -298,7 +297,7 @@ export class SidenavItem extends LitElement {
     ul.tree-children {
       height: 0px;
       list-style: none;
-      margin: 0 0 ${ITEM_GAP} 0;
+      margin: 0;
       outline: none;
       overflow: hidden;
       padding: 0;

@@ -72,6 +72,10 @@ export class Sidenav extends LitElement {
         margin: 0;
         padding: 0;
       }
+
+      slot::slotted(cros-sidenav-item:first-child) {
+        margin-top: 0;
+      }
   `;
   /** @nocollapse */
   static override properties = {
