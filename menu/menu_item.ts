@@ -105,6 +105,17 @@ export class MenuItem extends LitElement implements MenuItemType {
     #headline {
       white-space: nowrap;
     }
+
+    :host-context([dir=rtl]) ::slotted(:is(
+      [slot="start-icon"],
+      [slot="end-icon"]
+    )) {
+      transform: scaleX(-1);
+    }
+
+    :host-context([dir=rtl]) cros-icon {
+      transform: scaleX(-1);
+    }
   `;
 
   static override shadowRootOptions = {
