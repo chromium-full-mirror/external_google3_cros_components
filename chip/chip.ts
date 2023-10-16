@@ -21,8 +21,6 @@ export class Chip extends LitElement {
   /** @export */
   disabled: boolean;
   /** @export */
-  selected: boolean;
-  /** @export */
   label: string;
   /** @export */
   type: 'filter'|'input';
@@ -168,6 +166,27 @@ export class Chip extends LitElement {
     trailingIcon: {type: Boolean},
     avatar: {type: Boolean},
   };
+
+  /** @export */
+  set selected(value) {
+    // Selected only makes sense for filter chips.
+    if (this.type !== 'filter') {
+      return;
+    }
+    // Set may be called before shadowroot exists - await updateComplete to
+    // ensure shadowroot exists.
+    this.updateComplete.then(
+        () => this.shadowRoot!.querySelector('md-filter-chip')!.selected =
+            value);
+    // No need to requestupdate since this is a property of the child.
+  }
+
+  /** @export */
+  get selected() {
+    // Update needs to use this to calculate the old value even when shadowroot
+    // doesn't exist.
+    return this.shadowRoot?.querySelector('md-filter-chip')?.selected ?? false;
+  }
 
   constructor() {
     super();
