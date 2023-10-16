@@ -74,9 +74,7 @@ export class MenuItem extends LitElement implements MenuItemType {
 
     ::slotted(:is(
       [slot="start"],
-      [slot="start-icon"],
       [slot="end"],
-      [slot="end-icon"]
     )) {
       color: var(--cros-sys-on_surface);
       height: 20px;
@@ -107,8 +105,8 @@ export class MenuItem extends LitElement implements MenuItemType {
     }
 
     :host-context([dir=rtl]) ::slotted(:is(
-      [slot="start-icon"],
-      [slot="end-icon"]
+      [slot="start"],
+      [slot="end"]
     )) {
       transform: scaleX(-1);
     }
@@ -233,14 +231,14 @@ export class MenuItem extends LitElement implements MenuItemType {
         this.startSlot) {
       const startItems = this.startSlot.assignedElements();
       startItems.forEach((startItem) => {
-        startItem.setAttribute('slot', 'start-icon');
+        startItem.setAttribute('slot', 'start');
       });
     }
     if (changedProperties.has('itemEnd') && this.itemEnd === 'icon' &&
         this.endSlot) {
       const endItems = this.endSlot.assignedElements();
       endItems.forEach((endItem) => {
-        endItem.setAttribute('slot', 'end-icon');
+        endItem.setAttribute('slot', 'end');
       });
     }
   }
@@ -317,7 +315,7 @@ export class MenuItem extends LitElement implements MenuItemType {
       case 'icon':
         endSlot = html`
           <slot
-              name="end-icon"
+              name="end"
               slot="end"
               class="slot-end"
               aria-hidden="true">
@@ -355,8 +353,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     let startSlot = null;
     if (this.itemStart === 'icon') {
       startSlot = html`
-        <slot name="start" slot="start"></slot>
-        <slot name="start-icon" slot="start" aria-hidden="true"></slot>
+        <slot name="start" slot="start" aria-hidden="true"></slot>
       `;
     }
     return html`
