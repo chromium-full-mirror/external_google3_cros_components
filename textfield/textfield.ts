@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/textfield/outlined-text-field';
+import '@material/web/textfield/outlined-text-field.js';
 
-import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field';
+import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 
 /**
