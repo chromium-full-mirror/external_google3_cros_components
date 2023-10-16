@@ -11,6 +11,13 @@ import '../switch/switch';
 import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
+const CHECKED_ICON = html`
+  <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.7071 7.29289C13.3166 6.90237 12.6834 6.90237 12.2929 7.29289L9 10.5858L7.70711 9.29289C7.31658 8.90237 6.68342 8.90237 6.29289 9.29289C5.90237 9.68342 5.90237 10.3166 6.29289 10.7071L8.29289 12.7071C8.68342 13.0976 9.31658 13.0976 9.70711 12.7071L13.7071 8.70711C14.0976 8.31658 14.0976 7.68342 13.7071 7.29289Z"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM10 16C13.3137 16 16 13.3137 16 10C16 6.68629 13.3137 4 10 4C6.68629 4 4 6.68629 4 10C4 13.3137 6.68629 16 10 16Z"/>
+  </svg>
+`;
+
 /**
  * A cros compliant menu-item component for use in cros-menu.
  * @fires trigger Fired when the user clicks on or otherwise activates the menu
@@ -58,12 +65,10 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-focus-ring-duration: 0s;
       --md-focus-ring-width: 2px;
     }
-    :host {
-      display: inline block;
-    }
 
-    :host([checked]) cros-icon {
-      color: var(--cros-sys-primary);
+    :host([checked]) #checked-icon {
+      display: inline-block;
+      fill: var(--cros-sys-primary);
       height: 20px;
       width: 20px;
     }
@@ -111,8 +116,8 @@ export class MenuItem extends LitElement implements MenuItemType {
       transform: scaleX(-1);
     }
 
-    :host-context([dir=rtl]) cros-icon {
-      transform: scaleX(-1);
+    :host-context([dir=rtl]) #checked-icon {
+      transform: scaleX(1);
     }
   `;
 
@@ -294,12 +299,7 @@ export class MenuItem extends LitElement implements MenuItemType {
   // slotted element via cros-menu-item.
   private getEndSlot() {
     if (this.checked) {
-      return html`
-          <cros-icon
-              slot="end"
-              class="slot-end"
-              aria-hidden="true">
-          </cros-icon>`;
+      return html`<div id="checked-icon" slot="end">${CHECKED_ICON}</div>`;
     }
     let endSlot;
     switch (this.itemEnd) {
