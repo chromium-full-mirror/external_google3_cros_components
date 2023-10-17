@@ -323,7 +323,7 @@ export class Sidenav extends LitElement {
     const selectableItems = this.selectableItems;
     const currentIndex = selectableItems.findIndex(i => i === selectedItem);
 
-    if (e.ctrlKey || e.repeat) {
+    if (e.ctrlKey) {
       return;
     }
 
