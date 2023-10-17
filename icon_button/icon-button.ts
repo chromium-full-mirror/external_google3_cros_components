@@ -124,7 +124,7 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-icon-size: var(--cros-icon-button-icon-size, 24px);
       margin: 0;
     }
-    :host([surface="image"]) md-filled-tonal-icon-button {
+    :host([surface="image"][buttonStyle="filled"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-color: ${
       FILLED_CONTAINER_ON_IMAGE};
       --md-filled-tonal-icon-button-focus-icon-color: ${FILLED_ICON_ON_IMAGE};
@@ -136,6 +136,18 @@ export class IconButton extends LitElement {
       --md-filled-tonal-icon-button-selected-pressed-icon-color: ${
       FILLED_ICON_ON_IMAGE};
     }
+    :host([surface="image"][buttonStyle="floating"]) md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-color: rgba(var(--cros-sys-black-rgb), 0.6);
+      --md-filled-tonal-icon-button-focus-icon-color: ${FLOATING_ICON_ON_IMAGE};
+      --md-filled-tonal-icon-button-hover-icon-color: ${FLOATING_ICON_ON_IMAGE};
+      --md-filled-tonal-icon-button-icon-color: ${FLOATING_ICON_ON_IMAGE};
+      --md-filled-tonal-icon-button-pressed-icon-color: ${
+      FLOATING_ICON_ON_IMAGE};
+      --md-filled-tonal-icon-button-selected-focus-icon-color: ${
+      FLOATING_ICON_ON_IMAGE};
+      --md-filled-tonal-icon-button-selected-pressed-icon-color: ${
+      FLOATING_ICON_ON_IMAGE};
+      }
     :host([shape="circle"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 100vmax;
     }
@@ -184,15 +196,6 @@ export class IconButton extends LitElement {
       --md-icon-button-icon-color: ${FLOATING_ICON_ON_PROMINENT};
       --md-icon-button-pressed-icon-color: ${FLOATING_ICON_ON_PROMINENT};
       --md-icon-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_prominent);
-    }
-    :host([surface="image"]) md-icon-button {
-      --md-icon-button-disabled-icon-color: ${FLOATING_ICON_ON_IMAGE};
-      --md-icon-button-focus-icon-color: ${FLOATING_ICON_ON_IMAGE};
-      --md-icon-button-hover-icon-color: ${FLOATING_ICON_ON_IMAGE};
-      --md-icon-button-hover-state-layer-color: rgba(255, 255, 255, 0.06);
-      --md-icon-button-icon-color: ${FLOATING_ICON_ON_IMAGE};
-      --md-icon-button-pressed-icon-color: ${FLOATING_ICON_ON_IMAGE};
-      --md-icon-button-pressed-state-layer-color: rgba(255, 255, 255, 0.08);
     }
     :host([shape="circle"]) md-icon-button {
       --md-icon-button-state-layer-shape: 100vmax;
@@ -340,7 +343,7 @@ export class IconButton extends LitElement {
           </md-filled-icon-button>`;
     }
 
-    if (this.buttonStyle === 'floating') {
+    if (this.buttonStyle === 'floating' && this.surface !== 'image') {
       return html`
           <md-icon-button
               ?disabled=${this.disabled}
