@@ -20,6 +20,10 @@ export class Tabs extends LitElement {
       display: inline-block;
       font: var(--cros-body-0-font);
     }
+
+    md-tabs {
+      --md-divider-color: transparent;
+    }
   `;
 
   /**
