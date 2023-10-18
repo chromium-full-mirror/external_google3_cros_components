@@ -30,22 +30,47 @@ function renderTick() {
 
 /** A chromeOS compliant card. */
 export class Card extends LitElement {
-  /** @nocollapse */
+  /**
+   * Note about #content display: Because `display: block` / `inline-block` resize
+   * depending on any applicable line-height they often don't neatly wrap user
+   * content. Instead we use flex here with direction column to "emulate"
+   * `display: block` while ignoring line-height. Users are free to set this
+   * to `block` via the shadow part and deal with the line-height sizing
+   * themselves if they wish, but by default we want this to tightly wrap
+   * user content exactly.
+   * @nocollapse
+   */
   static override styles: CSSResultGroup = css`
     :host {
       color: var(--cros-sys-on_surface);
-      display: inline-block;
+      display: block;
       font: var(--cros-body-0-font);
+      width: fit-content;
+      height: fit-content;
+      min-width: 50px;
+      min-height: 50px;
     }
 
     #container {
       align-items: center;
       background-color: var(--cros-card-background-color, var(--cros-sys-app_base));
       border-radius: 12px;
+      box-sizing: border-box;
       display: grid;
-      outline: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));;
+      outline: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));
       padding: var(--cros-card-padding, 16px);
       position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #content {
+      border-radius: inherit;
+      width: inherit;
+      height: inherit;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     :host([cardStyle="filled"]) #container {
@@ -132,7 +157,9 @@ export class Card extends LitElement {
               ?disabled=${this.disabled}>
           </md-focus-ring>
           ${renderTick()}
-          <slot></slot>
+          <div id="content" part="content">
+            <slot></slot>
+          </div>
         </div>
     `;
   }
