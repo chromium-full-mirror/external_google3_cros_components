@@ -63,8 +63,10 @@ export class Textfield extends LitElement {
     md-outlined-text-field {
       /** Base styles */
       --md-outlined-field-supporting-text-color: var(--cros-sys-on_surface);
-      --md-outlined-field-supporting-text-leading-space: 0px;
-      --md-outlined-field-supporting-text-trailing-space: 0px;
+      --md-outlined-field-supporting-text-leading-space: ${
+      MD_TEXTFIELD_OUTLINE_WIDTH}px;
+      --md-outlined-field-supporting-text-trailing-space: ${
+      MD_TEXTFIELD_OUTLINE_WIDTH}px;
       --md-outlined-field-supporting-text-top-space: 8px;;
       --md-outlined-text-field-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-container-shape-end-end: 8px;
@@ -134,6 +136,7 @@ export class Textfield extends LitElement {
     #visible-label {
       font: var(--cros-label-1-font);
       padding-bottom: 8px;
+      padding-inline-start: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
     }
 
     #main-container {
