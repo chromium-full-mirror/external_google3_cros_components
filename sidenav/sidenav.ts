@@ -46,6 +46,14 @@ function isSelectable(item: SidenavItem): boolean {
 }
 
 /**
+ * True iff the user has navigated to `item` or has not navigated and `item`
+ * is enabled.
+ */
+function isSelected(item: SidenavItem): boolean {
+  return item.tabIndex === 0;
+}
+
+/**
  * <cros-sidenav> is the container of the <cros-sidenav-item> elements. An
  * example DOM structure is like this:
  *
@@ -130,7 +138,7 @@ export class Sidenav extends LitElement {
    * disabled.
    */
   get selectableItems(): SidenavItem[] {
-    return this.items.filter(e => isSelectable(e) || e === this.selectedItem);
+    return this.items.filter(e => isSelectable(e) || isSelected(e));
   }
 
   /** The default unnamed slot to let consumer pass children tree items. */
@@ -157,7 +165,7 @@ export class Sidenav extends LitElement {
    * always be an item to focus, unless there are no items.
    */
   private get selectedItem(): SidenavItem|null {
-    return this.items.find(item => item.tabIndex === 0) || null;
+    return this.items.find(isSelected) || null;
   }
 
   /**
@@ -442,7 +450,7 @@ export class Sidenav extends LitElement {
    */
   private selectItem(itemToSelect: SidenavItem) {
     const oldSelectedItem =
-        this.items.find(item => item.tabIndex === 0 && item !== itemToSelect);
+        this.items.find(item => isSelected(item) && item !== itemToSelect);
 
     if (oldSelectedItem) oldSelectedItem.tabIndex = -1;
     itemToSelect.tabIndex = 0;
