@@ -293,6 +293,7 @@ export class IconButton extends LitElement {
     md-filled-icon-button::part(focus-ring),
     md-icon-button::part(focus-ring) {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: 2px;
     }
     :host([surface="prominent"]) md-filled-tonal-icon-button::part(focus-ring),
     :host([surface="prominent"]) md-filled-icon-button::part(focus-ring),
