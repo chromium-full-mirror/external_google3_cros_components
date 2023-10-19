@@ -311,6 +311,10 @@ export class Textfield extends LitElement {
     `;
   }
 
+  focusTextfield() {
+    this.mdTextfield!.focus();
+  }
+
   private maybeRenderLabel() {
     return this.label ?
         html`<div id="visible-label" class="text-labels">${this.label}</div>` :
