@@ -42,6 +42,12 @@ const MD_FIELD_LEFT_RIGHT_SPACE_PX =
     css`${DEFAULT_LEFT_RIGHT_SPACE + MD_TEXTFIELD_OUTLINE_WIDTH}px`;
 
 /**
+ * To account for the extra spacing around the textfield background and the
+ * focus outline, we have to increase the corner radius by the outline width.
+ */
+const MD_TEXTFIELD_CONTAINER_CORNER_RADIUS =
+    css`${8 + MD_TEXTFIELD_OUTLINE_WIDTH}px`;
+/**
  * Textfield component. See the specs here:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3227%3A25882&t=50tDpMdSJky6eT9O-0
  */
@@ -69,10 +75,14 @@ export class Textfield extends LitElement {
       MD_TEXTFIELD_OUTLINE_WIDTH}px;
       --md-outlined-field-supporting-text-top-space: 8px;;
       --md-outlined-text-field-focus-caret-color: var(--cros-sys-primary);
-      --md-outlined-text-field-container-shape-end-end: 8px;
-      --md-outlined-text-field-container-shape-end-start: 8px;
-      --md-outlined-text-field-container-shape-start-end: 8px;
-      --md-outlined-text-field-container-shape-start-start: 8px;
+      --md-outlined-text-field-container-shape-end-end: ${
+      MD_TEXTFIELD_CONTAINER_CORNER_RADIUS};
+      --md-outlined-text-field-container-shape-end-start: ${
+      MD_TEXTFIELD_CONTAINER_CORNER_RADIUS};
+      --md-outlined-text-field-container-shape-start-end: ${
+      MD_TEXTFIELD_CONTAINER_CORNER_RADIUS};
+      --md-outlined-text-field-container-shape-start-start: ${
+      MD_TEXTFIELD_CONTAINER_CORNER_RADIUS};
       --md-outlined-text-field-bottom-space: 8px;
       --md-outlined-text-field-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-input-text-placeholder-color: var(--cros-sys-secondary);
@@ -173,6 +183,12 @@ export class Textfield extends LitElement {
       color: ${ICON_COLOR};
     }
   `;
+
+  /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
 
   /** @nocollapse */
   static override properties = {
