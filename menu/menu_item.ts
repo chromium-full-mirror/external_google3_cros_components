@@ -5,7 +5,7 @@
  */
 
 import '@material/web/menu/menu-item';
-import '../icon/icon';
+import '../placeholder_icon/placeholder-icon';
 import '../switch/switch';
 
 import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';

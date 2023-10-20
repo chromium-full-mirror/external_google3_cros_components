@@ -5,7 +5,7 @@
  */
 
 import '@material/web/button/text-button.js';
-import '../icon/icon';
+import '../placeholder_icon/placeholder-icon';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
