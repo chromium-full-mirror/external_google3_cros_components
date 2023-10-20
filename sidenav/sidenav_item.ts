@@ -127,7 +127,7 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    #tree-row button,
+    #tree-row-button,
     .md-ripple {
       align-items: center;
       background: none;
@@ -159,22 +159,22 @@ export class SidenavItem extends LitElement {
       --md-focus-ring-width: 2px;
     }
 
-    :host([enabled]) #tree-row button {
+    :host([enabled]) #tree-row-button {
       background-color: var(--cros-sys-primary);
       color: var(--cros-sys-on_primary);
     }
 
-    :host([disabled]) #tree-row button {
+    :host([disabled]) #tree-row-button {
       color: var(--cros-sys-disabled);
       pointer-events: none;
     }
 
-    :host([error]) #tree-row button {
+    :host([error]) #tree-row-button {
       background-color: var(--cros-sys-error_container);
       color: var(--cros-sys-on_error_container);
     }
 
-    :host-context(.pointer-active) #tree-row button:not(:active) {
+    :host-context(.pointer-active) #tree-row-button:not(:active) {
       cursor: default;
     }
 
@@ -569,16 +569,17 @@ export class SidenavItem extends LitElement {
             aria-disabled=${this.disabled}
             title="${this.label}"
             @click=${this.onRowClicked}>
-          <button
+            <button
+              id="tree-row-button"
               tabindex=${this.tabIndex}
               class=${classMap(treeRowClasses)}
               style=${styleMap(treeRowStyles)}>
             <md-ripple
-                for="tree-row"
+                for="tree-row-button"
                 ?disabled=${this.disabled}>
             </md-ripple>
             <md-focus-ring
-                for="tree-row"
+                for="tree-row-button"
                 ?disabled=${this.disabled}>
             </md-focus-ring>
             <!-- TODO: b/231672472 - Implement icon from spec -->
