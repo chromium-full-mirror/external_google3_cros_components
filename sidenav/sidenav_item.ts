@@ -10,7 +10,6 @@ import '@material/web/focus/md-focus-ring.js';
 import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {classMap} from 'lit/directives/class-map';
-import {ifDefined} from 'lit/directives/if-defined';
 import {StyleInfo, styleMap} from 'lit/directives/style-map';
 
 import {castExists} from '../helpers/helpers';
@@ -128,7 +127,7 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    #tree-row,
+    #tree-row button,
     .md-ripple {
       align-items: center;
       background: none;
@@ -149,7 +148,7 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    #tree-row:focus-visible {
+    #tree-row button:focus-visible {
       outline: none;
     }
 
@@ -160,22 +159,22 @@ export class SidenavItem extends LitElement {
       --md-focus-ring-width: 2px;
     }
 
-    :host([enabled]) #tree-row {
+    :host([enabled]) #tree-row button {
       background-color: var(--cros-sys-primary);
       color: var(--cros-sys-on_primary);
     }
 
-    :host([disabled]) #tree-row {
+    :host([disabled]) #tree-row button {
       color: var(--cros-sys-disabled);
       pointer-events: none;
     }
 
-    :host([error]) #tree-row {
+    :host([error]) #tree-row button {
       background-color: var(--cros-sys-error_container);
       color: var(--cros-sys-on_error_container);
     }
 
-    :host-context(.pointer-active) #tree-row:not(:active) {
+    :host-context(.pointer-active) #tree-row button:not(:active) {
       cursor: default;
     }
 
@@ -197,7 +196,8 @@ export class SidenavItem extends LitElement {
       display: unset;
     }
 
-    li[aria-expanded] .expand-icon {
+
+    [aria-expanded] .expand-icon {
       visibility: visible;
     }
 
@@ -259,7 +259,7 @@ export class SidenavItem extends LitElement {
     }
 
     ${LAYERED_SELECTOR} .has-icon .tree-label,
-    li[aria-expanded] .tree-label,
+    :host([expanded]) .tree-label,
     .has-icon + .tree-label, {
       margin-inline-start: ${ICON_LABEL_GAP};
     }
@@ -350,7 +350,6 @@ export class SidenavItem extends LitElement {
     inLayered: {type: Boolean, reflect: true},
     ignoreLayer: {type: Boolean},
     hasIcon: {type: Boolean, reflect: true},
-    role: {type: String, reflect: true},
     // Aria properties are forwarded to the `li` element and should not be
     // reflected on `cros-sidenav-item`.
     ariaSetSize: {type: String},
@@ -497,7 +496,6 @@ export class SidenavItem extends LitElement {
     this.ignoreLayer = false;
     this.hasIcon = false;
     this.inLayered = false;
-    this.role = 'none';
   }
 
   /** The child tree items which can be tabbed to. */
@@ -556,48 +554,51 @@ export class SidenavItem extends LitElement {
     return html`
       <li
           id="tree-item"
-          role="treeitem"
-          aria-setsize=${this.ariaSetSize ?? nothing}
-          aria-posinset=${this.ariaPosInSet ?? nothing}
-          aria-level=${this.layer + 1}
-          aria-labelledby="tree-label"
-          aria-selected=${this.enabled}
-          aria-expanded=${ifDefined(showExpandIcon ? this.expanded : undefined)}
-          aria-disabled=${this.disabled}
+          role="none"
           @click=${stopPropagation}>
         <!-- TODO: b/302435119 - Use cros-tooltip instead of title. -->
-        <button
+        <div
             id="tree-row"
-            tabindex=${this.tabIndex}
-            class=${classMap(treeRowClasses)}
-            style=${styleMap(treeRowStyles)}
+            role="treeitem"
+            aria-current=${this.enabled ? 'page' : nothing}
+            aria-setsize=${this.ariaSetSize ?? nothing}
+            aria-posinset=${this.ariaPosInSet ?? nothing}
+            aria-level=${this.layer + 1}
+            aria-labelledby="tree-label"
+            aria-expanded=${showExpandIcon ? this.expanded : nothing}
+            aria-disabled=${this.disabled}
             title="${this.label}"
             @click=${this.onRowClicked}>
-          <md-ripple
-              for="tree-row"
-              ?disabled=${this.disabled}>
-          </md-ripple>
-          <md-focus-ring
-              for="tree-row"
-              ?disabled=${this.disabled}>
-          </md-focus-ring>
-          <!-- TODO: b/231672472 - Implement icon from spec -->
-          <span
-              class="expand-icon"
-              aria-hidden="true"
-              @click=${this.onExpandIconClicked}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-              <polyline points="6 8 10 12 14 8 6 8"/>
-            </svg>
-          </span>
-          <slot
-              name="icon"
-              class=${this.hasIcon ? 'has-icon' : ''}
-              aria-hidden="true"
-              @slotchange=${this.onIconSlotChanged}>
-          </slot>
-          ${this.renderTreeLabel()}
-        </button>
+          <button
+              tabindex=${this.tabIndex}
+              class=${classMap(treeRowClasses)}
+              style=${styleMap(treeRowStyles)}>
+            <md-ripple
+                for="tree-row"
+                ?disabled=${this.disabled}>
+            </md-ripple>
+            <md-focus-ring
+                for="tree-row"
+                ?disabled=${this.disabled}>
+            </md-focus-ring>
+            <!-- TODO: b/231672472 - Implement icon from spec -->
+            <span
+                class="expand-icon"
+                aria-hidden="true"
+                @click=${this.onExpandIconClicked}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                <polyline points="6 8 10 12 14 8 6 8"/>
+              </svg>
+            </span>
+            <slot
+                name="icon"
+                class=${this.hasIcon ? 'has-icon' : ''}
+                aria-hidden="true"
+                @slotchange=${this.onIconSlotChanged}>
+            </slot>
+            ${this.renderTreeLabel()}
+          </button>
+        </div>
         <ul
             class="tree-children"
             role="group">
@@ -727,12 +728,6 @@ export class SidenavItem extends LitElement {
   }
 
   private onEnabledChanged() {
-    if (this.enabled) {
-      this.setAttribute('aria-current', 'page');
-    } else {
-      this.removeAttribute('aria-current');
-    }
-
     const event: SidenavItemEnabledChangedEvent =
         new CustomEvent(SidenavItem.events.SIDENAV_ITEM_ENABLED_CHANGED, {
           bubbles: true,
