@@ -57,11 +57,11 @@ export class Card extends LitElement {
       border-radius: 12px;
       box-sizing: border-box;
       display: grid;
+      height: 100%;
       outline: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));
       padding: var(--cros-card-padding, 16px);
       position: relative;
       width: 100%;
-      height: 100%;
     }
 
     #content {
@@ -71,6 +71,21 @@ export class Card extends LitElement {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      z-index: 1;
+    }
+
+    #background {
+      border-radius: inherit;
+      inset: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: 0;
+    }
+
+    #background slot::slotted(img) {
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
     }
 
     :host([cardStyle="filled"]) #container {
@@ -93,6 +108,7 @@ export class Card extends LitElement {
       --md-ripple-hover-opacity: 1;
       --md-ripple-pressed-color: var(--cros-card-pressed-color, var(--cros-sys-ripple_neutral_on_subtle));
       --md-ripple-pressed-opacity: 1;
+      z-index: 3;
     }
 
     md-focus-ring {
@@ -119,6 +135,7 @@ export class Card extends LitElement {
       DEFAULT_TICK_MARGIN});
       position: absolute;
       width: 20px;
+      z-index: 2;
     }
   `;
 
@@ -148,6 +165,9 @@ export class Card extends LitElement {
   override render() {
     return html`
         <div id="container" tabindex=${this.tabIndex}>
+          <div id="background" part="background">
+            <slot name="background"></slot>
+          </div>
           <md-ripple
               for="container"
               ?disabled=${this.disabled}>
