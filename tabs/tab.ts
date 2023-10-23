@@ -10,6 +10,9 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /** A chromeOS compliant tab component for use in cros-tabs. */
 export class Tab extends LitElement {
+  static override shadowRootOptions:
+      ShadowRootInit = {mode: 'open', delegatesFocus: true};
+
   /** @nocollapse */
   // TODO: b/302430637 - Make padding 8px on either side of the label.
   static override styles: CSSResultGroup = css`
@@ -19,10 +22,11 @@ export class Tab extends LitElement {
 
     md-primary-tab {
       /** Base styles */
+      --md-primary-tab-active-indicator-color: var(--cros-sys-primary);
+      --md-primary-tab-active-indicator-height: 4px;
+      --md-primary-tab-active-label-text-color: var(--cros-sys-primary);
       --md-primary-tab-container-color: transparent;
       --md-primary-tab-container-shape: 8px;
-      --md-primary-tab-active-indicator-color: var(--cros-sys-primary);
-      --md-primary-tab-active-label-text-color: var(--cros-sys-primary);
       --md-primary-tab-label-text-color: var(--cros-sys-on_surface_variant);
       --md-primary-tab-label-text-font: var(--cros-button-1-font-family);
 
@@ -41,6 +45,15 @@ export class Tab extends LitElement {
       --md-primary-tab-pressed-label-text-color: var(--cros-sys-primary);
       --md-primary-tab-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-primary-tab-pressed-state-layer-opacity: 1;
+    }
+
+    md-primary-tab::part(focus-ring) {
+      --md-focus-ring-active-width: 2px;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-duration: 0s;
+      --md-focus-ring-shape: 8px;
+      --md-focus-ring-width: 2px;
+      margin-bottom: 0;
     }
   `;
 
