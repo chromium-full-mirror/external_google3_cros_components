@@ -60,16 +60,13 @@ export class Tab extends LitElement {
   /** @nocollapse */
   static override properties = {
     active: {type: Boolean, reflect: true},
-    tabName: {type: String},
   };
 
   active: boolean;
-  tabName: string;
 
   constructor() {
     super();
     this.active = false;
-    this.tabName = '';
   }
 
   override firstUpdated() {
@@ -79,7 +76,7 @@ export class Tab extends LitElement {
   override render() {
     return html`
       <md-primary-tab ?active=${this.active}>
-        ${this.tabName}
+        <slot></slot>
       </md-primary-tab>
     `;
   }
