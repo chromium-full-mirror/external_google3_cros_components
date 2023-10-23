@@ -331,6 +331,13 @@ export class Textfield extends LitElement {
     this.mdTextfield!.focus();
   }
 
+  override async getUpdateComplete() {
+    const result = await super.getUpdateComplete();
+    await this.mdTextfield?.updateComplete;
+    return result;
+  }
+
+
   private maybeRenderLabel() {
     return this.label ?
         html`<div id="visible-label" class="text-labels">${this.label}</div>` :
