@@ -26,6 +26,7 @@ export class Breadcrumb extends LitElement {
     super();
     this.size = 'default';
   }
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
       display: flex;
