@@ -123,12 +123,15 @@ export class Chip extends LitElement {
       --md-input-chip-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
       --md-input-chip-disabled-outline-color: var(--cros-sys-separator);
       --md-input-chip-disabled-outline-opacity: var(--cros-sys-opacity-disabled);
+      --md-input-chip-disabled-trailing-icon-color: var(--cros-sys-disabled);
       --md-input-chip-focus-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-focus-leading-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-focus-trailing-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-hover-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-hover-leading-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-input-chip-hover-state-layer-opacity: 1;
+      --md-input-chip-hover-trailing-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-icon-size: ${ICON_SIZE};
       --md-input-chip-label-text-font: var(--cros-button-1-font-family);
       --md-input-chip-label-text-size: var(--cros-button-1-font-size);
@@ -141,6 +144,8 @@ export class Chip extends LitElement {
       --md-input-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-input-chip-pressed-state-layer-opacity: 1;
+      --md-input-chip-pressed-trailing-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-trailing-icon-color: var(--cros-sys-on_surface);
       }
 
       :host([avatar]) md-input-chip {
