@@ -7,7 +7,6 @@
 import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
-import {MdRipple} from '@material/web/ripple/ripple.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {classMap} from 'lit/directives/class-map';
 import {StyleInfo, styleMap} from 'lit/directives/style-map';
@@ -127,8 +126,7 @@ export class SidenavItem extends LitElement {
       width: 100%;
     }
 
-    #tree-row-button,
-    .md-ripple {
+    #tree-row-button {
       align-items: center;
       background: none;
       border: none;
@@ -471,14 +469,6 @@ export class SidenavItem extends LitElement {
   private get iconSlotElement(): HTMLSlotElement {
     return castExists(
         this.renderRoot.querySelector('slot[name="icon"]') as HTMLSlotElement);
-  }
-
-  protected get ripple(): Promise<MdRipple|null> {
-    // We can't use async / await here as js does not support async getters
-    // and setters.
-    return this.updateComplete.then(() => {
-      return this.renderRoot.querySelector('md-ripple');
-    });
   }
 
   constructor() {
