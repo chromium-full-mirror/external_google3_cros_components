@@ -54,13 +54,17 @@ export class Card extends LitElement {
     #container {
       align-items: center;
       background-color: var(--cros-card-background-color, var(--cros-sys-app_base));
+      border: none;
       border-radius: 12px;
       box-sizing: border-box;
       display: grid;
+      font: inherit;
+      color: inherit;
       height: 100%;
       outline: 1px solid var(--cros-card-border-color, var(--cros-sys-separator));
       padding: var(--cros-card-padding, 16px);
       position: relative;
+      text-align: start;
       width: 100%;
     }
 
@@ -164,7 +168,7 @@ export class Card extends LitElement {
 
   override render() {
     return html`
-        <div id="container" tabindex=${this.tabIndex}>
+        <button id="container" tabindex=${this.tabIndex}>
           <div id="background" part="background">
             <slot name="background"></slot>
           </div>
@@ -180,7 +184,7 @@ export class Card extends LitElement {
           <div id="content" part="content">
             <slot></slot>
           </div>
-        </div>
+        </button>
     `;
   }
 }
