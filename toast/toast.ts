@@ -24,7 +24,6 @@ export class Toast extends LitElement {
   static override styles: CSSResultGroup = css`
     :host(:popover-open) {
       background: none;
-      box-shadow: var(--cros-elevation1-shadow);
       border: none;
       width: 100%;
     }

@@ -6,6 +6,10 @@
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+// TODO: b/301335548 - Remove these once we have elevation tokens.
+const AMBIENT_SHADOW_COLOR = css`rgba(var(--cros-sys-shadow-rgb), 0.2)`;
+const KEY_SHADOW_COLOR = css`rgba(var(--cros-sys-shadow-rgb), 0.1)`;
+
 /** The visible rendered part of a cros-toast. */
 export class ToastItem extends LitElement {
   /** @nocollapse */
@@ -17,6 +21,9 @@ export class ToastItem extends LitElement {
       background-color: var(--cros-sys-inverse_surface);
       border-radius: 12px;
       font: var(--cros-body-2-font);
+      box-shadow:
+        0px 4px 4px 0px ${AMBIENT_SHADOW_COLOR},
+        0px 0px 4px 0px ${KEY_SHADOW_COLOR};
     }
 
     #container {
