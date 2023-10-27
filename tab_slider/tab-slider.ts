@@ -15,24 +15,30 @@ export class TabSlider extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      background: rgba(var(--cros-sys-surface_variant-rgb), 0.8);
+      border-radius: 100vh;
       display: inline-block;
       font: var(--cros-body-0-font);
+      padding: 2px;
+    }
+
+    #items {
+      display: flex;
+    }
+
+    /** TODO(b/296808808) - Replace with animation. */
+    #items::slotted(cros-tab-slider-item[selected]) {
+      background: var(--cros-sys-primary);
     }
   `;
 
-  /** @export */
-  label = 'I am a TabSlider';
-
   /** @nocollapse */
-  static override properties = {
-    name: {type: String, reflect: true},
-  };
-
+  static override properties = {};
 
   override render() {
     return html`
       <div>
-        Hello, ${this.label}!
+        <slot id="items"></slot>
       </div>
     `;
   }
