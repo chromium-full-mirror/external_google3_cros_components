@@ -12,16 +12,16 @@ export class ToastItem extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
-      font: var(--cros-body-2-font);
       background-color: var(--cros-sys-inverse_surface);
       border-radius: 12px;
+      font: var(--cros-body-2-font);
     }
 
     #container {
       display: flex;
+      padding-bottom: 16px;
       padding-inline: 20px;
       padding-top: 16px;
-      padding-bottom: 16px;
       width: 336px;
     }
 

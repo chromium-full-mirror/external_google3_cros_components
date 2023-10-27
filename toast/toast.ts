@@ -22,10 +22,18 @@ declare interface ToggleEvent extends Event {
 export class Toast extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
-
     :host(:popover-open) {
+      background: none;
+      box-shadow: var(--cros-elevation1-shadow);
       border: none;
-      padding: 0px;
+      width: 100%;
+    }
+
+    #container {
+      bottom: 0px;
+      margin-left: 24px;
+      margin-bottom: 24px;
+      position: fixed;
     }
   `;
 
@@ -72,7 +80,9 @@ export class Toast extends LitElement {
 
   override render() {
     return html`
-        <cros-toast-item message=${this.message}></cros-toast-item>
+        <div id="container">
+          <cros-toast-item message=${this.message}></cros-toast-item>
+        </div>
     `;
   }
 
