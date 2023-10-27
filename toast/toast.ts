@@ -81,7 +81,18 @@ export class Toast extends LitElement {
   override render() {
     return html`
         <div id="container">
-          <cros-toast-item message=${this.message}></cros-toast-item>
+          <cros-toast-item message=${this.message}>
+            <slot
+                name="action"
+                slot="action"
+                @slotchange=${this.handleSlotChanged}>
+            </slot>
+            <slot
+                name="dismiss"
+                slot="dismiss"
+                @slotchange=${this.handleSlotChanged}>
+            </slot>
+          </cros-toast-item>
         </div>
     `;
   }
@@ -100,6 +111,16 @@ export class Toast extends LitElement {
       clearTimeout(this.pendingTimeout!);
       this.pendingTimeout = null;
     }, this.timeout);
+  }
+
+  private handleSlotChanged() {
+    const hasActionButtons =
+        this.querySelectorAll(`*[slot="action"], [slot="dismiss"]`);
+    for (const toastItem of this.shadowRoot!.querySelectorAll(
+             `cros-toast-item`)) {
+      toastItem.classList.toggle(
+          'has-action-button', hasActionButtons.length > 0);
+    }
   }
 }
 

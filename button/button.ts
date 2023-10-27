@@ -105,6 +105,10 @@ export class Button extends LitElement {
       --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
     }
 
+    :host([inverted]) md-text-button {
+      --md-text-button-label-text-color: var(--cros-sys-inverse_primary);
+    }
+
     md-text-button {
       max-width: var(--cros-button-max-width_);
       min-width: ${MIN_WIDTH};
@@ -118,6 +122,7 @@ export class Button extends LitElement {
       --md-text-button-focus-state-layer-opacity: 100%;
       --md-text-button-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-text-button-hover-state-layer-opacity: 100%;
+      --md-text-button-label-text-color: var(--cros-sys-primary);
       --md-text-button-label-text-font: var(--cros-button-2-font-family);
       --md-text-button-label-text-size: var(--cros-button-2-font-size);
       --md-text-button-label-text-line-height: var(--cros-button-2-line-height);
@@ -144,12 +149,16 @@ export class Button extends LitElement {
    */
   buttonStyle: 'primary'|'secondary'|'floating' = 'primary';
 
+  /** @export */
+  inverted = false;
+
   /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     label: {type: String, reflect: true},
     disabled: {type: Boolean, reflect: true},
     buttonStyle: {type: String, reflect: true, attribute: 'button-style'},
+    inverted: {type: Boolean, reflect: true},
   };
 
   constructor() {

@@ -11,6 +11,8 @@ export class ToastItem extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      background-color: var(--cros-sys-inverse_surface);
+      border-radius: 12px;
       display: inline-block;
       background-color: var(--cros-sys-inverse_surface);
       border-radius: 12px;
@@ -18,15 +20,27 @@ export class ToastItem extends LitElement {
     }
 
     #container {
+      align-items: center;
+      column-gap: 8px;
       display: flex;
+      justify-content: space-between;
       padding-bottom: 16px;
       padding-inline: 20px;
       padding-top: 16px;
       width: 336px;
     }
 
+    :host(.has-action-button) #container {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
     #message {
       color: var(--cros-sys-surface);
+    }
+
+    #action-container {
+      display: flex;
     }
   `;
 
@@ -50,6 +64,10 @@ export class ToastItem extends LitElement {
     return html`
       <div id="container">
         <div id="message">${this.message}</div>
+        <div id="action-container">
+          <slot name="action"></slot>
+          <slot name="dismiss"></slot>
+        </div>
       </div>
     `;
   }
