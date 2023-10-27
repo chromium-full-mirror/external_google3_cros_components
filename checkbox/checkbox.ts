@@ -85,6 +85,7 @@ export class Checkbox extends LitElement {
   static override properties = {
     checked: {type: Boolean, reflect: true},
     disabled: {type: Boolean, reflect: true},
+    ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
   };
 
   /** @nocollapse */
@@ -120,7 +121,8 @@ export class Checkbox extends LitElement {
           ?disabled=${this.disabled}
           ?checked=${this.checked}
           @change=${this.onChange}
-          touch-target="wrapper">
+          touch-target="wrapper"
+          aria-label=${this.ariaLabel || ''}>
       </md-checkbox>
     `;
   }
