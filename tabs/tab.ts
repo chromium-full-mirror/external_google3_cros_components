@@ -38,6 +38,14 @@ export class Tab extends LitElement {
       --md-primary-tab-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-primary-tab-hover-state-layer-opacity: 1;
 
+      /** Focused */
+      --md-primary-tab-active-focus-label-text-color: var(--cros-sys-primary);
+      --md-primary-tab-active-focus-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-primary-tab-active-focus-state-layer-opacity: 1;
+      --md-primary-tab-focus-label-text-color: var(--cros-sys-on_surface_variant);
+      --md-primary-tab-focus-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-primary-tab-focus-state-layer-opacity: 1;
+
       /** Pressed */
       --md-primary-tab-active-pressed-label-text-color: var(--cros-sys-primary);
       --md-primary-tab-active-pressed-state-layer-color: var(--cros-sys-ripple_primary);
