@@ -50,10 +50,26 @@ export class TabSliderItem extends LitElement {
       outline: none;
     }
 
+    :host(:not([selected])) #container:hover {
+      color: var(--cros-sys-on_surface);
+    }
+
     md-focus-ring {
       animation-duration: 0s;
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-focus-ring-width: 2px;
+    }
+
+    md-ripple {
+      display: none;
+    }
+
+    :host([selected]:active) md-ripple {
+      display: unset;
+      --md-ripple-hover-color: var(--cros-sys-ripple_primary);
+      --md-ripple-hover-opacity: 1;
+      --md-ripple-pressed-color: var(--cros-sys-ripple_primary);
+      --md-ripple-pressed-opacity: 1;
     }
   `;
 
@@ -75,6 +91,7 @@ export class TabSliderItem extends LitElement {
         <div>
           <button id="container">
             <span>${this.label}</span>
+            <md-ripple for="container"></md-ripple>
             <md-focus-ring for="container"></md-focus-ring>
           </button>
         </div>
