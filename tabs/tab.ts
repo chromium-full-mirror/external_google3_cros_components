@@ -14,13 +14,14 @@ export class Tab extends LitElement {
       ShadowRootInit = {mode: 'open', delegatesFocus: true};
 
   /** @nocollapse */
-  // TODO: b/302430637 - Make padding 8px on either side of the label.
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
     }
 
     md-primary-tab {
+      padding: 0 8px;
+
       /** Base styles */
       --md-primary-tab-active-indicator-color: var(--cros-sys-primary);
       --md-primary-tab-active-indicator-height: 4px;
