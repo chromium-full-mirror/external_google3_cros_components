@@ -21,7 +21,6 @@ export class Tabs extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
-      font: var(--cros-body-0-font);
     }
 
     md-tabs {
