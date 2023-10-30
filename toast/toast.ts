@@ -11,7 +11,7 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 /**
  * Event interface for toast toggle events. Closure fires off the wrong event
  * type that is missing these fields.
- * TODO: 307830635 - Remove once ToggleEvents are supported.
+ * TODO: b/307830635 - Remove once ToggleEvents are supported.
  */
 declare interface ToggleEvent extends Event {
   newState: 'open'|'close';
