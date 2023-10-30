@@ -79,10 +79,14 @@ export class TabSliderItem extends LitElement {
   /** @export */
   selected = false;
 
+  /** @export */
+  disabled = false;
+
   /** @nocollapse */
   static override properties = {
     label: {type: String, reflect: true},
     selected: {type: Boolean, reflect: true},
+    disabled: {type: Boolean, reflect: true},
   };
 
 
@@ -91,8 +95,11 @@ export class TabSliderItem extends LitElement {
         <div>
           <button id="container">
             <span>${this.label}</span>
-            <md-ripple for="container"></md-ripple>
-            <md-focus-ring for="container"></md-focus-ring>
+            <md-ripple for="container" ?disabled=${this.disabled}></md-ripple>
+            <md-focus-ring
+                for="container"
+                ?disabled=${this.disabled}>
+            </md-focus-ring>
           </button>
         </div>
     `;

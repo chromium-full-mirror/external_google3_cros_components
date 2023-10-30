@@ -30,6 +30,10 @@ export class TabSlider extends LitElement {
     #items::slotted(cros-tab-slider-item[selected]) {
       background: var(--cros-sys-primary);
     }
+
+    #items::slotted(cros-tab-slider-item[disabled]) {
+      display: none;
+    }
   `;
 
   /** @nocollapse */
