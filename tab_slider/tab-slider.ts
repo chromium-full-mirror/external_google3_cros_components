@@ -23,7 +23,10 @@ export class TabSlider extends LitElement {
   }
 
   get selectedItem(): TabSliderItem|null {
-    return this.items.find((item: TabSliderItem) => item.selected) || null;
+    return this.itemSlot.assignedElements()
+               .filter(isTabSliderItem)
+               .find(item => item.selected && !item.disabled) ||
+        null;
   }
 
   /** @nocollapse */
@@ -81,6 +84,11 @@ export class TabSlider extends LitElement {
    * transition animation.
    */
   setSelected(itemToSelect: TabSliderItem) {
+    if (itemToSelect.disabled) {
+      itemToSelect.selected = false;
+      return;
+    }
+
     // Unselect old items.
     for (const item of this.items) {
       if (item.selected && item !== itemToSelect) {
