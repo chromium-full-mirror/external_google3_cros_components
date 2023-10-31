@@ -307,6 +307,12 @@ export class IconButton extends LitElement {
   `;
 
   /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
+  /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     prominent: {type: Boolean, reflect: true},
