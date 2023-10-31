@@ -7,7 +7,25 @@
 import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+
+/** Type of the item triggered custom event. */
+export type TabSliderItemTriggeredEvent = CustomEvent<{
+  /** The item which has been triggered. */
+  item: TabSliderItem,
+}>;
+
+/** Type of the item.selected changed custom event. */
+export type TabSliderItemSelectedChangedEvent = CustomEvent<{
+  /** The item which has been changed. */
+  item: TabSliderItem,
+}>;
+
+/** Check if an `Element` is a sidenav item or not. */
+export function isTabSliderItem(element: unknown): element is TabSliderItem {
+  return element instanceof Element &&
+      element.tagName === 'CROS-TAB-SLIDER-ITEM';
+}
 
 /** A chromeOS compliant tab-slider. */
 export class TabSliderItem extends LitElement {
@@ -89,6 +107,13 @@ export class TabSliderItem extends LitElement {
     disabled: {type: Boolean, reflect: true},
   };
 
+  /** @nocollapse */
+  static events = {
+    /** Triggers when the `selected` property changes. */
+    TAB_SLIDER_ITEM_SELECTED_CHANGED: 'cros-tab-slider-item-selected-changed',
+    /** Triggers when an item is clicked or equivalent. */
+    TAB_SLIDER_ITEM_TRIGGERED: 'cros-tab-slider-item-triggered',
+  } as const;
 
   override render() {
     return html`
@@ -104,6 +129,28 @@ export class TabSliderItem extends LitElement {
         </div>
     `;
   }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', () => {
+      this.dispatchEvent(new CustomEvent(
+          TabSliderItem.events.TAB_SLIDER_ITEM_TRIGGERED,
+          {bubbles: true, detail: {item: this}}));
+    });
+  }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('selected')) {
+      this.onSelectedChanged();
+    }
+  }
+
+  private onSelectedChanged() {
+    this.dispatchEvent(new CustomEvent(
+        TabSliderItem.events.TAB_SLIDER_ITEM_SELECTED_CHANGED,
+        {bubbles: true, detail: {item: this}}));
+  }
 }
 
 customElements.define('cros-tab-slider-item', TabSliderItem);
@@ -111,5 +158,12 @@ customElements.define('cros-tab-slider-item', TabSliderItem);
 declare global {
   interface HTMLElementTagNameMap {
     'cros-tab-slider-item': TabSliderItem;
+  }
+
+  interface HTMLElementEventMap {
+    [TabSliderItem.events.TAB_SLIDER_ITEM_TRIGGERED]:
+        TabSliderItemTriggeredEvent;
+    [TabSliderItem.events.TAB_SLIDER_ITEM_SELECTED_CHANGED]:
+        TabSliderItemSelectedChangedEvent;
   }
 }
