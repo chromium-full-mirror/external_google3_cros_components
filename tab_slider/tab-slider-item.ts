@@ -41,6 +41,7 @@ export class TabSliderItem extends LitElement {
       font: var(--cros-button-2-font);
       height: fit-content;
       position: relative;
+      text-align: center;
       width: fit-content;
     }
 

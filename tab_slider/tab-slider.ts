@@ -40,7 +40,14 @@ export class TabSlider extends LitElement {
     }
 
     #items {
-      display: flex;
+      display: grid;
+      grid-auto-columns: 1fr;
+      grid-auto-flow: column;
+      width: fit-content;
+    }
+
+    #items::slotted(cros-tab-slider-item) {
+      width: 100%;
     }
 
     /** TODO(b/296808808) - Replace with animation. */
