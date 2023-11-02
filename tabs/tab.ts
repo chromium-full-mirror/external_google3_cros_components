@@ -10,8 +10,12 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /** A chromeOS compliant tab component for use in cros-tabs. */
 export class Tab extends LitElement {
-  static override shadowRootOptions:
-      ShadowRootInit = {mode: 'open', delegatesFocus: true};
+  /** @nocollapse */
+  static override shadowRootOptions: ShadowRootInit = {
+    ...LitElement.shadowRootOptions,
+    mode: 'open',
+    delegatesFocus: true,
+  };
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
