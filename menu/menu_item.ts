@@ -262,6 +262,16 @@ export class MenuItem extends LitElement implements MenuItemType {
     item.typeaheadText = text;
   }
 
+  get switchSelected() {
+    if (this.itemEnd !== 'switch') return false;
+    return this.renderRoot.querySelector('cros-switch')!.selected;
+  }
+
+  set switchSelected(value: boolean) {
+    if (this.itemEnd !== 'switch') return;
+    this.renderRoot.querySelector('cros-switch')!.selected = value;
+  }
+
   override disconnectedCallback() {
     super.disconnectedCallback();
     if (this.itemEnd === 'switch') {
