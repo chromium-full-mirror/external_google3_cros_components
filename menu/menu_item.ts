@@ -226,8 +226,11 @@ export class MenuItem extends LitElement implements MenuItemType {
 
   override updated(changedProperties: PropertyValues<this>) {
     super.updated(changedProperties);
+    if (changedProperties.has('keepOpen') && this.keepOpen) {
+      this.addEventListener('keydown', this.keyDownListener);
+    }
     if (changedProperties.has('itemEnd') && this.itemEnd === 'switch') {
-      this.addEventListener('keydown', this.switchKeyDownListener);
+      this.addEventListener('keydown', this.keyDownListener);
       this.setAttribute('role', 'menuitemcheckbox');
       this.setAttribute('aria-checked', 'false');
       this.addEventListener('click', this.switchClickListener);
@@ -274,17 +277,20 @@ export class MenuItem extends LitElement implements MenuItemType {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.itemEnd === 'switch') {
-      this.removeEventListener('keydown', this.switchKeyDownListener);
+    if (this.itemEnd === 'switch' || this.keepOpen) {
+      this.removeEventListener('keydown', this.keyDownListener);
       this.removeEventListener('click', this.switchClickListener);
     }
   }
 
   // Toggles switch item within the end slot on `enter` or `space`.
-  private readonly switchKeyDownListener = (e: KeyboardEvent) => {
+  private readonly keyDownListener = (e: KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
-      crosSwitch.selected = !crosSwitch.selected;
+      this.fireTriggerEvent();
+      if (this.itemEnd === 'switch') {
+        const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
+        crosSwitch.selected = !crosSwitch.selected;
+      }
     }
   };
 
