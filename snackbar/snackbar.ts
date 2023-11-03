@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import './toast-item';
+import './snackbar-item';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
- * Event interface for toast toggle events. Closure fires off the wrong event
+ * Event interface for snackbar toggle events. Closure fires off the wrong event
  * type that is missing these fields.
  * TODO: b/307830635 - Remove once ToggleEvents are supported.
  */
@@ -18,8 +18,8 @@ declare interface ToggleEvent extends Event {
   oldState: 'open'|'close';
 }
 
-/** A chromeOS compliant toast. */
-export class Toast extends LitElement {
+/** A chromeOS compliant snackbar. */
+export class Snackbar extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host(:popover-open) {
@@ -37,7 +37,7 @@ export class Toast extends LitElement {
   `;
 
   /**
-   * The visible message on the toast surface.
+   * The visible message on the snackbar surface.
    * @export
    */
   message: string;
@@ -46,7 +46,7 @@ export class Toast extends LitElement {
   override role = 'alert';
 
   /**
-   * Timeout between the toast showing and hiding, in milliseconds.
+   * Timeout between the snackbar showing and hiding, in milliseconds.
    */
   timeout = -1;
 
@@ -61,8 +61,8 @@ export class Toast extends LitElement {
 
   /** @nocollapse */
   static events = {
-    /** The toast popup timed out and closed itself. */
-    TIMEOUT: 'cros-toast-timeout',
+    /** The snackbar popup timed out and closed itself. */
+    TIMEOUT: 'cros-snackbar-timeout',
   } as const;
 
   private pendingTimeout: number|null = null;
@@ -80,7 +80,7 @@ export class Toast extends LitElement {
   override render() {
     return html`
         <div id="container">
-          <cros-toast-item message=${this.message}>
+          <cros-snackbar-item message=${this.message}>
             <slot name="icon" slot="icon"></slot>
             <slot
                 name="action"
@@ -92,7 +92,7 @@ export class Toast extends LitElement {
                 slot="dismiss"
                 @slotchange=${this.handleSlotChanged}>
             </slot>
-          </cros-toast-item>
+          </cros-snackbar-item>
         </div>
     `;
   }
@@ -107,7 +107,7 @@ export class Toast extends LitElement {
     if (this.timeout < 1 || this.pendingTimeout) return;
     this.pendingTimeout = setTimeout(() => {
       this.hidePopover();
-      this.dispatchEvent(new CustomEvent('cros-toast-timeout'));
+      this.dispatchEvent(new CustomEvent('cros-snackbar-timeout'));
       clearTimeout(this.pendingTimeout!);
       this.pendingTimeout = null;
     }, this.timeout);
@@ -116,21 +116,21 @@ export class Toast extends LitElement {
   private handleSlotChanged() {
     const hasActionButtons =
         this.querySelectorAll(`*[slot="action"], [slot="dismiss"]`);
-    for (const toastItem of this.shadowRoot!.querySelectorAll(
-             `cros-toast-item`)) {
-      toastItem.classList.toggle(
+    for (const snackbarItem of this.shadowRoot!.querySelectorAll(
+             `cros-snackbar-item`)) {
+      snackbarItem.classList.toggle(
           'has-action-button', hasActionButtons.length > 0);
     }
   }
 }
 
-customElements.define('cros-toast', Toast);
+customElements.define('cros-snackbar', Snackbar);
 
 declare global {
   interface HTMLElementTagNameMap {
-    'cros-toast': Toast;
+    'cros-snackbar': Snackbar;
   }
   interface HTMLElementEventMap {
-    [Toast.events.TIMEOUT]: Event;
+    [Snackbar.events.TIMEOUT]: Event;
   }
 }

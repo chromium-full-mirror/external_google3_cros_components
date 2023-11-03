@@ -10,8 +10,8 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 const AMBIENT_SHADOW_COLOR = css`rgba(var(--cros-sys-shadow-rgb), 0.2)`;
 const KEY_SHADOW_COLOR = css`rgba(var(--cros-sys-shadow-rgb), 0.1)`;
 
-/** The visible rendered part of a cros-toast. */
-export class ToastItem extends LitElement {
+/** The visible rendered part of a cros-snackbar. */
+export class SnackbarItem extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -103,10 +103,10 @@ export class ToastItem extends LitElement {
   }
 }
 
-customElements.define('cros-toast-item', ToastItem);
+customElements.define('cros-snackbar-item', SnackbarItem);
 
 declare global {
   interface HTMLElementTagNameMap {
-    'cros-toast-item': ToastItem;
+    'cros-snackbar-item': SnackbarItem;
   }
 }
