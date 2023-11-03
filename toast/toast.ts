@@ -25,14 +25,14 @@ export class Toast extends LitElement {
     :host(:popover-open) {
       background: none;
       border: none;
-      width: 100%;
     }
 
     #container {
       bottom: 0px;
-      margin-left: 24px;
       margin-bottom: 24px;
+      margin-left: 24px;
       position: fixed;
+      width: 100%;
     }
   `;
 
@@ -81,6 +81,7 @@ export class Toast extends LitElement {
     return html`
         <div id="container">
           <cros-toast-item message=${this.message}>
+            <slot name="icon" slot="icon"></slot>
             <slot
                 name="action"
                 slot="action"
