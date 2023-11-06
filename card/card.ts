@@ -7,7 +7,8 @@
 import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, LitElement, nothing} from 'lit';
+import {html, literal} from 'lit/static-html.js';
 
 const DEFAULT_TICK_MARGIN = css`14px`;
 
@@ -156,6 +157,9 @@ export class Card extends LitElement {
   selected = false;
 
   /** @export */
+  interactive = false;
+
+  /** @export */
   cardStyle: 'outline'|'filled'|'elevated' = 'outline';
 
   /** @nocollapse */
@@ -163,28 +167,31 @@ export class Card extends LitElement {
     cardStyle: {type: String, reflect: true},
     disabled: {type: Boolean, reflect: true},
     selected: {type: Boolean, reflect: true},
-    tabIndex: {type: Number},
+    interactive: {type: Boolean, reflect: true},
   };
 
   override render() {
+    const interactive = !this.disabled && this.interactive;
+    const containerTag = interactive ? literal`button` : literal`div`;
+
+    const renderInteractives = () => {
+      return interactive ? html`
+                            <md-ripple for="container"></md-ripple>
+                            <md-focus-ring for="container"></md-focus-ring>` :
+                           nothing;
+    };
+
     return html`
-        <button id="container" tabindex=${this.tabIndex}>
+        <${containerTag} id="container">
           <div id="background" part="background">
             <slot name="background"></slot>
           </div>
-          <md-ripple
-              for="container"
-              ?disabled=${this.disabled}>
-          </md-ripple>
-          <md-focus-ring
-              for="container"
-              ?disabled=${this.disabled}>
-          </md-focus-ring>
+          ${renderInteractives()}
           ${renderTick()}
           <div id="content" part="content">
             <slot></slot>
           </div>
-        </button>
+        </${containerTag}>
     `;
   }
 }
