@@ -15,19 +15,37 @@ import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSl
  */
 export class TabSlider extends LitElement {
   private get itemSlot(): HTMLSlotElement {
-    return this.shadowRoot!.querySelector('#items') as HTMLSlotElement;
+    return this.shadowRoot!.getElementById('items') as HTMLSlotElement;
   }
 
   get items(): TabSliderItem[] {
     return this.itemSlot.assignedElements().filter(isTabSliderItem);
   }
 
-  get selectedItem(): TabSliderItem|null {
-    return this.itemSlot.assignedElements()
-               .filter(isTabSliderItem)
-               .find(item => item.selected && !item.disabled) ||
-        null;
+  get selectableItems(): TabSliderItem[] {
+    return this.items.filter(item => !item.disabled);
   }
+
+  get selectedItem(): TabSliderItem|null {
+    return this.selectableItems.find(item => item.selected) || null;
+  }
+
+  get selectionIndicator(): HTMLDivElement {
+    return this.shadowRoot!.getElementById('selectionIndicator') as
+        HTMLDivElement;
+  }
+
+  /**
+   * The index of the item the indicator is highlighting.
+   * Public for testing. Do not use externally.
+   */
+  indicatorIndex = -1;
+
+  /**
+   * The width of the indicator. This should match the items' width, unless an
+   * update is pending.
+   */
+  private indicatorWidth = 0;
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
@@ -39,6 +57,10 @@ export class TabSlider extends LitElement {
       padding: 2px;
     }
 
+    :host > div {
+      position: relative;
+    }
+
     #items {
       display: grid;
       grid-auto-columns: 1fr;
@@ -48,11 +70,25 @@ export class TabSlider extends LitElement {
 
     #items::slotted(cros-tab-slider-item) {
       width: 100%;
+      z-index: 2;
     }
 
-    /** TODO(b/296808808) - Replace with animation. */
-    #items::slotted(cros-tab-slider-item[selected]) {
+    #selectionIndicator {
       background: var(--cros-sys-primary);
+      border-radius: 100vh;
+      height: 40px;
+      width: 100px;
+      inset: 0;
+      z-index: 1;
+    }
+
+    #indicatorTrack {
+      position: absolute;
+      top: 0;
+    }
+
+    :host-context([dir="rtl"]) #indicatorTrack {
+      transform: scaleX(-1);
     }
 
     #items::slotted(cros-tab-slider-item[disabled]) {
@@ -69,9 +105,12 @@ export class TabSlider extends LitElement {
         <slot
             id="items"
             @cros-tab-slider-item-triggered=${this.onItemTriggered}
-            @cros-tab-slider-item-selected-changed=${
-        this.onItemSelectedChanged}>
+            @cros-tab-slider-item-selected-changed=${this.onItemSelectedChanged}
+            @slotchange=${this.onSlotChanged}>
         </slot>
+        <div id="indicatorTrack">
+          <div id="selectionIndicator"></div>
+        </div>
       </div>
     `;
   }
@@ -83,7 +122,13 @@ export class TabSlider extends LitElement {
   private onItemSelectedChanged(event: TabSliderItemSelectedChangedEvent) {
     if (event.detail.item.selected) {
       this.setSelected(event.detail.item);
+    } else {
+      this.updateIndicator();
     }
+  }
+
+  private onSlotChanged() {
+    this.updateIndicator();
   }
 
   /**
@@ -91,6 +136,7 @@ export class TabSlider extends LitElement {
    * transition animation.
    */
   setSelected(itemToSelect: TabSliderItem) {
+    // Undo invalid selection.
     if (itemToSelect.disabled) {
       itemToSelect.selected = false;
       return;
@@ -103,8 +149,29 @@ export class TabSlider extends LitElement {
       }
     }
 
-    // TODO: b/296808808 - Play animation.
     itemToSelect.selected = true;
+    this.updateIndicator();
+  }
+
+  // TODO: b/296808808 : Update the indicator when an item is (un)hidden.
+  updateIndicator() {
+    const item = this.selectedItem;
+    const selectedIndex = item ? this.selectableItems.indexOf(item) : -1;
+    const itemWidth = item?.offsetWidth || 0;
+
+    // Don't animate the inidicator if
+    // 1. It is coming or going off-screen.
+    // 2. Its size is being adjusted to match the item's.
+    const animate = this.indicatorIndex !== -1 && selectedIndex !== -1 &&
+        this.indicatorWidth === itemWidth;
+
+    this.indicatorIndex = selectedIndex;
+    this.indicatorWidth = itemWidth;
+
+    this.selectionIndicator.style.transition = animate ? '200ms' : 'none';
+    this.selectionIndicator.style.transform =
+        `translateX(${this.indicatorIndex * this.indicatorWidth}px)`;
+    this.selectionIndicator.style.width = `${this.indicatorWidth}px`;
   }
 }
 

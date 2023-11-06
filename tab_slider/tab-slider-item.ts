@@ -58,7 +58,7 @@ export class TabSliderItem extends LitElement {
       padding-inline-end: 16px;
       position: relative;
       text-align: center;
-      width: fit-content;
+      width: 100%;
     }
 
     :host([selected]) #container {
