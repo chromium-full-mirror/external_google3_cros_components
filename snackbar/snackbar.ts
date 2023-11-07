@@ -46,6 +46,10 @@ export class Snackbar extends LitElement {
   override role = 'alert';
 
   /**
+   * @export
+   */
+  closeOnEscape = false;
+  /**
    * Timeout between the snackbar showing and hiding, in milliseconds.
    */
   timeout = -1;
@@ -56,6 +60,7 @@ export class Snackbar extends LitElement {
   /** @nocollapse */
   static override properties = {
     message: {type: String, reflect: true},
+    closeOnEscape: {type: Boolean, reflect: true},
     timeout: {type: Number, reflect: true},
   };
 
@@ -63,18 +68,32 @@ export class Snackbar extends LitElement {
   static events = {
     /** The snackbar popup timed out and closed itself. */
     TIMEOUT: 'cros-snackbar-timeout',
+    CLOSED: 'cros-snackbar-closed',
   } as const;
-
-  private pendingTimeout: number|null = null;
 
   constructor() {
     super();
     this.message = '';
   }
 
+  private pendingTimeout: number|null = null;
+  private openInternal = false;
+
+  private readonly handleKeyDown = (event: KeyboardEvent) => {
+    if (this.openInternal && event.key === 'Escape' && this.closeOnEscape) {
+      this.hidePopover();
+    }
+  };
+
   override connectedCallback() {
     super.connectedCallback();
     this.addEventListener('toggle', (e) => this.onToggle(e as ToggleEvent));
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   override render() {
@@ -98,8 +117,11 @@ export class Snackbar extends LitElement {
   }
 
   private onToggle(e: ToggleEvent) {
+    this.openInternal = e.newState === 'open';
     if (e.newState === 'open') {
       this.startTimeout();
+    } else if (e.newState === 'close') {
+      this.dispatchEvent(new CustomEvent('cros-snackbar-closed'));
     }
   }
 
@@ -132,5 +154,6 @@ declare global {
   }
   interface HTMLElementEventMap {
     [Snackbar.events.TIMEOUT]: Event;
+    [Snackbar.events.CLOSED]: Event;
   }
 }
