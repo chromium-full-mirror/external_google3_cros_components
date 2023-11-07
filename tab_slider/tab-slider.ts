@@ -8,10 +8,11 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSliderItemTriggeredEvent} from './tab-slider-item';
 
-const OBSERVE_DISABLED_ITEMS = {
+const OBSERVE_ITEMS = {
   attributes: true,
   attributeFilter: ['disabled'],
-  subtree: true
+  subtree: true,
+  childList: true,
 };
 
 /**
@@ -127,7 +128,7 @@ export class TabSlider extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.attributeObserver.observe(this, OBSERVE_DISABLED_ITEMS);
+    this.attributeObserver.observe(this, OBSERVE_ITEMS);
   }
 
   override disconnectedCallback() {

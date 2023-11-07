@@ -90,6 +90,21 @@ export class TabSliderItem extends LitElement {
       --md-ripple-pressed-color: var(--cros-sys-ripple_primary);
       --md-ripple-pressed-opacity: 1;
     }
+
+    #container {
+      display: flex;
+    }
+
+    #container > div {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+    }
+
+    slot[name="icon"]::slotted(*) {
+      height: 20px;
+      width: 20px;
+    }
   `;
 
   /** @export */
@@ -120,7 +135,10 @@ export class TabSliderItem extends LitElement {
     return html`
         <div>
           <button id="container">
-            <span>${this.label}</span>
+            <div>
+              <slot name="icon"></slot>
+              <span>${this.label}</span>
+            </div>
             <md-ripple for="container" ?disabled=${this.disabled}></md-ripple>
             <md-focus-ring
                 for="container"
