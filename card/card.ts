@@ -32,9 +32,9 @@ function renderTick() {
 /** A chromeOS compliant card. */
 export class Card extends LitElement {
   /**
-   * Note about #content display: Because `display: block` / `inline-block` resize
-   * depending on any applicable line-height they often don't neatly wrap user
-   * content. Instead we use flex here with direction column to "emulate"
+   * Note about #content display: Because `display: block` / `inline-block`
+   * resize depending on any applicable line-height they often don't neatly wrap
+   * user content. Instead we use flex here with direction column to "emulate"
    * `display: block` while ignoring line-height. Users are free to set this
    * to `block` via the shadow part and deal with the line-height sizing
    * themselves if they wish, but by default we want this to tightly wrap
@@ -168,6 +168,9 @@ export class Card extends LitElement {
     disabled: {type: Boolean, reflect: true},
     selected: {type: Boolean, reflect: true},
     interactive: {type: Boolean, reflect: true},
+    ariaLabel: {type: String, attribute: 'aria-label'},
+    ariaRoleDescription: {type: String, attribute: 'aria-roledescription'},
+    role: {type: String},
   };
 
   override render() {
@@ -182,7 +185,11 @@ export class Card extends LitElement {
     };
 
     return html`
-        <${containerTag} id="container">
+        <${containerTag}
+            aria-label=${this.ariaLabel ?? nothing}
+            aria-roledescription=${this.ariaRoleDescription ?? nothing}
+            role=${this.role ?? nothing}
+            id="container">
           <div id="background" part="background">
             <slot name="background"></slot>
           </div>
