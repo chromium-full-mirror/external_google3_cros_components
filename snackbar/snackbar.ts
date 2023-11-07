@@ -29,6 +29,7 @@ export class Snackbar extends LitElement {
 
     #container {
       bottom: 0px;
+      left: 0px;
       margin-bottom: 24px;
       margin-left: 24px;
       position: fixed;
@@ -52,7 +53,7 @@ export class Snackbar extends LitElement {
   /**
    * Timeout between the snackbar showing and hiding, in milliseconds.
    */
-  timeout = -1;
+  timeoutMs = -1;
 
   /** @export */
   override popover = 'manual';
@@ -76,8 +77,12 @@ export class Snackbar extends LitElement {
     this.message = '';
   }
 
+  get open() {
+    return this.openInternal;
+  }
+
   private pendingTimeout: number|null = null;
-  private openInternal = false;
+  openInternal = false;
 
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     if (this.openInternal && event.key === 'Escape' && this.closeOnEscape) {
@@ -126,13 +131,13 @@ export class Snackbar extends LitElement {
   }
 
   private startTimeout() {
-    if (this.timeout < 1 || this.pendingTimeout) return;
+    if (this.timeoutMs < 1 || this.pendingTimeout) return;
     this.pendingTimeout = setTimeout(() => {
       this.hidePopover();
       this.dispatchEvent(new CustomEvent('cros-snackbar-timeout'));
       clearTimeout(this.pendingTimeout!);
       this.pendingTimeout = null;
-    }, this.timeout);
+    }, this.timeoutMs);
   }
 
   private handleSlotChanged() {
