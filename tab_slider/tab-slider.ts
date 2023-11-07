@@ -8,6 +8,12 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSliderItemTriggeredEvent} from './tab-slider-item';
 
+const OBSERVE_DISABLED_ITEMS = {
+  attributes: true,
+  attributeFilter: ['disabled'],
+  subtree: true
+};
+
 /**
  * A chromeOS compliant tab-slider.
  *
@@ -46,6 +52,10 @@ export class TabSlider extends LitElement {
    * update is pending.
    */
   private indicatorWidth = 0;
+
+  private readonly attributeObserver = new MutationObserver(() => {
+    this.updateIndicator(false);
+  });
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
@@ -115,6 +125,16 @@ export class TabSlider extends LitElement {
     `;
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.attributeObserver.observe(this, OBSERVE_DISABLED_ITEMS);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.attributeObserver.disconnect();
+  }
+
   private onItemTriggered(event: TabSliderItemTriggeredEvent) {
     this.setSelected(event.detail.item);
   }
@@ -153,17 +173,18 @@ export class TabSlider extends LitElement {
     this.updateIndicator();
   }
 
-  // TODO: b/296808808 : Update the indicator when an item is (un)hidden.
-  updateIndicator() {
+  updateIndicator(animate?: boolean) {
     const item = this.selectedItem;
     const selectedIndex = item ? this.selectableItems.indexOf(item) : -1;
     const itemWidth = item?.offsetWidth || 0;
 
-    // Don't animate the inidicator if
-    // 1. It is coming or going off-screen.
-    // 2. Its size is being adjusted to match the item's.
-    const animate = this.indicatorIndex !== -1 && selectedIndex !== -1 &&
-        this.indicatorWidth === itemWidth;
+    if (animate === undefined) {
+      // Don't animate the inidicator if
+      // 1. It is coming or going off-screen.
+      // 2. Its size is being adjusted to match the item's.
+      animate = this.indicatorIndex !== -1 && selectedIndex !== -1 &&
+          this.indicatorWidth === itemWidth;
+    }
 
     this.indicatorIndex = selectedIndex;
     this.indicatorWidth = itemWidth;
