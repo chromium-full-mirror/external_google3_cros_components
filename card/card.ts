@@ -52,6 +52,10 @@ export class Card extends LitElement {
       min-height: 50px;
     }
 
+    :host([interactive]) * {
+      cursor: pointer;
+    }
+
     #container {
       align-items: center;
       background-color: var(--cros-card-background-color, var(--cros-sys-app_base));
