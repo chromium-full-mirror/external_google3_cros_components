@@ -133,19 +133,20 @@ export class TabSliderItem extends LitElement {
 
   override render() {
     return html`
-        <div>
-          <button id="container">
+          <button
+              aria-selected=${this.selected}
+              id="container"
+              role="tab">
             <div>
-              <slot name="icon"></slot>
+              <slot name="icon" aria-hidden="true"></slot>
               <span>${this.label}</span>
             </div>
             <md-ripple for="container" ?disabled=${this.disabled}></md-ripple>
             <md-focus-ring
-                for="container"
-                ?disabled=${this.disabled}>
+                ?disabled=${this.disabled}
+                for="container">
             </md-focus-ring>
           </button>
-        </div>
     `;
   }
 

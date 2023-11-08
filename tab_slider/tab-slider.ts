@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
 
 import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSliderItemTriggeredEvent} from './tab-slider-item';
 
@@ -108,15 +108,20 @@ export class TabSlider extends LitElement {
   `;
 
   /** @nocollapse */
-  static override properties = {};
+  static override properties = {
+    ariaLabel: {type: String, attribute: 'aria-label'},
+  };
 
   override render() {
     return html`
-      <div>
+      <div
+          aria-label=${this.ariaLabel || nothing}
+          id="container"
+          role="tablist">
         <slot
             id="items"
-            @cros-tab-slider-item-triggered=${this.onItemTriggered}
             @cros-tab-slider-item-selected-changed=${this.onItemSelectedChanged}
+            @cros-tab-slider-item-triggered=${this.onItemTriggered}
             @slotchange=${this.onSlotChanged}>
         </slot>
         <div id="indicatorTrack">
