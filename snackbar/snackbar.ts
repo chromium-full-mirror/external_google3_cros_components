@@ -14,8 +14,8 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
  * TODO: b/307830635 - Remove once ToggleEvents are supported.
  */
 declare interface ToggleEvent extends Event {
-  newState: 'open'|'close';
-  oldState: 'open'|'close';
+  newState: 'open'|'closed';
+  oldState: 'open'|'closed';
 }
 
 /** A chromeOS compliant snackbar. */
@@ -46,13 +46,11 @@ export class Snackbar extends LitElement {
   /** @export */
   override role = 'alert';
 
-  /**
-   * @export
-   */
+  /** @export */
   closeOnEscape = false;
-  /**
-   * Timeout between the snackbar showing and hiding, in milliseconds.
-   */
+
+  /** @export */
+  /** Timeout between the snackbar showing and hiding, in milliseconds. */
   timeoutMs = -1;
 
   /** @export */
@@ -77,12 +75,13 @@ export class Snackbar extends LitElement {
     this.message = '';
   }
 
+  /** @export */
   get open() {
     return this.openInternal;
   }
 
   private pendingTimeout: number|null = null;
-  openInternal = false;
+  private openInternal = false;
 
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     if (this.openInternal && event.key === 'Escape' && this.closeOnEscape) {
@@ -125,7 +124,7 @@ export class Snackbar extends LitElement {
     this.openInternal = e.newState === 'open';
     if (e.newState === 'open') {
       this.startTimeout();
-    } else if (e.newState === 'close') {
+    } else if (e.newState === 'closed') {
       this.dispatchEvent(new CustomEvent('cros-snackbar-closed'));
     }
   }
