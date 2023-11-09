@@ -73,3 +73,17 @@ export function shouldProcessClick(event: MouseEvent) {
   }
   return true;
 }
+
+/**
+ * Returns the chain of active elements. This is the actual activeElement,
+ * preceeded by all the containers with shadowroots.
+ */
+export function shadowPiercingActiveElements(): Element[] {
+  let activeElement = document.activeElement;
+  const activeElements = activeElement ? [activeElement] : [];
+  while (activeElement && activeElement.shadowRoot) {
+    activeElement = activeElement.shadowRoot.activeElement;
+    if (activeElement) activeElements.push(activeElement);
+  }
+  return activeElements;
+}
