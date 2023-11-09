@@ -81,6 +81,13 @@ export class Checkbox extends LitElement {
       opacity: var(--cros-disabled-opacity);
     }
   `;
+
+  /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
   /** @nocollapse */
   static override properties = {
     checked: {type: Boolean, reflect: true},
