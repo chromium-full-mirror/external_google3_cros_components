@@ -91,6 +91,25 @@ export class Button extends LitElement {
       width: 100%;
     }
 
+    :host(:not([button-style="secondary"]):is([inverted][disabled])) {
+      opacity: var(--cros-disabled-opacity);
+    }
+
+    :host([inverted][button-style="primary"]) md-filled-button {
+      /** Base styles */
+      --md-sys-color-primary: var(--cros-sys-inverse_primary);
+      --md-sys-color-secondary: var(--cros-sys-inverse_focus_ring);
+      --md-sys-color-on-primary: var(--cros-sys-inverse_on_primary);
+      --md-filled-button-label-text-color: var(--cros-sys-inverse_on_primary);
+      /** Disabled */
+      --md-filled-button-disabled-container-color: var(--cros-sys-inverse_primary);
+      --md-filled-button-disabled-label-text-color: var(--cros-sys-inverse_on_primary);
+      /** Hover */
+      --md-filled-button-hover-state-layer-color: var(--cros-sys-inverse_hover_on_prominent);
+      /** Pressed */
+      --md-filled-button-pressed-state-layer-color: var(--cros-sys-inverse_ripple_primary);
+    }
+
     :host([button-style="primary"]) md-filled-button {
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-on-primary: var(--cros-sys-on_primary);
@@ -103,10 +122,6 @@ export class Button extends LitElement {
       --md-filled-button-pressed-state-layer-color: var(--cros-sys-ripple_primary);
       --md-sys-color-primary: var(--cros-sys-primary_container);
       --md-sys-color-on-primary: var(--cros-sys-on_primary_container);
-    }
-
-    :host([inverted]) md-text-button {
-      --md-text-button-label-text-color: var(--cros-sys-inverse_primary);
     }
 
     md-text-button {
@@ -134,6 +149,17 @@ export class Button extends LitElement {
       width: 100%;
     }
 
+    :host([inverted]) md-text-button {
+      /** Base styles */
+      --md-sys-color-primary: var(--cros-sys-inverse_primary);
+      --md-sys-color-secondary: var(--cros-sys-inverse_focus_ring);
+      --md-text-button-label-text-color: var(--cros-sys-inverse_primary);
+      /** Disabled */
+      --md-text-button-disabled-label-text-color: var(--cros-sys-inverse_primary);
+      --md-text-button-pressed-state-layer-color: var(--cros-sys-inverse_ripple_neutral_on_subtle);
+      --md-text-button-hover-state-layer-color: var(--cros-sys-inverse_hover_on_subtle);
+    }
+
     ::slotted(ea-icon) {
       --ea-icon-size: 20px;
     }
@@ -149,7 +175,12 @@ export class Button extends LitElement {
    */
   buttonStyle: 'primary'|'secondary'|'floating' = 'primary';
 
-  /** @export */
+  /**
+   * If the button should be in the inverted color scheme, eg for use in
+   * cros-snackbar. Inverted color schemes are only supported for `primary` and
+   * floating button styles.
+   * @export
+   */
   inverted = false;
 
   /** @nocollapse */
