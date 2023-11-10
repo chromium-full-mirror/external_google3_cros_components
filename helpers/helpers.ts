@@ -26,6 +26,18 @@ export function assertExists<A>(
 }
 
 /**
+ * Asserts that `condition` is true and throws an error otherwise.
+ *
+ * NOTE: unlike the internal counterpart this ALWAYS throws an error when given
+ * null or undefined. This is not compiled out for prod.
+ */
+export function assert(condition: boolean, msg: string) {
+  if (!condition) {
+    throw new Error(`Assertion Error: ${msg}`);
+  }
+}
+
+/**
  * Asserts that `arg` is not null and returns it. If `arg` is null, throws an
  * error with `msg`.
  *
