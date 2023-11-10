@@ -35,8 +35,22 @@ export class Button extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
-      --cros-button-max-width_ : var(--cros-button-max-width,200px);
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
       width: fit-content;
+    }
+
+    .button {
+      max-width: var(--cros-button-max-width,200px);
+      min-width: ${MIN_WIDTH};
+      text-overflow: inherit;
+      text-wrap: inherit;
+      width: 100%;
+    }
+
+    .label {
+      overflow: hidden;
+      text-overflow: inherit;
     }
 
     ::slotted(*) {
@@ -68,8 +82,6 @@ export class Button extends LitElement {
     }
 
     md-filled-button {
-      max-width: var(--cros-button-max-width_);
-      min-width: ${MIN_WIDTH};
       --md-filled-button-container-height: ${CONTAINER_HEIGHT};
       --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
       --md-filled-button-disabled-container-opacity: 100%;
@@ -88,7 +100,6 @@ export class Button extends LitElement {
       --md-focus-ring-duration: 0s;
       --md-focus-ring-width: 2px;
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
-      width: 100%;
     }
 
     :host(:not([button-style="secondary"]):is([inverted][disabled])) {
@@ -125,8 +136,6 @@ export class Button extends LitElement {
     }
 
     md-text-button {
-      max-width: var(--cros-button-max-width_);
-      min-width: ${MIN_WIDTH};
       --md-sys-color-primary: var(--cros-sys-primary);
       --md-sys-color-secondary: var(--cros-sys-focus_ring);
       --md-focus-ring-duration: 0s;
@@ -146,7 +155,6 @@ export class Button extends LitElement {
       --md-text-button-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-text-button-pressed-state-layer-opacity: 100%;
       --md-text-button-trailing-space: ${LABEL_PADDING_START_END};
-      width: 100%;
     }
 
     :host([inverted]) md-text-button {
@@ -207,6 +215,7 @@ export class Button extends LitElement {
     if (this.buttonStyle === 'floating') {
       return html`
         <md-text-button
+            class="button"
             aria-label=${this.ariaLabel || ''}
             aria-haspopup=${ariaHasPopup}
             ?disabled=${this.disabled}>
@@ -217,6 +226,7 @@ export class Button extends LitElement {
 
     return html`
         <md-filled-button
+            class="button"
             aria-label=${this.ariaLabel || ''}
             aria-haspopup=${ariaHasPopup}
             ?disabled=${this.disabled}>
@@ -229,7 +239,7 @@ export class Button extends LitElement {
     return html`
       <div class="content-container">
         <slot name="leading-icon" @slotchange=${this.onSlotChange}></slot>
-        ${this.label}
+        <span class="label">${this.label}</span>
         <slot name="trailing-icon" @slotchange=${this.onSlotChange}></slot>
       </div>
     `;
