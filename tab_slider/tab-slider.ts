@@ -56,6 +56,7 @@ export class TabSlider extends LitElement {
 
   private readonly attributeObserver = new MutationObserver(() => {
     this.updateIndicator(false);
+    this.ensureFocusable();
   });
 
   /** @nocollapse */
@@ -108,6 +109,12 @@ export class TabSlider extends LitElement {
   `;
 
   /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
+  /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, attribute: 'aria-label'},
   };
@@ -141,6 +148,14 @@ export class TabSlider extends LitElement {
     this.attributeObserver.disconnect();
   }
 
+  override firstUpdated() {
+    this.ensureFocusable();
+  }
+
+  override focus() {
+    this.selectableItems.filter(i => i.tabIndex >= 0)[0]?.focus();
+  }
+
   private onItemTriggered(event: TabSliderItemTriggeredEvent) {
     this.setSelected(event.detail.item);
   }
@@ -154,7 +169,22 @@ export class TabSlider extends LitElement {
   }
 
   private onSlotChanged() {
+    this.ensureFocusable();
     this.updateIndicator();
+  }
+
+  /** Ensure there is at least one item to delegate focus to. */
+  private ensureFocusable() {
+    // Focus should jump to the selected item.
+    for (const item of this.items) {
+      item.tabIndex = item.selected ? 0 : -1;
+    }
+
+    const selectedItem = this.selectedItem;
+    if (!selectedItem) {
+      const first = this.selectableItems[0];
+      if (first) first.tabIndex = 0;
+    }
   }
 
   /**
@@ -165,17 +195,20 @@ export class TabSlider extends LitElement {
     // Undo invalid selection.
     if (itemToSelect.disabled) {
       itemToSelect.selected = false;
+      itemToSelect.tabIndex = -1;
       return;
     }
 
     // Unselect old items.
     for (const item of this.items) {
-      if (item.selected && item !== itemToSelect) {
+      if (item !== itemToSelect) {
         item.selected = false;
+        item.tabIndex = -1;
       }
     }
 
     itemToSelect.selected = true;
+    itemToSelect.tabIndex = 0;
     this.updateIndicator();
   }
 

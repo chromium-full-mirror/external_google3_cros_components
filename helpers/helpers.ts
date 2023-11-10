@@ -87,3 +87,17 @@ export function shadowPiercingActiveElements(): Element[] {
   }
   return activeElements;
 }
+
+/**
+ * Returns the innermost activeElement with type `tag`, or null if there is no
+ * activeElement of this type.
+ */
+export function shadowPiercingActiveElement(tag: keyof HTMLElementTagNameMap):
+    HTMLElementTagNameMap[typeof tag]|null {
+  const upperTag = tag.toUpperCase();
+  const chain = shadowPiercingActiveElements();
+  for (const el of chain.reverse()) {
+    if (el.tagName === upperTag) return el as HTMLElementTagNameMap[typeof tag];
+  }
+  return null;
+}

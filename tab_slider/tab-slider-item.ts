@@ -7,7 +7,7 @@
 import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 
 /** Type of the item triggered custom event. */
 export type TabSliderItemTriggeredEvent = CustomEvent<{
@@ -117,10 +117,17 @@ export class TabSliderItem extends LitElement {
   disabled = false;
 
   /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
+  /** @nocollapse */
   static override properties = {
     label: {type: String, reflect: true},
     selected: {type: Boolean, reflect: true},
     disabled: {type: Boolean, reflect: true},
+    tabIndex: {type: Number},
   };
 
   /** @nocollapse */
@@ -136,7 +143,8 @@ export class TabSliderItem extends LitElement {
           <button
               aria-selected=${this.selected}
               id="container"
-              role="tab">
+              role="tab"
+              tabindex=${this.tabIndex ?? nothing}>
             <div>
               <slot name="icon" aria-hidden="true"></slot>
               <span>${this.label}</span>
