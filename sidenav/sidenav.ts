@@ -358,7 +358,7 @@ export class Sidenav extends LitElement {
           break;
         }
 
-        const expandKey = isRTL() ? 'ArrowLeft' : 'ArrowRight';
+        const expandKey = isRTL(this) ? 'ArrowLeft' : 'ArrowRight';
         if (e.key === expandKey) {
           if (selectedItem.hasChildren() && !selectedItem.expanded) {
             selectedItem.expanded = true;

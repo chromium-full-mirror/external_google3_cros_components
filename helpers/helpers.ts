@@ -114,7 +114,20 @@ export function shadowPiercingActiveElement(tag: keyof HTMLElementTagNameMap):
   return null;
 }
 
-/** True if the page is read right-to-left. */
-export function isRTL() {
-  return document.documentElement.dir === 'rtl';
+/**
+ * True if the page is read right-to-left. Do not assume this calculation is
+ * cheap.
+ */
+export function isRTL(el: HTMLElement): boolean {
+  // Search for the closest ancestor with a direction.
+  let dirEl: typeof el|null = el;
+  while (dirEl && !dirEl.dir) {
+    dirEl = dirEl.parentElement;
+  }
+
+  if (dirEl && dirEl.dir) {
+    return dirEl.dir === 'rtl';
+  } else {
+    return document.documentElement.dir === 'rtl';
+  }
 }
