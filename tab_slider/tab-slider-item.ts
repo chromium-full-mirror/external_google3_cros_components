@@ -149,7 +149,10 @@ export class TabSliderItem extends LitElement {
               <slot name="icon" aria-hidden="true"></slot>
               <span>${this.label}</span>
             </div>
-            <md-ripple for="container" ?disabled=${this.disabled}></md-ripple>
+            <md-ripple
+                for="container"
+                ?disabled=${!this.selected || this.disabled}>
+            </md-ripple>
             <md-focus-ring
                 ?disabled=${this.disabled}
                 for="container">
