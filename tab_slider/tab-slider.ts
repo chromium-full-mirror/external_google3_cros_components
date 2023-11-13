@@ -6,6 +6,8 @@
 
 import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
 
+import {shadowPiercingActiveElement} from '../helpers/helpers';
+
 import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSliderItemTriggeredEvent} from './tab-slider-item';
 
 const OBSERVE_ITEMS = {
@@ -141,6 +143,7 @@ export class TabSlider extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     this.attributeObserver.observe(this, OBSERVE_ITEMS);
+    this.addEventListener('keydown', this.onKeyDown);
   }
 
   override disconnectedCallback() {
@@ -155,6 +158,7 @@ export class TabSlider extends LitElement {
   override focus() {
     this.selectableItems.filter(i => i.tabIndex >= 0)[0]?.focus();
   }
+  itemToFocus: TabSliderItem|null|undefined = null;
 
   private onItemTriggered(event: TabSliderItemTriggeredEvent) {
     this.setSelected(event.detail.item);
@@ -212,7 +216,7 @@ export class TabSlider extends LitElement {
     this.updateIndicator();
   }
 
-  updateIndicator(animate?: boolean) {
+  private updateIndicator(animate?: boolean) {
     const item = this.selectedItem;
     const selectedIndex = item ? this.selectableItems.indexOf(item) : -1;
     const itemWidth = item?.offsetWidth || 0;
@@ -232,6 +236,55 @@ export class TabSlider extends LitElement {
     this.selectionIndicator.style.transform =
         `translateX(${this.indicatorIndex * this.indicatorWidth}px)`;
     this.selectionIndicator.style.width = `${this.indicatorWidth}px`;
+  }
+
+  /**
+   * Handle the keydown. This mainly handles the navigation and the selection
+   * with the keyboard.
+   */
+  private onKeyDown(e: KeyboardEvent) {
+    const selectableItems = this.selectableItems;
+    const focusedItem = shadowPiercingActiveElement('cros-tab-slider-item');
+    const currentIndex = selectableItems.findIndex(i => i === focusedItem);
+
+    if (e.ctrlKey) {
+      return;
+    }
+
+    if (currentIndex === -1) {
+      return;
+    }
+
+    let nextIndex = currentIndex;
+    switch (e.key) {
+      // TODO: b/296807005 - Consider RTL.
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        // Don't let back/forward keyboard shortcuts be used.
+        if (e.altKey) {
+          break;
+        }
+
+        if (e.key === 'ArrowLeft') {
+          nextIndex = Math.max(currentIndex - 1, 0);
+        } else {
+          nextIndex = Math.min(currentIndex + 1, selectableItems.length - 1);
+        }
+        break;
+      case 'Home':
+        nextIndex = 0;
+        break;
+      case 'End':
+        nextIndex = selectableItems.length - 1;
+        break;
+      default:
+        break;
+    }
+
+    if (nextIndex !== currentIndex) {
+      selectableItems[nextIndex].focus();
+      e.preventDefault();
+    }
   }
 }
 
