@@ -6,7 +6,7 @@
 
 import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
 
-import {shadowPiercingActiveElement} from '../helpers/helpers';
+import {isRTL, shadowPiercingActiveElement} from '../helpers/helpers';
 
 import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSliderItemTriggeredEvent} from './tab-slider-item';
 
@@ -16,6 +16,16 @@ const OBSERVE_ITEMS = {
   subtree: true,
   childList: true,
 };
+
+function clamp(value: number, min: number, max: number): number {
+  if (value < min) {
+    return min;
+  } else if (value > max) {
+    return max;
+  } else {
+    return value;
+  }
+}
 
 /**
  * A chromeOS compliant tab-slider.
@@ -257,7 +267,6 @@ export class TabSlider extends LitElement {
 
     let nextIndex = currentIndex;
     switch (e.key) {
-      // TODO: b/296807005 - Consider RTL.
       case 'ArrowLeft':
       case 'ArrowRight':
         // Don't let back/forward keyboard shortcuts be used.
@@ -265,11 +274,8 @@ export class TabSlider extends LitElement {
           break;
         }
 
-        if (e.key === 'ArrowLeft') {
-          nextIndex = Math.max(currentIndex - 1, 0);
-        } else {
-          nextIndex = Math.min(currentIndex + 1, selectableItems.length - 1);
-        }
+        nextIndex += e.key === 'ArrowRight' === isRTL(this) ? -1 : 1;
+        nextIndex = clamp(nextIndex, 0, selectableItems.length - 1);
         break;
       case 'Home':
         nextIndex = 0;
