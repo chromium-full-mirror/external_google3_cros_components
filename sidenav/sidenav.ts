@@ -8,10 +8,10 @@ import './sidenav_item';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
-import {castExists} from '../helpers/helpers';
+import {castExists, isRTL} from '../helpers/helpers';
 
 import {SidenavItem, SidenavItemCollapsedEvent, SidenavItemEnabledChangedEvent, SidenavItemExpandedEvent} from './sidenav_item';
-import {isRTL, isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
+import {isSidenavItem, shadowPiercingActiveItem} from './sidenav_util';
 
 /**
  * Allow calling `scrollIntoViewIfNeeded`.

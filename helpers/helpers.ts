@@ -113,3 +113,8 @@ export function shadowPiercingActiveElement(tag: keyof HTMLElementTagNameMap):
   }
   return null;
 }
+
+/** True if the page is read right-to-left. */
+export function isRTL() {
+  return document.documentElement.dir === 'rtl';
+}
