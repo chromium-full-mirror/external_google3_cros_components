@@ -288,7 +288,7 @@ export class TabSlider extends LitElement {
     }
 
     if (nextIndex !== currentIndex) {
-      selectableItems[nextIndex].focus();
+      selectableItems[nextIndex]!.focus();
       e.preventDefault();
     }
   }
