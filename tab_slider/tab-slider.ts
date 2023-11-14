@@ -89,7 +89,7 @@ export class TabSlider extends LitElement {
       display: grid;
       grid-auto-columns: 1fr;
       grid-auto-flow: column;
-      width: fit-content;
+      width: 100%;
     }
 
     #items::slotted(cros-tab-slider-item) {
