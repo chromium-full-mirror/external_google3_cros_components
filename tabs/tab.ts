@@ -17,6 +17,10 @@ export class Tab extends LitElement {
     delegatesFocus: true,
   };
 
+  get mdTab(): HTMLElement|null {
+    return this.shadowRoot!.querySelector('md-primary-tab');
+  }
+
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -84,6 +88,14 @@ export class Tab extends LitElement {
 
   override firstUpdated() {
     this.setAttribute('md-tab', 'tab');
+
+    // Add extra styles if the tabs should fill the width of a container.
+    if (this.parentElement!.hasAttribute('fill-container')) {
+      if (this.mdTab) {
+        this.mdTab.style.width = '100%';
+        this.mdTab.style.boxSizing = 'border-box';
+      }
+    }
   }
 
   override render() {
