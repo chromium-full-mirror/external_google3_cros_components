@@ -33,8 +33,9 @@ export class VerticalButton extends LitElement {
     }
     md-filled-button {
       width: 100%;
-      min-height: ${VerticalButton.MIN_HEIGHT}px;
       min-width: ${VerticalButton.WIDTH}px;
+      padding-top: ${VerticalButton.PADDING_TOP}px;
+      padding-bottom: ${VerticalButton.PADDING_BOTTOM}px;
       --md-filled-button-leading-space: ${VerticalButton.HORIZONTAL_PADDING}px;
       --md-filled-button-trailing-space: ${VerticalButton.HORIZONTAL_PADDING}px;
       --md-filled-button-with-leading-icon-leading-space: 0px;
@@ -80,8 +81,6 @@ export class VerticalButton extends LitElement {
       --md-filled-button-disabled-container-color: var(--cros-sys-disabled_container);
     }
     :host div {
-      padding-top: ${VerticalButton.PADDING_TOP}px;
-      padding-bottom: ${VerticalButton.PADDING_BOTTOM}px;
       display: flex;
       align-items: center;
       flex-direction: column;
