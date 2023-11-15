@@ -292,6 +292,13 @@ export class TabSlider extends LitElement {
       e.preventDefault();
     }
   }
+
+  override async getUpdateComplete() {
+    const result = await super.getUpdateComplete();
+    await Promise.all(
+        this.items.map((item: TabSliderItem) => item.updateComplete));
+    return result;
+  }
 }
 
 customElements.define('cros-tab-slider', TabSlider);
