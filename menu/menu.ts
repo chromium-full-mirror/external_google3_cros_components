@@ -80,6 +80,7 @@ export class Menu extends LitElement implements MenuInterface {
     stayOpenOnOutsideClick:
         {type: Boolean, attribute: 'stay-open-on-outside-click'},
     isSubmenu: {type: Boolean, attribute: 'is-submenu'},
+    usePopover: {type: Boolean, attribute: 'use-popover'},
   };
 
   /** @nocollapse */
@@ -172,6 +173,15 @@ export class Menu extends LitElement implements MenuInterface {
    * `cros-sub-menu-item`.
    */
   isSubmenu: boolean;
+  /**
+   * If cros-menu should use the build-in popover API. If true cros-menu is
+   * rendered in an isolated layer on top of all other contents in the web,
+   * regardless of positioning in the DOM or current stacking context. However
+   * the menu then positions exclusviely using the javascript accessible x and y
+   * position of the provided `anchor`.
+   * @export
+   */
+  usePopover: boolean;
 
   get mdMenu(): MdMenu {
     return this.renderRoot.querySelector('md-menu') as MdMenu;
@@ -212,6 +222,7 @@ export class Menu extends LitElement implements MenuInterface {
     this.stayOpenOnFocusout = false;
     this.stayOpenOnOutsideClick = false;
     this.isSubmenu = false;
+    this.usePopover = true;
   }
 
   override firstUpdated() {
@@ -275,6 +286,7 @@ export class Menu extends LitElement implements MenuInterface {
           .defaultFocus=${this.defaultFocus}
           .skipRestoreFocus=${this.skipRestoreFocus}
           .isSubmenu=${this.isSubmenu}
+          .positioning=${this.usePopover ? 'popover' : 'absolute'}
           @closed=${this.close}
           @opened=${this.show}
           @closing=${this.onClosing}
