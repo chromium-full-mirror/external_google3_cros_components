@@ -10,6 +10,11 @@ import {isRTL, shadowPiercingActiveElement} from '../helpers/helpers';
 
 import {isTabSliderItem, TabSliderItem, TabSliderItemSelectedChangedEvent, TabSliderItemTriggeredEvent} from './tab-slider-item';
 
+/**
+ * The padding between `cros-tab-slider` and `cros-tab-slider-item`s.
+ */
+export const TAB_SLIDER_PADDING_PX = 2;
+
 const OBSERVE_ITEMS = {
   attributes: true,
   attributeFilter: ['disabled'],
@@ -62,13 +67,17 @@ export class TabSlider extends LitElement {
 
   /**
    * The width of the indicator. This should match the items' width, unless an
-   * update is pending.
+   * update is pending. Public for testing. Do not use externally.
    */
-  private indicatorWidth = 0;
+  indicatorWidth = 0;
 
   private readonly attributeObserver = new MutationObserver(() => {
     this.updateIndicator(false);
     this.ensureFocusable();
+  });
+
+  private readonly resizeObserver = new ResizeObserver(() => {
+    this.updateIndicator(false);
   });
 
   /** @nocollapse */
@@ -78,7 +87,7 @@ export class TabSlider extends LitElement {
       border-radius: 100vh;
       display: inline-block;
       font: var(--cros-body-0-font);
-      padding: 2px;
+      padding: ${TAB_SLIDER_PADDING_PX}px;
     }
 
     :host > div {
@@ -152,13 +161,15 @@ export class TabSlider extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.attributeObserver.observe(this, OBSERVE_ITEMS);
     this.addEventListener('keydown', this.onKeyDown);
+    this.attributeObserver.observe(this, OBSERVE_ITEMS);
+    this.resizeObserver.observe(this);
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.attributeObserver.disconnect();
+    this.resizeObserver.disconnect();
   }
 
   override firstUpdated() {
