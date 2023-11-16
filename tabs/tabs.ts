@@ -35,6 +35,10 @@ export class Tabs extends LitElement {
       min-inline-size: var(--container-size, auto);
     }
 
+    :host-context([fill-container]) slot {
+      gap: var(--container-tabs-gap, 0);
+    }
+
     md-tabs {
       --md-divider-color: transparent;
     }
