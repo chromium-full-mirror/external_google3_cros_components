@@ -24,6 +24,14 @@ import {SubMenuItem} from './sub_menu_item';
  */
 export type MenuItemFilter = (menuItem: MenuItem|SubMenuItem) => boolean;
 
+/** Options for opening a menu. */
+export interface OpenMenuOptions {
+  /**
+   * What input method should be used to open the menu. Defaults to programtic.
+   */
+  method: 'programmatic'|'arrow-down';
+}
+
 /** Waits for `eventName` to be fired on `menu`. */
 export async function waitForMenuEvent(
     menu: Menu, eventName: 'opened'|'closed') {
@@ -91,11 +99,22 @@ async function openSubMenuItem(subMenuItem: SubMenuItem) {
 }
 
 /** Opens a menu and waits for it to finish animating if needed. */
-export async function openMenu(menu: Menu) {
+export async function openMenu(menu: Menu, options: OpenMenuOptions = {
+  method: 'programmatic'
+}) {
   assert(
       menu.isConnected,
       'closeMenu provided with menu which is disconnected from the DOM.');
-  menu.show();
+  if (options.method === 'programmatic') {
+    menu.show();
+  } else {
+    assertExists(
+        menu.anchorElement,
+        'No anchor element for menu, can not open via ArrowDown');
+    menu.anchorElement.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'ArrowDown'}));
+  }
+
   // In case the menu has an animation we wait for the `opened` event which
   // fires once the animation is done.
   await waitForMenuEvent(menu, 'opened');
