@@ -210,6 +210,7 @@ export class IconButton extends LitElement {
       --md-filled-icon-button-disabled-icon-opacity: 1;
       --md-filled-icon-button-hover-state-layer-opacity: 1;
       --md-filled-icon-button-icon-size: var(--cros-icon-button-icon-size, 20px);
+      --md-filled-icon-button-pressed-state-layer-opacity: 1;
       --md-filled-icon-button-selected-container-color: ${
       TOGGLE_CONTAINER_ON_BASE};
       --md-filled-icon-button-toggle-selected-focus-icon-color: ${
