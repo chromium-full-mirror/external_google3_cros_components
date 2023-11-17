@@ -593,6 +593,7 @@ export class SidenavItem extends LitElement {
           ${this.renderTreeLabel()}
         </div>
         <ul
+            aria-hidden=${!this.expanded}
             class="tree-children"
             role="group">
           <slot @slotchange=${this.onSlotChanged}></slot>
