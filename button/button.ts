@@ -199,6 +199,7 @@ export class Button extends LitElement {
     disabled: {type: Boolean, reflect: true},
     buttonStyle: {type: String, reflect: true, attribute: 'button-style'},
     inverted: {type: Boolean, reflect: true},
+    ariaHasPopup: {type: String, reflect: true, attribute: 'aria-haspopup'},
   };
 
   constructor() {
