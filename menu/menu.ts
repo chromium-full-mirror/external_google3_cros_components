@@ -11,6 +11,19 @@ import {Corner, FocusState, MdMenu, Menu as MenuInterface} from '@material/web/m
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
+ * Declare PopoverAPI properties. See
+ * https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
+ * Without this, closure will rename these properties.
+ * TODO: b/312044521 - Remove this once we add this to.
+ * surfacePositionController.ts in material/web.
+ */
+declare global {
+  interface HTMLElement {
+    popover: string|null;
+  }
+}
+
+/**
  * A chromeOS menu component.
  * See spec
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2650%3A7994&t=01NOG3FTGuaigSvB-0
