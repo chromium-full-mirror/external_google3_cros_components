@@ -202,6 +202,8 @@ export class Textfield extends LitElement {
     hint: {type: String, attribute: true},
     maxLength: {type: Number, attribute: true},
     placeholder: {type: String, attribute: true},
+    min: {type: Number, attribute: true},
+    max: {type: Number, attribute: true},
   };
 
   /** @nocollapse */
@@ -259,7 +261,21 @@ export class Textfield extends LitElement {
    * not render the charCounter.
    * @export
    */
-  maxLength = -1;
+  maxLength: number;
+  /**
+   * Defines the most negative value in the range of permitted values. Only used
+   * with `number` type.
+   * @export
+   */
+  min: number;
+
+  /**
+   * Defines the greatest value in the range of permitted values. Only used with
+   * `number` type.
+   * @export
+   */
+  max: number;
+
   /** @export */
   placeholder = '';
 
@@ -277,6 +293,8 @@ export class Textfield extends LitElement {
     this.disabled = false;
     this.hint = '';
     this.maxLength = -1;
+    this.min = -1;
+    this.max = -1;
   }
 
   override async firstUpdated() {
@@ -311,6 +329,8 @@ export class Textfield extends LitElement {
             value=${this.value}
             suffix-text=${this.suffix}
             maxLength=${this.maxLength}
+            min=${this.min > -1 ? this.min : nothing}
+            max=${this.max > -1 ? this.max : nothing}
             supporting-text=${this.hint}
             placeholder=${this.placeholder}
             @focus=${this.toggleFocusStyle}
