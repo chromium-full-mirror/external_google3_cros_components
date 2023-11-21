@@ -51,13 +51,13 @@ const DISABLED_STATE_OVERRIDES = css`
       width: calc((1 - var(--_end-fraction)) * 100% - var(--handle-gap));
   }
 `;
+
 /**
  * A cros compliant slider component.
  * See spec:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2978%3A19626
  */
 export class Slider extends LitElement {
-  // TODO: b/285172083 - check disabled styling.
   /** @nocollapse */
   static override styles: CSSResultGroup = [
     css`
@@ -66,16 +66,16 @@ export class Slider extends LitElement {
     }
     md-slider {
       display: block;
-      --active-disabled: var(--cros-ref-neutral10);
-      --inactive-disabled: var(--cros-ref-neutral10);
+      --active-disabled: var(--cros-sys-on_surface);
+      --inactive-disabled: var(--cros-sys-on_surface);
       --disabled-color: var(--inactive-disabled);
       --md-focus-ring-duration: 0s;
       --md-slider-active-track-color: var(--cros-sys-primary);
       --md-slider-disabled-active-track-color: var(--disabled-color);
-      --md-slider-disabled-active-track-opacity: var(--cros-sys-opacity-disabled);
+      --md-slider-disabled-active-track-opacity: var(--cros-disabled-opacity);
       --md-slider-disabled-handle-color: var(--disabled-color);
       --md-slider-disabled-inactive-track-color: var(--disabled-color);
-      --md-slider-disabled-inactive-track-opacity: var(--cros-sys-opacity-disabled);
+      --md-slider-disabled-inactive-track-opacity: var(--cros-disabled-opacity);
       --md-slider-focus-handle-color: var(--cros-sys-primary);
       --md-slider-handle-color: var(--cros-sys-primary);
       --md-slider-handle-height: 12px;
