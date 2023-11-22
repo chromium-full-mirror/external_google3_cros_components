@@ -113,11 +113,14 @@ export class Slider extends LitElement {
 
   /** @nocollapse */
   static override properties = {
-    value: {type: Number},
+    value: {type: Number, reflect: true},
     disabled: {type: Boolean},
     withTickMarks: {type: Boolean},
     withLabel: {type: Boolean},
     valueLabel: {type: String, state: true},
+    min: {type: Number},
+    max: {type: Number},
+    step: {type: Number},
   };
 
   /** @export */
@@ -130,6 +133,13 @@ export class Slider extends LitElement {
   withLabel: boolean;
   /** @export */
   valueLabel?: string;
+  /** @export */
+  min: number;
+  /** @export */
+  max: number;
+  /** @export */
+  step: number;
+
 
   constructor() {
     super();
@@ -137,6 +147,9 @@ export class Slider extends LitElement {
     this.disabled = false;
     this.withTickMarks = false;
     this.withLabel = false;
+    this.min = 0;
+    this.max = 10;
+    this.step = 1;
   }
 
   override render() {
@@ -152,14 +165,26 @@ export class Slider extends LitElement {
       ` :
                                              nothing;
     return html`
-      <md-slider @input=${this.handleInput} .valueLabel=${
-        valueLabel} .disabled=${this.disabled} .value=${
-        this.value} max=10 .ticks=${this.withTickMarks} .labeled=${
-        this.withLabel}>${disabledTemplate}</md-slider>`;
+      <md-slider
+        @input=${this.handleInput}
+        ?disabled=${this.disabled}
+        .labeled=${this.withLabel}
+        .min=${this.min}
+        .max=${this.max}
+        .step=${this.step}
+        .ticks=${this.withTickMarks}
+        .value=${this.value}
+        .valueLabel=${valueLabel}>
+        ${disabledTemplate}
+      </md-slider>`;
   }
 
   handleInput(e: Event) {
-    this.valueLabel = String((e.target as MdSlider).value);
+    const sliderValue = (e.target as MdSlider).value;
+    if (sliderValue !== undefined) {
+      this.value = sliderValue;
+    }
+    this.valueLabel = String(sliderValue);
   }
 }
 
