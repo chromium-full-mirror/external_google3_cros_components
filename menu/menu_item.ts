@@ -24,7 +24,6 @@ const CHECKED_ICON = html`
  * item i.e. via a enter or space key.
  */
 export class MenuItem extends LitElement implements MenuItemType {
-  /** @nocollapse */
   // TODO: b/198759625 - Remove negative margin-inline-end when mwc token
   // available (padding 16px)
   /** @nocollapse */
@@ -49,6 +48,8 @@ export class MenuItem extends LitElement implements MenuItemType {
       --md-menu-item-pressed-state-layer-opacity: 1;
       --md-menu-item-trailing-element-headline-trailing-element-space: 48px;
       --md-menu-item-trailing-space: 16px;
+      --md-menu-item-selected-container-color: var(--cros-sys-hover_on_subtle);
+      --md-menu-item-selected-label-text-color: var(--cros-sys-on_surface);
     }
     md-menu-item([itemEnd=null]) {
       --md-menu-item-trailing-space: 48px;
