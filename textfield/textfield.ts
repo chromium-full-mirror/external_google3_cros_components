@@ -212,26 +212,22 @@ export class Textfield extends LitElement {
     max: {type: Number, attribute: true},
     errorMessage: {type: String, attribute: true},
     error: {type: Boolean, attribute: true},
+    autoValidate: {type: Boolean, attribute: true},
   };
 
   /** @nocollapse */
   static events = {
-    /** The textfield value changed via user input. */
+    /**
+     * The textfield value changed via user input. Dispatched on blur/when a
+     * changed value is committed.
+     */
     CHANGE: 'change',
+    /**
+     * The textfield value changed via user input, but dispatched immediately on
+     * keystroke/every value change.
+     */
+    INPUT: 'input',
   } as const;
-
-  private valueInternal = '';
-
-
-  /** @export */
-  type: TextFieldType = 'text';
-  /**
-   * When false, will use the darker container designed to sit on app-base. When
-   * true, will use the lighter container colored designed for use with
-   * app-base-shaded. Purely a cosmetic difference to improve contrast.
-   * @export
-   */
-  shaded = false;
 
   /** @export */
   get value() {
@@ -246,6 +242,18 @@ export class Textfield extends LitElement {
       this.mdTextfield.value = this.valueInternal;
     }
   }
+
+  private valueInternal = '';
+
+  /** @export */
+  type: TextFieldType = 'text';
+  /**
+   * When false, will use the darker container designed to sit on app-base. When
+   * true, will use the lighter container colored designed for use with
+   * app-base-shaded. Purely a cosmetic difference to improve contrast.
+   * @export
+   */
+  shaded = false;
 
   /**
    * The visible label above the textfield. This is also used as the aria-label
@@ -283,6 +291,13 @@ export class Textfield extends LitElement {
    * @export
    */
   max: number;
+  /**
+   * When true, the validity state of the textfield is reported on every
+   * input event (eg each keystroke) rather than on each change event (only
+   * occur on blur).
+   * @export
+   */
+  autoValidate: boolean;
 
   /**
    * The error text shown below the textfield on `error`. This will override
@@ -318,6 +333,7 @@ export class Textfield extends LitElement {
     this.disabled = false;
     this.hint = '';
     this.maxLength = -1;
+    this.autoValidate = false;
     this.min = -1;
     this.max = -1;
     this.errorMessage = '';
@@ -368,6 +384,7 @@ export class Textfield extends LitElement {
             @focus=${this.toggleFocusStyle}
             @blur=${this.toggleFocusStyle}
             @change=${this.onChange}
+            @input=${this.onInput}
             @invalid=${() => void this.toggleErrorStyles(true)}>
           <slot name="leading" @slotchange=${this.handleIconChange}></slot>
           <slot
@@ -428,6 +445,13 @@ export class Textfield extends LitElement {
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
+  private onInput() {
+    if (this.autoValidate) {
+      this.checkAndUpdateValidity();
+    }
+    this.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+
   private getSlottedIcon(slotName: 'leading'|'trailing') {
     return this.querySelector(`*[slot="${slotName}"]`) !== null;
   }
@@ -445,6 +469,7 @@ customElements.define('cros-textfield', Textfield);
 declare global {
   interface HTMLElementEventMap {
     [Textfield.events.CHANGE]: Event;
+    [Textfield.events.INPUT]: Event;
   }
 
   interface HTMLElementTagNameMap {
