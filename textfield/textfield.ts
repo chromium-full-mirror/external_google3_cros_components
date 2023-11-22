@@ -8,6 +8,7 @@ import '@material/web/textfield/outlined-text-field.js';
 
 import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined';
 
 /**
  * Textfields have two variants that differ only by the container background,
@@ -139,8 +140,13 @@ export class Textfield extends LitElement {
       color: var(--cros-sys-primary);
     }
 
-    :host(.error) .text-labels {
-      color: var(--cros-sys-error)
+    /**
+     * The .error class is applied on native constraint invalidation, and the
+     * error attribute is set by clients, so we need to use both to style the
+     * label correctly.
+    */
+    :host(:is(.error, [error])) .text-labels {
+      color: var(--cros-sys-error);
     }
 
     #visible-label {
@@ -204,6 +210,8 @@ export class Textfield extends LitElement {
     placeholder: {type: String, attribute: true},
     min: {type: Number, attribute: true},
     max: {type: Number, attribute: true},
+    errorMessage: {type: String, attribute: true},
+    error: {type: Boolean, attribute: true},
   };
 
   /** @nocollapse */
@@ -276,6 +284,23 @@ export class Textfield extends LitElement {
    */
   max: number;
 
+  /**
+   * The error text shown below the textfield on `error`. This will override
+   * native error messages returned on validation, and is only shown when
+   * `error` is set.
+   * @export
+   */
+  errorMessage: string;
+
+  /**
+   * Gets or sets whether or not the text field is in a visually invalid state.
+   * This overrides the error state controlled by the internal textfield's
+   * `reportValidity()`, so should only be set if the error state of the
+   * textfield is determined by application logic instead of the HTMLInput
+   * constraint validation.
+   * @export
+   */
+  error: boolean;
   /** @export */
   placeholder = '';
 
@@ -295,6 +320,8 @@ export class Textfield extends LitElement {
     this.maxLength = -1;
     this.min = -1;
     this.max = -1;
+    this.errorMessage = '';
+    this.error = false;
   }
 
   override async firstUpdated() {
@@ -313,11 +340,14 @@ export class Textfield extends LitElement {
     if (this.mdTextfield && this.classList.contains('error')) {
       this.toggleErrorStyles(this.mdTextfield.error);
     }
+
     super.update(changedProperties);
   }
 
   override render() {
     const ariaLabel = this.ariaLabel || this.label;
+    const errorTextOrUndef =
+        this.error && this.errorMessage ? this.errorMessage : undefined;
     return html`
       ${this.maybeRenderLabel()}
       <div id="main-container">
@@ -332,6 +362,8 @@ export class Textfield extends LitElement {
             min=${this.min > -1 ? this.min : nothing}
             max=${this.max > -1 ? this.max : nothing}
             supporting-text=${this.hint}
+            ?error=${this.error ?? nothing}
+            error-text=${ifDefined(errorTextOrUndef)}
             placeholder=${this.placeholder}
             @focus=${this.toggleFocusStyle}
             @blur=${this.toggleFocusStyle}
@@ -350,13 +382,6 @@ export class Textfield extends LitElement {
   focusTextfield() {
     this.mdTextfield!.focus();
   }
-
-  override async getUpdateComplete() {
-    const result = await super.getUpdateComplete();
-    await this.mdTextfield?.updateComplete;
-    return result;
-  }
-
 
   private maybeRenderLabel() {
     return this.label ?
