@@ -72,6 +72,10 @@ export class Tab extends LitElement {
       --md-focus-ring-width: 2px;
       margin-bottom: 0;
     }
+
+    ::slotted(*) {
+      margin: 0 4px;
+    }
   `;
 
   /** @nocollapse */
