@@ -210,9 +210,10 @@ export class Textfield extends LitElement {
     placeholder: {type: String, attribute: true},
     min: {type: Number, attribute: true},
     max: {type: Number, attribute: true},
+    autoValidate: {type: Boolean, attribute: true},
     errorMessage: {type: String, attribute: true},
     error: {type: Boolean, attribute: true},
-    autoValidate: {type: Boolean, attribute: true},
+    pattern: {type: String, attribute: true},
   };
 
   /** @nocollapse */
@@ -227,7 +228,20 @@ export class Textfield extends LitElement {
      * keystroke/every value change.
      */
     INPUT: 'input',
+    /** The entered textfield value is invalid.  */
+    INVALID: 'invalid',
   } as const;
+
+  /** @export */
+  type: TextFieldType;
+
+  /**
+   * When false, will use the darker container designed to sit on app-base. When
+   * true, will use the lighter container colored designed for use with
+   * app-base-shaded. Purely a cosmetic difference to improve contrast.
+   * @export
+   */
+  shaded = false;
 
   /** @export */
   get value() {
@@ -243,18 +257,6 @@ export class Textfield extends LitElement {
     }
   }
 
-  private valueInternal = '';
-
-  /** @export */
-  type: TextFieldType = 'text';
-  /**
-   * When false, will use the darker container designed to sit on app-base. When
-   * true, will use the lighter container colored designed for use with
-   * app-base-shaded. Purely a cosmetic difference to improve contrast.
-   * @export
-   */
-  shaded = false;
-
   /**
    * The visible label above the textfield. This is also used as the aria-label
    * for the internal md-textfield.
@@ -265,12 +267,16 @@ export class Textfield extends LitElement {
   // cros-textfield API. These are manually plumbed through as cros-textfield is
   // not a subclass. This is not an exhaustive list, and support should be
   // added by clients as needed.
+
   /** @export */
   suffix: string;
+
   /** @export */
   disabled: boolean;
+
   /** @export */
   hint: string;
+
   /**
    * Max length of the textfield value. If set to -1 or less, md-textfield will
    * ignore this value when restricting the length of the textfield, and also
@@ -278,6 +284,7 @@ export class Textfield extends LitElement {
    * @export
    */
   maxLength: number;
+
   /**
    * Defines the most negative value in the range of permitted values. Only used
    * with `number` type.
@@ -291,6 +298,7 @@ export class Textfield extends LitElement {
    * @export
    */
   max: number;
+
   /**
    * When true, the validity state of the textfield is reported on every
    * input event (eg each keystroke) rather than on each change event (only
@@ -316,13 +324,25 @@ export class Textfield extends LitElement {
    * @export
    */
   error: boolean;
+
+  /**
+   * A regular expression that the text field's value must match to pass
+   * constraint validation.
+   *
+   * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#pattern
+   * @export
+   */
+  pattern: string;
+
   /** @export */
-  placeholder = '';
+  placeholder: string;
 
   get mdTextfield(): MdOutlinedTextField|undefined {
     return this.renderRoot?.querySelector('md-outlined-text-field') ||
         undefined;
   }
+
+  private valueInternal = '';
 
   constructor() {
     super();
@@ -338,6 +358,8 @@ export class Textfield extends LitElement {
     this.max = -1;
     this.errorMessage = '';
     this.error = false;
+    this.pattern = '';
+    this.placeholder = '';
   }
 
   override async firstUpdated() {
@@ -380,12 +402,14 @@ export class Textfield extends LitElement {
             supporting-text=${this.hint}
             ?error=${this.error ?? nothing}
             error-text=${ifDefined(errorTextOrUndef)}
+            pattern=${this.pattern}
+            step=1
             placeholder=${this.placeholder}
             @focus=${this.toggleFocusStyle}
             @blur=${this.toggleFocusStyle}
             @change=${this.onChange}
-            @input=${this.onInput}
-            @invalid=${() => void this.toggleErrorStyles(true)}>
+            @input=${(e: InputEvent) => void this.onInput(e)}
+            @invalid=${() => void this.onInvalid()}>
           <slot name="leading" @slotchange=${this.handleIconChange}></slot>
           <slot
               name="trailing"
@@ -445,11 +469,15 @@ export class Textfield extends LitElement {
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
-  private onInput() {
+  private onInput(e: InputEvent) {
     if (this.autoValidate) {
       this.checkAndUpdateValidity();
     }
-    this.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+
+  private onInvalid() {
+    this.toggleErrorStyles(true);
+    this.dispatchEvent(new Event('invalid', {bubbles: true}));
   }
 
   private getSlottedIcon(slotName: 'leading'|'trailing') {
@@ -470,6 +498,7 @@ declare global {
   interface HTMLElementEventMap {
     [Textfield.events.CHANGE]: Event;
     [Textfield.events.INPUT]: Event;
+    [Textfield.events.INVALID]: Event;
   }
 
   interface HTMLElementTagNameMap {
