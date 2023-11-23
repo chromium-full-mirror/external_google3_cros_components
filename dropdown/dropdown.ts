@@ -4,9 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/select/outlined-select.js';
+
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
-/** A chromeOS compliant dropdown. */
+/**
+ * A chromeOS compliant dropdown.
+ */
 export class Dropdown extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
@@ -17,7 +21,9 @@ export class Dropdown extends LitElement {
   `;
 
   override render() {
-    return html``;
+    return html`
+      <md-outlined-select></md-outlined-select>
+    `;
   }
 }
 
