@@ -54,6 +54,10 @@ export class Button extends LitElement {
       text-overflow: inherit;
     }
 
+    :host([overflow="stack"]) {
+      text-wrap: wrap;
+    }
+
     ::slotted(*) {
       display: inline-flex;
       block-size: ${ICON_SIZE};
@@ -192,6 +196,13 @@ export class Button extends LitElement {
    */
   inverted = false;
 
+  /**
+   * If button should truncate with ellipsis or stack contents if label
+   * overflows button container.
+   * @export
+   */
+  overflow: 'truncate'|'stack' = 'truncate';
+
   /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
@@ -200,6 +211,7 @@ export class Button extends LitElement {
     buttonStyle: {type: String, reflect: true, attribute: 'button-style'},
     inverted: {type: Boolean, reflect: true},
     ariaHasPopup: {type: String, reflect: true, attribute: 'aria-haspopup'},
+    overflow: {type: String, reflect: true},
   };
 
   constructor() {
