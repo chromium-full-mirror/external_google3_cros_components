@@ -408,8 +408,8 @@ export class Textfield extends LitElement {
             @focus=${this.toggleFocusStyle}
             @blur=${this.toggleFocusStyle}
             @change=${this.onChange}
-            @input=${(e: InputEvent) => void this.onInput(e)}
-            @invalid=${() => void this.onInvalid()}>
+            @input=${this.onInput}
+            @invalid=${this.onInvalid}>
           <slot name="leading" @slotchange=${this.handleIconChange}></slot>
           <slot
               name="trailing"
@@ -469,7 +469,7 @@ export class Textfield extends LitElement {
     this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
-  private onInput(e: InputEvent) {
+  private onInput() {
     if (this.autoValidate) {
       this.checkAndUpdateValidity();
     }
