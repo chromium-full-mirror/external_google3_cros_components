@@ -210,6 +210,18 @@ export class Button extends LitElement {
     this.disabled = false;
   }
 
+  override firstUpdated() {
+    this.addEventListener('click', this.clickListener);
+  }
+
+  private clickListener (e: MouseEvent) {
+    if (this.disabled) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      return;
+    }
+  }
+
   override render() {
     const ariaHasPopup = (this.ariaHasPopup ?? 'false') as 'false' | 'true' |
         'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
