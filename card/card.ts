@@ -7,8 +7,7 @@
 import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, LitElement, nothing} from 'lit';
-import {html, literal} from 'lit/static-html.js';
+import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
 
 const DEFAULT_TICK_MARGIN = css`14px`;
 
@@ -43,6 +42,7 @@ export class Card extends LitElement {
    */
   static override styles: CSSResultGroup = css`
     :host {
+      border-radius: 12px;
       color: var(--cros-sys-on_surface);
       display: block;
       font: var(--cros-body-0-font);
@@ -166,6 +166,15 @@ export class Card extends LitElement {
   /** @export */
   cardStyle: 'outline'|'filled'|'elevated' = 'outline';
 
+  /**
+   * The card's aria role. Allowed values are a short list of expected roles for
+   * a card. They can be extended with types from
+   * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
+   * @export
+   */
+  override role: 'button'|'dialog'|'none'|'presentation'|'link'|'img'|'cell'|
+      null = null;
+
   /** @nocollapse */
   static override properties = {
     cardStyle: {type: String, reflect: true},
@@ -175,35 +184,50 @@ export class Card extends LitElement {
     ariaLabel: {type: String, attribute: 'aria-label'},
     ariaRoleDescription: {type: String, attribute: 'aria-roledescription'},
     role: {type: String},
+    tabIndex: {type: Number},
   };
 
   override render() {
     const interactive = !this.disabled && this.interactive;
-    const containerTag = interactive ? literal`button` : literal`div`;
+    const hasTabstop = this.hasAttribute('tabIndex') && this.tabIndex > -1;
 
-    const renderInteractives = () => {
-      return interactive ? html`
-                            <md-ripple for="container"></md-ripple>
-                            <md-focus-ring for="container"></md-focus-ring>` :
-                           nothing;
-    };
+    const maybeRipple =
+        interactive ? html`<md-ripple for="container"></md-ripple>` : nothing;
+    const maybeFocusRing = hasTabstop ?
+        html`<md-focus-ring for="container"></md-focus-ring>` :
+        nothing;
 
     return html`
-        <${containerTag}
+        <div
             aria-label=${this.ariaLabel ?? nothing}
             aria-roledescription=${this.ariaRoleDescription ?? nothing}
-            role=${this.role ?? nothing}
+            tabindex=${this.tabIndex ?? nothing}
+            role=${this.role ?? 'none'}
+            @keydown=${this.onKeyDown}
             id="container">
           <div id="background" part="background">
             <slot name="background"></slot>
           </div>
-          ${renderInteractives()}
+          ${maybeRipple}
+          ${maybeFocusRing}
           ${renderTick()}
           <div id="content" part="content">
             <slot></slot>
           </div>
-        </${containerTag}>
+        </div>
     `;
+  }
+
+  private onKeyDown(e: KeyboardEvent) {
+    switch (e.key) {
+      case 'Enter':
+      case ' ':
+        e.currentTarget?.dispatchEvent(
+            new MouseEvent('click', {bubbles: true, composed: true}));
+        break;
+      default:
+        break;
+    }
   }
 }
 
