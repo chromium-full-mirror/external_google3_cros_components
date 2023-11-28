@@ -65,12 +65,6 @@ export class TabSlider extends LitElement {
    */
   indicatorIndex = -1;
 
-  /**
-   * The width of the indicator. This should match the items' width, unless an
-   * update is pending. Public for testing. Do not use externally.
-   */
-  indicatorWidth = 0;
-
   private readonly attributeObserver = new MutationObserver(() => {
     this.updateIndicator(false);
     this.ensureFocusable();
@@ -195,7 +189,7 @@ export class TabSlider extends LitElement {
 
   private onSlotChanged() {
     this.ensureFocusable();
-    this.updateIndicator();
+    this.updateIndicator(false);
   }
 
   /** Ensure there is at least one item to delegate focus to. */
@@ -237,26 +231,30 @@ export class TabSlider extends LitElement {
     this.updateIndicator();
   }
 
+  /**
+   * Resizes and positions the indicator behind the active item. The sliding
+   * animation should be skipped if the slider isn't moving between items.
+   */
   private updateIndicator(animate?: boolean) {
-    const item = this.selectedItem;
-    const selectedIndex = item ? this.selectableItems.indexOf(item) : -1;
-    const itemWidth = item?.offsetWidth || 0;
+    const selectedItem = this.selectedItem;
+    const selectedIndex =
+        selectedItem ? this.selectableItems.indexOf(selectedItem) : -1;
 
     if (animate === undefined) {
-      // Don't animate the inidicator if
-      // 1. It is coming or going off-screen.
-      // 2. Its size is being adjusted to match the item's.
-      animate = this.indicatorIndex !== -1 && selectedIndex !== -1 &&
-          this.indicatorWidth === itemWidth;
+      // Don't animate the inidicator if it is coming or going off-screen.
+      animate = this.indicatorIndex !== -1 && selectedIndex !== -1;
     }
 
     this.indicatorIndex = selectedIndex;
-    this.indicatorWidth = itemWidth;
+    const indicatorWidth = selectedItem?.getBoundingClientRect()?.width || 0;
+    const indicatorLeft = selectedItem ?
+        selectedItem.getBoundingClientRect().left -
+            this.selectableItems[0].getBoundingClientRect().left :
+        0;
 
     this.selectionIndicator.style.transition = animate ? '200ms' : 'none';
-    this.selectionIndicator.style.transform =
-        `translateX(${this.indicatorIndex * this.indicatorWidth}px)`;
-    this.selectionIndicator.style.width = `${this.indicatorWidth}px`;
+    this.selectionIndicator.style.transform = `translateX(${indicatorLeft}px)`;
+    this.selectionIndicator.style.width = `${indicatorWidth}px`;
   }
 
   /**
