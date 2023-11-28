@@ -249,7 +249,7 @@ export class TabSlider extends LitElement {
     const indicatorWidth = selectedItem?.getBoundingClientRect()?.width || 0;
     const indicatorLeft = selectedItem ?
         selectedItem.getBoundingClientRect().left -
-            this.selectableItems[0].getBoundingClientRect().left :
+            this.selectableItems[0]!.getBoundingClientRect().left :
         0;
 
     this.selectionIndicator.style.transition = animate ? '200ms' : 'none';
