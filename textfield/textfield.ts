@@ -48,6 +48,32 @@ const MD_FIELD_LEFT_RIGHT_SPACE_PX =
  */
 const MD_TEXTFIELD_CONTAINER_CORNER_RADIUS =
     css`${8 + MD_TEXTFIELD_OUTLINE_WIDTH}px`;
+
+/**
+ * Supported types for cros-textfield:
+ * 'email'
+ * 'number'
+ * 'password'
+ * 'search'
+ * 'tel'
+ * 'text'
+ * 'url'
+ * 'textarea'
+ * 'integer'
+ */
+export type SupportedTextfieldType = TextFieldType|'integer';
+
+/**
+ * Supported autofix types for cros-textfield (only for type=integer):
+ * 'clear'
+ * 'preserve'
+ * 'strip'
+ */
+export type TextfieldAutofixType = 'clear'|'preserve'|'strip';
+
+/** Regex used for automatically stripping non numeric characters from input. */
+const NON_INTEGER_REGEX = /\D/g;
+
 /**
  * Textfield component. See the specs here:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3227%3A25882&t=50tDpMdSJky6eT9O-0
@@ -214,6 +240,7 @@ export class Textfield extends LitElement {
     errorMessage: {type: String, attribute: true},
     error: {type: Boolean, attribute: true},
     pattern: {type: String, attribute: true},
+    autofix: {type: String, attribute: true},
   };
 
   /** @nocollapse */
@@ -233,8 +260,7 @@ export class Textfield extends LitElement {
   } as const;
 
   /** @export */
-  type: TextFieldType;
-
+  type: SupportedTextfieldType;
   /**
    * When false, will use the darker container designed to sit on app-base. When
    * true, will use the lighter container colored designed for use with
@@ -250,10 +276,10 @@ export class Textfield extends LitElement {
 
   set value(value: string) {
     // On first render the initial value is lost because mwcTextfield is not yet
-    // rendered. Store it in `valueInternal` and set it in firstUpdated().
-    this.valueInternal = value;
+    // rendered. Store it in `valueInitial` and set it in firstUpdated().
+    this.valueInitial = value;
     if (this.mdTextfield) {
-      this.mdTextfield.value = this.valueInternal;
+      this.mdTextfield.value = this.valueInitial;
     }
   }
 
@@ -337,12 +363,34 @@ export class Textfield extends LitElement {
   /** @export */
   placeholder: string;
 
+  /**
+   * When using `type=integer`, clients can also set this field to either
+   * `clear`, `preserve` or `strip` to force the value to valid value, removing
+   * any non integer characters. For every other type except for `integer`,
+   * `autofix` is ignored.
+   *
+   * preserve:    Restore to the last valid value. (Default)
+   * clear:       Set value to the empty string.
+   * strip:       Remove any non-integer characters.
+   */
+  autofix: TextfieldAutofixType;
+
   get mdTextfield(): MdOutlinedTextField|undefined {
     return this.renderRoot?.querySelector('md-outlined-text-field') ||
         undefined;
   }
 
-  private valueInternal = '';
+  /**
+   * A copy of the value on initialization to ensure mdTextfield has the
+   * correct value on first render.
+   */
+  private valueInitial = '';
+
+  /**
+   * A copy of the last valid value we had, updated on change events. Used to
+   * restore the textfield value when `autofix=preserve` is used.
+   */
+  private lastValidValue = '';
 
   constructor() {
     super();
@@ -360,10 +408,11 @@ export class Textfield extends LitElement {
     this.error = false;
     this.pattern = '';
     this.placeholder = '';
+    this.autofix = 'preserve';
   }
 
   override async firstUpdated() {
-    this.mdTextfield!.value = this.valueInternal;
+    this.mdTextfield!.value = this.valueInitial;
     // Run the logic to forward any slotted icons to the md-text-field internal
     // icon slots.
     this.handleIconChange();
@@ -386,13 +435,14 @@ export class Textfield extends LitElement {
     const ariaLabel = this.ariaLabel || this.label;
     const errorTextOrUndef =
         this.error && this.errorMessage ? this.errorMessage : undefined;
+    const mdType = this.type === 'integer' ? 'number' : this.type;
     return html`
       ${this.maybeRenderLabel()}
       <div id="main-container">
         <div id="textfield-background"></div>
         <md-outlined-text-field
             ?disabled=${this.disabled}
-            type=${this.type}
+            type=${mdType}
             aria-label=${ariaLabel}
             value=${this.value}
             suffix-text=${this.suffix}
@@ -465,8 +515,24 @@ export class Textfield extends LitElement {
   }
 
   private onChange() {
+    // If the last committed value contained non numeric characters, we can
+    // strip them out here.
+    if (this.type === 'integer' && this.value.match(NON_INTEGER_REGEX)) {
+      switch (this.autofix) {
+        case 'clear':
+          this.value = '';
+          break;
+        case 'strip':
+          this.value = this.value.replace(NON_INTEGER_REGEX, '');
+          break;
+        case 'preserve':
+        default:
+          this.value = this.lastValidValue;
+      }
+    }
     this.checkAndUpdateValidity();
     this.dispatchEvent(new Event('change', {bubbles: true}));
+    this.lastValidValue = this.value;
   }
 
   private onInput() {
