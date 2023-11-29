@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '@material/web/dialog/dialog.js';
+
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
@@ -18,8 +20,14 @@ export class Dialog extends LitElement {
     }
   `;
 
+  show() {
+    this.shadowRoot!.querySelector('md-dialog')!.show();
+  }
+
   override render() {
-    return html``;
+    return html`
+      <md-dialog></md-dialog>
+    `;
   }
 }
 
