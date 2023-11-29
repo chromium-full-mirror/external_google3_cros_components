@@ -311,7 +311,6 @@ export class MenuItem extends LitElement implements MenuItemType {
   // Fires trigger event (needed for keep-open menu items). Toggles switch item
   // within the end slot if any part of menu-item is clicked.
   private readonly clickListener = (e: MouseEvent) => {
-    this.fireTriggerEvent();
     if (this.itemEnd === 'switch') {
       const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
       crosSwitch.selected = !crosSwitch.selected;
@@ -321,6 +320,7 @@ export class MenuItem extends LitElement implements MenuItemType {
         this.setAttribute('aria-checked', 'false');
       }
     }
+    this.fireTriggerEvent();
   };
 
   // Set item to be placed in `end` slot of menu item (if any).
