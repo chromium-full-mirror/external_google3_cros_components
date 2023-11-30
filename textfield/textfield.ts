@@ -241,6 +241,7 @@ export class Textfield extends LitElement {
     error: {type: Boolean, attribute: true},
     pattern: {type: String, attribute: true},
     autofix: {type: String, attribute: true},
+    required: {type: Boolean, attribute: true},
   };
 
   /** @nocollapse */
@@ -375,6 +376,12 @@ export class Textfield extends LitElement {
    */
   autofix: TextfieldAutofixType;
 
+  /**
+   * Whether the input should be invalid when left blank.
+   * @export
+   */
+  required: boolean;
+
   get mdTextfield(): MdOutlinedTextField|undefined {
     return this.renderRoot?.querySelector('md-outlined-text-field') ||
         undefined;
@@ -409,6 +416,7 @@ export class Textfield extends LitElement {
     this.pattern = '';
     this.placeholder = '';
     this.autofix = 'preserve';
+    this.required = false;
   }
 
   override async firstUpdated() {
@@ -449,6 +457,7 @@ export class Textfield extends LitElement {
             maxLength=${this.maxLength}
             min=${this.min > -1 ? this.min : nothing}
             max=${this.max > -1 ? this.max : nothing}
+            ?required=${this.required}
             supporting-text=${this.hint}
             ?error=${this.error ?? nothing}
             error-text=${ifDefined(errorTextOrUndef)}
@@ -468,6 +477,10 @@ export class Textfield extends LitElement {
         </md-outlined-text-field>
       </div>
     `;
+  }
+
+  validate() {
+    this.checkAndUpdateValidity();
   }
 
   focusTextfield() {
