@@ -60,7 +60,7 @@ export class Snackbar extends LitElement {
   static override properties = {
     message: {type: String, reflect: true},
     closeOnEscape: {type: Boolean, reflect: true},
-    timeout: {type: Number, reflect: true},
+    timeoutMs: {type: Number, reflect: true},
   };
 
   /** @nocollapse */
