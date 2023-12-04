@@ -209,6 +209,10 @@ export class MenuItem extends LitElement implements MenuItemType {
    * Sets the behavior and role of the menu item, defaults to "menuitem".
    */
   type: 'menuitem'|'option'|'button'|'link';
+  /**
+   * Whether switch within itemEnd is selected. Only needed for first render.
+   */
+  private switchSelectedInternal = false;
 
   constructor() {
     super();
@@ -280,13 +284,17 @@ export class MenuItem extends LitElement implements MenuItemType {
   }
 
   get switchSelected() {
-    if (this.itemEnd !== 'switch') return false;
-    return this.renderRoot.querySelector('cros-switch')!.selected;
+    return this.renderRoot?.querySelector('cros-switch')?.selected ?? false;
   }
 
   set switchSelected(value: boolean) {
-    if (this.itemEnd !== 'switch') return;
-    this.renderRoot.querySelector('cros-switch')!.selected = value;
+    if (!this.renderRoot) return;
+    const crosSwitch = this.renderRoot.querySelector('cros-switch');
+    if (crosSwitch === null) {
+      this.switchSelectedInternal = value;
+    } else {
+      crosSwitch.selected = value;
+    }
   }
 
   override disconnectedCallback() {
@@ -358,7 +366,8 @@ export class MenuItem extends LitElement implements MenuItemType {
         endSlot = html`
           <cros-switch
               slot="end"
-              class="slot-end">
+              class="slot-end"
+              ?selected=${this.switchSelectedInternal}>
           </cros-switch>`;
         break;
       default:
