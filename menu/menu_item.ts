@@ -8,7 +8,7 @@ import '@material/web/menu/menu-item';
 import '../placeholder_icon/placeholder-icon';
 import '../switch/switch';
 
-import {MenuItem as MenuItemType} from '@material/web/menu/menu-item';
+import {CloseMenuEvent, MenuItem as MenuItemType} from '@material/web/menu/menu-item';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 const CHECKED_ICON = html`
@@ -382,7 +382,12 @@ export class MenuItem extends LitElement implements MenuItemType {
     return [html`<slot name="end" slot="end"></slot>`, endSlot];
   }
 
-  private fireTriggerEvent() {
+  private fireTriggerEvent(e?: CloseMenuEvent) {
+    const reason = e?.detail.reason;
+    if (reason && reason.kind === 'keydown' && reason.key === 'Escape') {
+      return;
+    }
+
     this.dispatchEvent(
         new CustomEvent(MenuItem.events.MENU_ITEM_TRIGGERED, {bubbles: true, composed: true}));
   }
@@ -400,7 +405,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     }
     return html`
       <md-menu-item
-          @close-menu=${() => void this.fireTriggerEvent()}
+          @close-menu=${(e: CloseMenuEvent) => void this.fireTriggerEvent(e)}
           .keepOpen=${keepOpen}
           .disabled=${this.disabled}
           .tabIndex=${this.tabIndex}
