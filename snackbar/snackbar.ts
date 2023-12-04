@@ -125,7 +125,7 @@ export class Snackbar extends LitElement {
     if (e.newState === 'open') {
       this.startTimeout();
     } else if (e.newState === 'closed') {
-      this.dispatchEvent(new CustomEvent('cros-snackbar-closed'));
+      this.dispatchEvent(new CustomEvent(Snackbar.events.CLOSED));
     }
   }
 
@@ -133,7 +133,7 @@ export class Snackbar extends LitElement {
     if (this.timeoutMs < 1 || this.pendingTimeout) return;
     this.pendingTimeout = setTimeout(() => {
       this.hidePopover();
-      this.dispatchEvent(new CustomEvent('cros-snackbar-timeout'));
+      this.dispatchEvent(new CustomEvent(Snackbar.events.TIMEOUT));
       clearTimeout(this.pendingTimeout!);
       this.pendingTimeout = null;
     }, this.timeoutMs);
