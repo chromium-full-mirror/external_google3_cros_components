@@ -23,7 +23,7 @@ export class Chip extends LitElement {
   /** @export */
   label: string;
   /** @export */
-  type: 'filter'|'input';
+  type: 'filter'|'input'|'radio';
   /**
    * Input chips can have a trailing icon (to close chip) or not.
    * @export
@@ -50,7 +50,7 @@ export class Chip extends LitElement {
       --md-filter-chip-disabled-outline-color: var(--cros-sys-separator);
       --md-filter-chip-disabled-outline-opacity: var(--cros-sys-opacity-disabled);
       --md-filter-chip-disabled-selected-container-color: var(--cros-sys-disabled_container);
-      --md-filter-chip-disabled-selected-container-opacity: var(--cros-sys-opacity-disabled);
+      --md-filter-chip-disabled-selected-container-opacity: 1;
       --md-filter-chip-disabled-trailing-icon-color: var(--cros-sys-disabled);
       --md-filter-chip-disabled-trailing-icon-opacity: var(--cros-sys-opacity-disabled);
       --md-filter-chip-focus-label-text-color: var(--cros-sys-on_surface);
@@ -160,11 +160,28 @@ export class Chip extends LitElement {
         --md-focus-ring-color: var(--cros-sys-focus_ring);
         --md-focus-ring-width: ${FOCUS_RING_WIDTH};
       }
+      :host([type="radio"]) md-filter-chip {
+        --md-filter-chip-container-shape: 9999px;
+        --md-filter-chip-label-text-color: var(--cros-sys-on_surface);
+        --md-filter-chip-selected-container-color: var(--cros-sys-primary);
+        --md-filter-chip-selected-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
+        --md-filter-chip-selected-hover-label-text-color: var(--cros-sys-on_primary);
+        --md-filter-chip-selected-hover-leading-icon-color: var(--cros-sys-on_primary);
+        --md-filter-chip-selected-label-text-color: var(--cros-sys-on_primary);
+        --md-filter-chip-selected-leading-icon-color: var(--cros-sys-on_primary);
+        --md-filter-chip-selected-pressed-label-text-color: var(--cros-sys-on_primary);
+        --md-filter-chip-selected-pressed-leading-icon-color: var(--cros-sys-on_primary);
+        --md-filter-chip-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      }
+      :host([disabled][type="radio"]) md-filter-chip {
+        --md-filter-chip-selected-label-text-color: var(--cros-sys-on_surface);
+        --md-filter-chip-selected-leading-icon-color: var(--cros-sys-on_surface);
+      }
   `;
 
   /** @nocollapse */
   static override properties = {
-    disabled: {type: Boolean},
+    disabled: {type: Boolean, reflect: true},
     selected: {type: Boolean},
     label: {type: String},
     type: {type: String},
@@ -174,8 +191,8 @@ export class Chip extends LitElement {
 
   /** @export */
   set selected(value) {
-    // Selected only makes sense for filter chips.
-    if (this.type !== 'filter') {
+    // Selected only makes sense for filter & radio chips.
+    if (this.type !== 'filter' && this.type !== 'radio') {
       return;
     }
     // Set may be called before shadowroot exists - await updateComplete to
@@ -204,7 +221,7 @@ export class Chip extends LitElement {
   }
 
   override render() {
-    if (this.type === 'filter') {
+    if (this.type === 'filter' || this.type === 'radio') {
       return html`
         <md-filter-chip
             label=${this.label}
