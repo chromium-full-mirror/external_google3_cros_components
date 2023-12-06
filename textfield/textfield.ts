@@ -487,6 +487,10 @@ export class Textfield extends LitElement {
     this.mdTextfield!.focus();
   }
 
+  blurTextfield() {
+    this.mdTextfield!.blur();
+  }
+
   private maybeRenderLabel() {
     return this.label ?
         html`<div id="visible-label" class="text-labels">${this.label}</div>` :
