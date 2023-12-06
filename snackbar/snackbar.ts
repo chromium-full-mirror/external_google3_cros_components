@@ -127,11 +127,17 @@ export class Snackbar extends LitElement {
       this.startTimeout();
     } else if (e.newState === 'closed') {
       this.dispatchEvent(new CustomEvent(Snackbar.events.CLOSED));
+      // If the snackbar was closed before the timer fired cancel it.
+      if (this.pendingTimeout) {
+        clearTimeout(this.pendingTimeout);
+        this.pendingTimeout = null;
+      }
     }
   }
 
   private startTimeout() {
     if (this.timeoutMs < 1 || this.pendingTimeout) return;
+
     this.pendingTimeout = setTimeout(() => {
       this.hidePopover();
       this.dispatchEvent(new CustomEvent(Snackbar.events.TIMEOUT));
