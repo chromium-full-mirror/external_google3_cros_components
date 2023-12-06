@@ -30,10 +30,11 @@ export class Snackbar extends LitElement {
     #container {
       bottom: 0px;
       left: 0px;
-      margin-bottom: 24px;
-      margin-left: 24px;
+      padding-bottom: 24px;
+      padding-inline-start: 24px;
       position: fixed;
       width: 100%;
+      box-sizing: border-box;
     }
   `;
 
