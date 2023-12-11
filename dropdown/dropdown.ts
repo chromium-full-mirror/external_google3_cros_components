@@ -66,6 +66,12 @@ export class Dropdown extends LitElement {
     this.supportingText = '';
   }
 
+  override async firstUpdated() {
+    // Run the logic to forward any slotted icons to the md-select internal
+    // icon slots.
+    this.handleIconChange();
+  }
+
   override update(changedProperties: PropertyValues<Dropdown>) {
     // There is no corresponding 'valid' event to match md-select's
     // 'invalid' event, so just check on every update to see if it's still
@@ -88,13 +94,32 @@ export class Dropdown extends LitElement {
           error-text=${ifDefined(errorTextOrUndef)}
           label=${this.label || ''}
           supporting-text=${this.supportingText || ''}>
-        <slot></slot>
+        <slot
+            name="leading"
+            @slotchange=${this.handleIconChange}>
+        </slot>
       </md-outlined-select>
     `;
   }
 
   private toggleErrorStyles(error: boolean) {
     this.classList.toggle('error', error);
+  }
+
+  private handleIconChange() {
+    // Add the icon to the slot. If there is no slotted icon, remove the empty
+    // leadingSlot from the md slot so we return to the original state.
+    const leadingSlot = this.shadowRoot!.querySelector('slot[name="leading"]');
+
+    if (this.hasSlottedIcon()) {
+      leadingSlot!.setAttribute('slot', 'leading-icon');
+    } else {
+      leadingSlot!.removeAttribute('slot');
+    }
+  }
+
+  private hasSlottedIcon() {
+    return this.querySelector(`*[slot="leading"]`) !== null;
   }
 }
 
