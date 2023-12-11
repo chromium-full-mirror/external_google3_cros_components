@@ -6,7 +6,9 @@
 
 import '@material/web/select/outlined-select.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {MdOutlinedSelect} from '@material/web/select/outlined-select.js';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined';
 
 /**
  * A chromeOS compliant dropdown.
@@ -29,23 +31,70 @@ export class Dropdown extends LitElement {
   /** @nocollapse */
   static override properties = {
     disabled: {type: Boolean, reflect: true},
+    error: {type: Boolean, attribute: true},
+    errorText: {type: String, attribute: true},
+    label: {type: String},
+    supportingText: {type: String},
   };
 
   /** @export */
   disabled: boolean;
+  /**
+   * The error text shown below the dropdown on `error`. This will override
+   * native error messages returned on validation, and is only shown when
+   * `error` is set.
+   *  @export
+   */
+  errorText?: string;
+  /** @export */
+  error: boolean;
+  /** @export */
+  label?: string;
+  /** @export */
+  supportingText?: string;
+
+  get mdSelect(): MdOutlinedSelect|null {
+    return this.shadowRoot?.querySelector('md-outlined-select') || null;
+  }
 
   constructor() {
     super();
     this.disabled = false;
+    this.error = false;
+    this.errorText = '';
+    this.label = '';
+    this.supportingText = '';
+  }
+
+  override update(changedProperties: PropertyValues<Dropdown>) {
+    // There is no corresponding 'valid' event to match md-select's
+    // 'invalid' event, so just check on every update to see if it's still
+    // invalid and remove the class if not.
+    if (this.mdSelect && this.classList.contains('error')) {
+      this.toggleErrorStyles(this.mdSelect.error);
+    }
+
+    super.update(changedProperties);
   }
 
   override render() {
+    const errorTextOrUndef =
+        this.error && this.errorText ? this.errorText : undefined;
+
     return html`
       <md-outlined-select
-          ?disabled=${this.disabled}>
+          ?disabled=${this.disabled}
+          ?error=${this.error ?? nothing}
+          error-text=${ifDefined(errorTextOrUndef)}
+          label=${this.label || ''}
+          supporting-text=${this.supportingText || ''}>
         <slot></slot>
       </md-outlined-select>
     `;
+  }
+
+  private toggleErrorStyles(error: boolean) {
+    this.classList.toggle('error', error);
   }
 }
 
