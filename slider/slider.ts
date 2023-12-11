@@ -81,7 +81,8 @@ export class Slider extends LitElement {
       --md-slider-handle-height: 12px;
       --md-slider-handle-width: 12px;
       --md-slider-hover-handle-color: var(--cros-sys-primary);
-      --md-slider-hover-state-layer-opacity: 0;
+      --md-slider-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-slider-hover-state-layer-opacity: 1;
       --md-slider-inactive-track-color: var(--cros-sys-highlight_shape);
       --md-slider-label-container-color: var(--cros-sys-primary);
       --md-slider-label-container-height: 18px;
