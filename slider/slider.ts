@@ -7,7 +7,9 @@
 import '@material/web/slider/slider.js';
 
 import {MdSlider} from '@material/web/slider/slider.js';
-import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
+
+
 
 // TODO(b/285172083) remove unsupported disabled state rendering/styling
 // tslint:disable:no-any needed for JS interface
@@ -178,6 +180,13 @@ export class Slider extends LitElement {
         .valueLabel=${valueLabel}>
         ${disabledTemplate}
       </md-slider>`;
+  }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('disabled')) {
+      // Work around for b/315384008.
+      this.renderRoot.querySelector('md-slider')?.requestUpdate();
+    }
   }
 
   handleInput(e: Event) {

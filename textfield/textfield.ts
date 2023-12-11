@@ -435,6 +435,10 @@ export class Textfield extends LitElement {
     if (this.mdTextfield && this.classList.contains('error')) {
       this.toggleErrorStyles(this.mdTextfield.error);
     }
+    if (changedProperties.has('disabled')) {
+      // Work around for b/315384008.
+      this.renderRoot.querySelector('md-outlined-text-field')?.requestUpdate();
+    }
 
     super.update(changedProperties);
   }

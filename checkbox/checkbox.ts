@@ -7,7 +7,7 @@
 import '@material/web/checkbox/checkbox.js';
 
 import {MdCheckbox} from '@material/web/checkbox/checkbox.js';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 import {shouldProcessClick} from '../helpers/helpers';
 
@@ -141,6 +141,13 @@ export class Checkbox extends LitElement {
 
   override click() {
     this.mdCheckbox.click();
+  }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('disabled')) {
+      // Work around for b/315384008.
+      this.renderRoot.querySelector('md-checkbox')?.requestUpdate();
+    }
   }
 }
 

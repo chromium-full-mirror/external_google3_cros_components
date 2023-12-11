@@ -7,7 +7,7 @@
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {styleMap} from 'lit/directives/style-map';
 
 /**
@@ -156,6 +156,13 @@ export class VerticalButton extends LitElement {
           </div>
         </md-filled-button>
         `;
+  }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('disabled')) {
+      // Work around for b/315384008.
+      this.renderRoot.querySelector('md-filled-button')?.requestUpdate();
+    }
   }
 }
 
