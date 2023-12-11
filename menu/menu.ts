@@ -76,7 +76,6 @@ export class Menu extends LitElement implements MenuInterface {
     menuCorner: {type: String, attribute: 'menu-corner'},
     defaultFocus: {type: String, attribute: 'default-focus'},
     skipRestoreFocus: {type: Boolean, attribute: 'skip-restore-focus'},
-    stayOpenOnFocusout: {type: Boolean, attribute: 'stay-open-on-focus-out'},
     stayOpenOnOutsideClick:
         {type: Boolean, attribute: 'stay-open-on-outside-click'},
     isSubmenu: {type: Boolean, attribute: 'is-submenu'},
@@ -158,11 +157,6 @@ export class Menu extends LitElement implements MenuInterface {
    */
   skipRestoreFocus: boolean;
   /**
-   * Keeps the menu open when focus leaves the menu's composed subtree.
-   * @export
-   */
-  stayOpenOnFocusout: boolean;
-  /**
    * Keeps the menu open even if user clicks outside window.
    * @export
    */
@@ -219,7 +213,6 @@ export class Menu extends LitElement implements MenuInterface {
     // NOTE this comment also applies to the tabindex=0 in the template
     this.defaultFocus = FocusState.LIST_ROOT;
     this.skipRestoreFocus = false;
-    this.stayOpenOnFocusout = false;
     this.stayOpenOnOutsideClick = false;
     this.isSubmenu = false;
     this.usePopover = true;
@@ -291,7 +284,6 @@ export class Menu extends LitElement implements MenuInterface {
           @opened=${this.show}
           @closing=${this.onClosing}
           @opening=${this.onOpening}
-          .stayOpenOnFocusout=${this.stayOpenOnFocusout}
           .stayOpenOnOutsideClick=${this.stayOpenOnOutsideClick}>
         <slot></slot>
         <md-focus-ring for="menu"></md-focus-ring>
