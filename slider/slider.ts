@@ -103,6 +103,7 @@ export class Slider extends LitElement {
     }
 
     md-slider::part(focus-ring) {
+      background: var(--cros-sys-ripple_primary);
       height: 28px;
       inset: unset;
       width: 28px;
