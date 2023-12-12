@@ -305,20 +305,17 @@ export class MenuItem extends LitElement implements MenuItemType {
     }
   }
 
-  // Toggles switch item within the end slot on `enter` or `space`.
-  private readonly keyDownListener = (e: KeyboardEvent) => {
+  private keyDownListener(e: KeyboardEvent) {
     if (e.key === 'Enter' || e.key === ' ') {
-      this.fireTriggerEvent();
-      if (this.itemEnd === 'switch') {
-        const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
-        crosSwitch.selected = !crosSwitch.selected;
-      }
+      this.onTrigger();
     }
-  };
+  }
 
-  // Fires trigger event (needed for keep-open menu items). Toggles switch item
-  // within the end slot if any part of menu-item is clicked.
-  private readonly clickListener = (e: MouseEvent) => {
+  private clickListener(e: MouseEvent) {
+    this.onTrigger();
+  }
+
+  private onTrigger() {
     if (this.itemEnd === 'switch') {
       const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
       crosSwitch.selected = !crosSwitch.selected;
@@ -329,7 +326,7 @@ export class MenuItem extends LitElement implements MenuItemType {
       }
     }
     this.fireTriggerEvent();
-  };
+  }
 
   // Set item to be placed in `end` slot of menu item (if any).
   // Checked property (check mark) will always take precedence over any icon
