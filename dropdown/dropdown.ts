@@ -10,6 +10,8 @@ import {MdOutlinedSelect} from '@material/web/select/outlined-select.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
 
+const CROS_SELECT_OUTLINE_WIDTH = 2;
+
 /**
  * A chromeOS compliant dropdown.
  */
@@ -18,7 +20,58 @@ export class Dropdown extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
-      font: var(--cros-body-0-font);
+    }
+
+    md-outlined-select {
+      /* Base styles */
+      --md-outlined-select-text-field-container-shape: 8px;
+      --md-outlined-select-text-field-outline-width: 0px;
+
+      --md-outlined-select-text-field-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-input-text-font: var(--cros-body-2-font-family);
+      --md-outlined-select-text-field-input-text-line-height: var(--cros-body-2-line-height);
+      --md-outlined-select-text-field-input-text-size: var(--cros-body-2-font-size);
+      --md-outlined-select-text-field-input-text-weight: var(--cros-body-2-font-weight);
+
+      --md-outlined-select-text-field-label-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-label-text-font: var(--cros-label-1-font-family);
+
+      --md-outlined-select-text-field-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-supporting-text-font: var(--cros-label-2-font-family);
+      --md-outlined-select-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
+      --md-outlined-select-text-field-supporting-text-size: var(--cros-label-2-font-size);
+      --md-outlined-select-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
+
+      /* Error */
+      --md-outlined-select-text-field-error-label-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-error-focus-outline-color: var(--cros-sys-error);
+      --md-outlined-select-text-field-error-hover-state-layer-opacity: 0;
+      --md-outlined-select-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
+      --md-outlined-select-text-field-error-supporting-text-color: var(--cros-sys-error);
+
+      /* Focus */
+      --md-outlined-select-text-field-focus-label-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-focus-leading-icon-color: var(--cros-sys-secondary);
+      --md-outlined-select-text-field-focus-outline-color: var(--cros-sys-focus_ring);
+      --md-outlined-select-text-field-focus-outline-width: ${
+      CROS_SELECT_OUTLINE_WIDTH}px;
+
+      /* Hover */
+      --md-outlined-select-text-field-hover-outline-width: 0px;
+      --md-outlined-select-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-hover-state-layer-opacity: 0;
+    }
+
+    /**
+     * Some md styling can override the color provided to the md-select, so we
+     * explicitly set it here as well.
+     */
+    ::slotted(svg) {
+      fill: var(--cros-sys-secondary);
+    }
+
+    ::slotted(*) {
+      color: var(--cros-sys-secondary);
     }
   `;
 
