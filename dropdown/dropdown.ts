@@ -98,6 +98,7 @@ export class Dropdown extends LitElement {
             name="leading"
             @slotchange=${this.handleIconChange}>
         </slot>
+        <slot></slot>
       </md-outlined-select>
     `;
   }
