@@ -302,11 +302,10 @@ export class Menu extends LitElement implements MenuInterface {
   close() {
     this.open = false;
     this.dispatchEvent(new Event('closed'));
-    // Set default focus back to entire menu. Default for keyboard navigation
-    // apart from arrow up/down. We avoid doing this in focusFirstItem() to
+    // Set default focus back correctly (in case keyboard arrow nav has
+    // changed it temporarily). We avoid doing this in focusFirstItem() to
     // avoid race conditions with menu open.
-    this.renderRoot.querySelector('md-menu')!.defaultFocus =
-        FocusState.LIST_ROOT;
+    this.renderRoot.querySelector('md-menu')!.defaultFocus = this.defaultFocus;
     this.anchorElement?.setAttribute('aria-expanded', 'false');
   }
 
