@@ -74,6 +74,14 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-hover-outline-width: 0px;
       --md-outlined-select-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-hover-state-layer-opacity: 0;
+
+      /* Md-menu */
+      --md-menu-container-color: var(--cros-bg-color-elevation-3);
+      --md-menu-container-shape: 8px;
+      --md-menu-item-bottom-space: 0px;
+      --md-menu-item-container-color: var(--cros-bg-color-elevation-3);
+      --md-menu-item-one-line-container-height: 36px;
+      --md-menu-item-top-space: 0px;
     }
 
    .text-labels {

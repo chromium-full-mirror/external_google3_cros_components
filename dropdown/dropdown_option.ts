@@ -19,6 +19,23 @@ export class DropdownOption extends LitElement {
     :host {
       font: var(--cros-body-0-font);
     }
+
+    md-select-option {
+      --md-menu-item-focus-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-hover-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-menu-item-hover-state-layer-opacity: 1;
+      --md-menu-item-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-label-text-font: var(--cros-button-2-font-family);
+      --md-menu-item-label-text-size: var(--cros-button-2-font-size);
+      --md-menu-item-label-text-weight: var(--cros-button-2-font-weight);
+      --md-menu-item-pressed-label-text-color: var(--cros-sys-on_surface);
+      --md-menu-item-pressed-state-layer-color:var(--cros-sys-on_surface);
+      --md-menu-item-pressed-state-layer-opacity: 1;
+      --md-menu-item-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-menu-item-selected-container-color: var(--cros-sys-hover_on_subtle);
+      --md-menu-item-selected-label-text-color: var(--cros-sys-on_surface);
+    }
   `;
 
   /** @nocollapse */
