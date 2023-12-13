@@ -22,14 +22,22 @@ import {ifDefined} from 'lit/directives/if-defined';
 const DROPDOWN_CONTAINER_ON_BASE = css`var(--cros-sys-input_field_on_base)`;
 const DROPDOWN_CONTAINER_ON_SHADED = css`var(--cros-sys-input_field_on_shaded)`;
 
+/**
+ * We need the outline to render on the outside of the dropdown container, which
+ * is an element we control. This adds an extra 2px padding to accomodate the
+ * extra space, as the md-select does not support changing its height, only line
+ * height.
+ */
 const CROS_DROPDOWN_OUTLINE_WIDTH = 2;
+const DEFAULT_TOP_BOTTOM_SPACE = 8;
+const MD_FIELD_TOP_BOTTOM_SPACE_PX =
+    css`${DEFAULT_TOP_BOTTOM_SPACE + CROS_DROPDOWN_OUTLINE_WIDTH}px`;
 
 /**
  * A chromeOS compliant dropdown.
  */
 export class Dropdown extends LitElement {
   /** @nocollapse */
-  // TODO: b/315895240 - Fix height of dropdown to 36px;
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
@@ -41,6 +49,8 @@ export class Dropdown extends LitElement {
 
     md-outlined-select {
       /* Base styles */
+      --md-outlined-field-top-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
+      --md-outlined-field-bottom-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-select-text-field-container-shape: 8px;
       --md-outlined-select-text-field-container-color: ${
       DROPDOWN_CONTAINER_ON_BASE};
@@ -106,7 +116,7 @@ export class Dropdown extends LitElement {
       background-color: ${DROPDOWN_CONTAINER_ON_BASE};
       border-radius: 8px;
       left: ${CROS_DROPDOWN_OUTLINE_WIDTH}px;
-      min-height: 48px;
+      min-height: 36px;
       position: absolute;
       right: ${CROS_DROPDOWN_OUTLINE_WIDTH}px;
       top: ${CROS_DROPDOWN_OUTLINE_WIDTH}px;
