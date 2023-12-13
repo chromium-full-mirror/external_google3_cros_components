@@ -22,6 +22,10 @@ export class Dropdown extends LitElement {
       display: inline-block;
     }
 
+    :host([disabled]) .text-labels {
+      opacity: var(--cros-disabled-opacity);
+    }
+
     md-outlined-select {
       /* Base styles */
       --md-outlined-select-text-field-container-shape: 8px;
@@ -33,9 +37,6 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-input-text-size: var(--cros-body-2-font-size);
       --md-outlined-select-text-field-input-text-weight: var(--cros-body-2-font-weight);
 
-      --md-outlined-select-text-field-label-text-color: var(--cros-sys-on_surface);
-      --md-outlined-select-text-field-label-text-font: var(--cros-label-1-font-family);
-
       --md-outlined-select-text-field-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-supporting-text-font: var(--cros-label-2-font-family);
       --md-outlined-select-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
@@ -43,14 +44,12 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
 
       /* Error */
-      --md-outlined-select-text-field-error-label-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-error-focus-outline-color: var(--cros-sys-error);
       --md-outlined-select-text-field-error-hover-state-layer-opacity: 0;
       --md-outlined-select-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
       --md-outlined-select-text-field-error-supporting-text-color: var(--cros-sys-error);
 
       /* Focus */
-      --md-outlined-select-text-field-focus-label-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-focus-leading-icon-color: var(--cros-sys-secondary);
       --md-outlined-select-text-field-focus-outline-color: var(--cros-sys-focus_ring);
       --md-outlined-select-text-field-focus-outline-width: ${
@@ -60,6 +59,20 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-hover-outline-width: 0px;
       --md-outlined-select-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-hover-state-layer-opacity: 0;
+    }
+
+   .text-labels {
+      color: var(--cros-sys-on_surface);
+    }
+
+    :host(.focused) .text-labels {
+      color: var(--cros-sys-primary);
+    }
+
+    #visible-label {
+      font: var(--cros-label-1-font);
+      padding-bottom: 8px;
+      padding-inline-start: ${CROS_SELECT_OUTLINE_WIDTH}px;
     }
 
     /**
@@ -101,8 +114,11 @@ export class Dropdown extends LitElement {
   errorText?: string;
   /** @export */
   error: boolean;
-  /** @export */
-  label?: string;
+  /**
+   * The visible label above the dropdown.
+   * @export
+   */
+  label: string;
   /** @export */
   supportingText?: string;
 
@@ -141,11 +157,11 @@ export class Dropdown extends LitElement {
         this.error && this.errorText ? this.errorText : undefined;
 
     return html`
+      ${this.maybeRenderLabel()}
       <md-outlined-select
           ?disabled=${this.disabled}
           ?error=${this.error ?? nothing}
           error-text=${ifDefined(errorTextOrUndef)}
-          label=${this.label || ''}
           supporting-text=${this.supportingText || ''}>
         <slot
             name="leading"
@@ -174,6 +190,12 @@ export class Dropdown extends LitElement {
 
   private hasSlottedIcon() {
     return this.querySelector(`*[slot="leading"]`) !== null;
+  }
+
+  private maybeRenderLabel() {
+    return this.label ?
+        html`<div id="visible-label" class="text-labels">${this.label}</div>` :
+        nothing;
   }
 }
 
