@@ -12,6 +12,7 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 const ICON_SIZE = css`20px`;
 const FOCUS_RING_WIDTH = css`2px`;
+const CHIP_PADDING = css`12px`;
 /**
  * A cros-compliant chip component.
  * See spec:
@@ -68,6 +69,7 @@ export class Chip extends LitElement {
       --md-filter-chip-label-text-weight: var(--cros-button-1-font-weight);
       --md-filter-chip-label-text-color: var(--cros-sys-on_surface);
       --md-filter-chip-leading-icon-color: var(--cros-sys-on_surface);
+      --md-filter-chip-leading-space:  ${CHIP_PADDING};
       --md-filter-chip-outline-color: var(--cros-sys-separator);
       --md-filter-chip-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-filter-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
@@ -84,6 +86,7 @@ export class Chip extends LitElement {
       --md-filter-chip-selected-pressed-state-layer-opacity: 1;
       --md-filter-chip-selected-trailing-icon-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-trailing-icon-color: var(--cros-sys-on_surface);
+      --md-filter-chip-trailing-space: ${CHIP_PADDING};
       --md-focus-ring-duration: 0s;
     }
 
@@ -108,11 +111,13 @@ export class Chip extends LitElement {
       --md-suggestion-chip-label-text-weight: var(--cros-button-1-font-weight);
       --md-suggestion-chip-label-text-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-leading-icon-color: var(--cros-sys-on_surface);
+      --md-suggestion-chip-leading-space: ${CHIP_PADDING};
       --md-suggestion-chip-outline-color: var(--cros-sys-separator);
       --md-suggestion-chip-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
       --md-suggestion-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-suggestion-chip-pressed-state-layer-opacity: 1;
+      --md-suggestion-chip-trailing-space: ${CHIP_PADDING};
     }
 
     md-input-chip {
@@ -139,6 +144,7 @@ export class Chip extends LitElement {
       --md-input-chip-label-text-weight: var(--cros-button-1-font-weight);
       --md-input-chip-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-leading-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-leading-space: ${CHIP_PADDING};
       --md-input-chip-outline-color: var(--cros-sys-separator);
       --md-input-chip-pressed-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-pressed-leading-icon-color: var(--cros-sys-on_surface);
@@ -146,6 +152,7 @@ export class Chip extends LitElement {
       --md-input-chip-pressed-state-layer-opacity: 1;
       --md-input-chip-pressed-trailing-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-trailing-icon-color: var(--cros-sys-on_surface);
+      --md-input-chip-trailing-space: ${CHIP_PADDING};
       }
 
       :host([avatar]) md-input-chip {
