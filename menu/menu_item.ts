@@ -307,6 +307,7 @@ export class MenuItem extends LitElement implements MenuItemType {
 
   private keyDownListener(e: KeyboardEvent) {
     if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
       this.onTrigger();
     }
   }
