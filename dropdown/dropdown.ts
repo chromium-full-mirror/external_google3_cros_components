@@ -74,12 +74,16 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-input-text-size: var(--cros-body-2-font-size);
       --md-outlined-select-text-field-input-text-weight: var(--cros-body-2-font-weight);
 
+      --md-outlined-field-supporting-text-leading-space: ${
+      CROS_DROPDOWN_OUTLINE_WIDTH}px;
+      --md-outlined-field-supporting-text-top-space: ${
+      MD_FIELD_TOP_BOTTOM_SPACE_PX};
+      --md-outlined-field-supporting-text-trailing-space: ${
+      CROS_DROPDOWN_OUTLINE_WIDTH}px;
       --md-outlined-select-text-field-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-supporting-text-font: var(--cros-label-2-font-family);
       --md-outlined-select-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
       --md-outlined-select-text-field-supporting-text-size: var(--cros-label-2-font-size);
-      --md-outlined-field-supporting-text-top-space: ${
-      MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-select-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
 
       /* Error */
