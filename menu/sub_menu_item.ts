@@ -5,8 +5,8 @@
  */
 
 import '@material/web/menu/menu.js';
-import '@material/web/menu/sub-menu';
-import '@material/web/menu/menu-item';
+import '@material/web/menu/sub-menu.js';
+import '@material/web/menu/menu-item.js';
 import './menu_item';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';

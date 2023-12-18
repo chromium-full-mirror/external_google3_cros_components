@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '@material/web/tabs/tabs';
+import '@material/web/tabs/tabs.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
