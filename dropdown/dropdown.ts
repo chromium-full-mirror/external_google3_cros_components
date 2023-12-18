@@ -34,6 +34,13 @@ const MD_FIELD_TOP_BOTTOM_SPACE_PX =
     css`${DEFAULT_TOP_BOTTOM_SPACE + CROS_DROPDOWN_OUTLINE_WIDTH}px`;
 
 /**
+ * To account for the extra spacing around the textfield background and the
+ * focus outline, we have to increase the corner radius by the outline width.
+ */
+const CROS_DROPDOWN_CONTAINER_CORNER_RADIUS =
+    css`${8 + CROS_DROPDOWN_OUTLINE_WIDTH}px`;
+
+/**
  * A chromeOS compliant dropdown.
  */
 export class Dropdown extends LitElement {
@@ -51,9 +58,18 @@ export class Dropdown extends LitElement {
       /* Base styles */
       --md-outlined-field-top-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-field-bottom-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
-      --md-outlined-select-text-field-container-shape: 8px;
+      --md-outlined-field-trailing-content-color: var(--cros-sys-secondary);
+
       --md-outlined-select-text-field-container-color: ${
       DROPDOWN_CONTAINER_ON_BASE};
+      --md-outlined-select-text-field-container-shape-end-end: ${
+      CROS_DROPDOWN_CONTAINER_CORNER_RADIUS};
+      --md-outlined-select-text-field-container-shape-end-start: ${
+      CROS_DROPDOWN_CONTAINER_CORNER_RADIUS};
+      --md-outlined-select-text-field-container-shape-start-end: ${
+      CROS_DROPDOWN_CONTAINER_CORNER_RADIUS};
+      --md-outlined-select-text-field-container-shape-start-start: ${
+      CROS_DROPDOWN_CONTAINER_CORNER_RADIUS};
       --md-outlined-select-text-field-outline-width: 0px;
 
       --md-outlined-select-text-field-input-text-color: var(--cros-sys-on_surface);
@@ -66,24 +82,33 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-supporting-text-font: var(--cros-label-2-font-family);
       --md-outlined-select-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
       --md-outlined-select-text-field-supporting-text-size: var(--cros-label-2-font-size);
+      --md-outlined-field-supporting-text-top-space: ${
+      MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-select-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
 
       /* Error */
+      --md-outlined-field-error-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-focus-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-select-text-field-error-focus-outline-color: var(--cros-sys-error);
       --md-outlined-select-text-field-error-hover-state-layer-opacity: 0;
       --md-outlined-select-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
       --md-outlined-select-text-field-error-supporting-text-color: var(--cros-sys-error);
 
       /* Focus */
+      --md-outlined-field-focus-trailing-content-color: var(--cros-sys-primary);
+      --md-outlined-select-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-focus-leading-icon-color: var(--cros-sys-secondary);
+      --md-outlined-select-text-field-focus-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-focus-outline-color: var(--cros-sys-focus_ring);
       --md-outlined-select-text-field-focus-outline-width: ${
       CROS_DROPDOWN_OUTLINE_WIDTH}px;
 
       /* Hover */
+      --md-outlined-field-hover-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-select-text-field-hover-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-hover-outline-width: 0px;
-      --md-outlined-select-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-hover-state-layer-opacity: 0;
+      --md-outlined-select-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
 
       /* Md-menu */
       --md-menu-container-color: var(--cros-bg-color-elevation-3);
@@ -98,13 +123,18 @@ export class Dropdown extends LitElement {
       color: var(--cros-sys-on_surface);
     }
 
-    :host(.focused) .text-labels {
-      color: var(--cros-sys-primary);
+    /**
+     * The .error class is applied on native constraint invalidation, and the
+     * error attribute is set by clients, so we need to use both to style the
+     * label correctly.
+    */
+    :host(:is(.error, [error])) .text-labels {
+      color: var(--cros-sys-on_surface);
     }
 
     #visible-label {
       font: var(--cros-label-1-font);
-      padding-bottom: 8px;
+      padding-bottom: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       padding-inline-start: ${CROS_DROPDOWN_OUTLINE_WIDTH}px;
     }
 

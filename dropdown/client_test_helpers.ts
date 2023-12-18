@@ -33,6 +33,11 @@ export class SelectHarness extends MdSelectHarness {
   }
 }
 
+/** Get a harness for the `cros-dropdown` element. */
+export function getHarnessFor(dropdown: Dropdown) {
+  return new MdSelectHarness(getMdSelect(dropdown));
+}
+
 /** Helper to open the dropdown and wait for any animations. */
 export async function openDropdown(dropdown: Dropdown) {
   const selectHarness = new SelectHarness(dropdown);
