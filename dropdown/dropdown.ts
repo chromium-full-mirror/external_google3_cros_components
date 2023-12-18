@@ -50,10 +50,6 @@ export class Dropdown extends LitElement {
       display: inline-block;
     }
 
-    :host([disabled]) .text-labels {
-      opacity: var(--cros-disabled-opacity);
-    }
-
     md-outlined-select {
       /* Base styles */
       --md-outlined-field-top-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
@@ -110,6 +106,14 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-hover-state-layer-opacity: 0;
       --md-outlined-select-text-field-hover-supporting-text-color: var(--cros-sys-on_surface);
 
+      /* Disabled */
+      --md-outlined-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-field-disabled-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-select-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-disabled-outline-width: 0px;
+      --md-outlined-select-text-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
+      --md-outlined-select-text-field-disabled-supporting-text-opacity: 1;
+
       /* Md-menu */
       --md-menu-container-color: var(--cros-bg-color-elevation-3);
       --md-menu-container-shape: 8px;
@@ -119,7 +123,15 @@ export class Dropdown extends LitElement {
       --md-menu-item-top-space: 0px;
     }
 
-   .text-labels {
+    .text-labels {
+      color: var(--cros-sys-on_surface);
+    }
+
+    :host(.focused) .text-labels {
+      color: var(--cros-sys-primary);
+    }
+
+    :host([disabled]) .text-labels {
       color: var(--cros-sys-on_surface);
     }
 
