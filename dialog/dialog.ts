@@ -27,7 +27,53 @@ export class Dialog extends LitElement {
       --md-dialog-supporting-text-color: var(--cros-sys-on_surface_variant);
       --md-dialog-supporting-text-font: var(--cros-body-1-font);
       }
+      :host([type="list"]) slot[name="headline"] {
+        background-color: var(--cros-sys-surface1);
+      }
+      ::slotted(:is([slot="headline"])) {
+        padding: 32px 32px 16px 32px;
+      }
+      ::slotted(:is([slot="content"])) {
+        padding: 0px 32px 32px 32px;
+      }
+      ::slotted(:is([slot="actions"])) {
+        padding: 0px 32px 28px 32px;
+      }
+      :host([type="list"]) ::slotted(:is[slot="headline"]) {
+        padding: 32px 32px 20px 32px;
+      }
+      :host([type="illustration"]) {
+        --cros-dialog-headline-alignment: center;
+        --cros-dialog-content-alignment: center;
+        --cros-dialog-actions-alignment: center;
+      }
+      slot {
+        display: flex;
+      }
+      slot[name="headline"] {
+        justify-content: var(--cros-dialog-headline-alignment, left);
+      }
+      slot[name="content"] {
+        justify-content: var(--cros-dialog-content-alignment, left);
+      }
+      slot[name="actions"] {
+        justify-content: var(--cros-dialog-actions-alignment, right);
+      }
   `;
+
+  /** @nocollapse */
+  static override properties = {
+    type: {type: String, reflect: true},
+  };
+
+  /** @export */
+  type: 'basic'|'illustration'|'list'|'pagination';
+
+  constructor() {
+    super();
+
+    this.type = 'basic';
+  }
 
   override render() {
     return html`
