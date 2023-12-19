@@ -9,10 +9,16 @@
  * cros-dropdown in tests.
  */
 
+import './dropdown_option'; // So querySelector picks up the correct type.
+
+import {SelectHarness as MdSelectHarness} from '@material/web/select/harness.js';
 import {MdOutlinedSelect} from '@material/web/select/outlined-select.js';
 import {cast} from 'google3/javascript/common/asserts/asserts';
 import {isInstanceOf} from 'google3/javascript/common/asserts/guards';
-import {SelectHarness as MdSelectHarness} from 'google3/third_party/javascript/material/web/select/harness';
+
+import {waitForComponentReady} from '../client_test_helpers';
+import {castExists} from '../helpers/helpers';
+import {clickMenuItem} from '../menu/client_test_helpers';
 
 import {Dropdown} from './dropdown';
 
@@ -42,4 +48,19 @@ export function getHarnessFor(dropdown: Dropdown) {
 export async function openDropdown(dropdown: Dropdown) {
   const selectHarness = new SelectHarness(dropdown);
   await selectHarness.click();
+}
+
+/**
+ * Click on a dropdown option triggering it to be the selection for a wrapping
+ * cros-dropdown component. Assumes the dropdown is already open.
+ */
+export async function clickDropdownOption(
+    dropdown: Dropdown, dropdownOptionIndex: number) {
+  const dropdownOption = castExists(
+      dropdown.querySelectorAll('cros-dropdown-option')[dropdownOptionIndex],
+      `no such option at index ${dropdownOptionIndex}`);
+
+  await clickMenuItem(dropdownOption);
+
+  await waitForComponentReady(dropdown);
 }

@@ -146,7 +146,7 @@ export async function closeMenu(menu: Menu) {
  * reference to the menuItem DOM element that was revealed.
  */
 export async function revealMenuItem(
-    menu: Menu, menuItemFilter: MenuItemFilter) {
+    menu: Menu, menuItemFilter: MenuItemFilter): Promise<MenuItem|SubMenuItem> {
   await menu.updateComplete;
   // Flush the microtask queue to ensure all menu children have finished
   // rendering.
@@ -175,17 +175,25 @@ export async function revealMenuItem(
 export async function triggerMenuItem(
     menu: Menu, menuItemFilter: MenuItemFilter) {
   const target = await revealMenuItem(menu, menuItemFilter);
-  // The interactive element that click and focus events are fired on is the
+  await clickMenuItem(target);
+  await menu.updateComplete;
+}
+
+/**
+ * Clicks a provided menu item ignoring if it's currently in an open menu or
+ * not.
+ */
+export async function clickMenuItem(menuItem: MenuItem|SubMenuItem) {
+  // The interactive element tVhat click and focus events are fired on is the
   // list-item inside of the md-menu-item.
   const mdListItem = castExists<LitElement|null>(
-      target.renderRoot.querySelector('md-menu-item'),
+      menuItem.renderRoot.querySelector('md-menu-item'),
       `cros-menu-item[headline=${
-          target.headline}] has no md-menu-item inside of it.`);
+          menuItem.headline}] has no md-menu-item inside of it.`);
   const interactiveElement = castExists<HTMLElement|null>(
       mdListItem.renderRoot.querySelector('.list-item'),
       `cros-menu-item[headline=${
-          target
+          menuItem
               .headline}] md-list-item has no .list-item element inside of it.`);
   interactiveElement.click();
-  await menu.updateComplete;
 }

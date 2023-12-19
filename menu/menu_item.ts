@@ -11,6 +11,8 @@ import '../switch/switch';
 import {CloseMenuEvent, MenuItem as MenuItemType} from '@material/web/menu/menu-item.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
+import {ifDefined} from 'lit/directives/if-defined';
+
 const CHECKED_ICON = html`
   <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
     <path d="M13.7071 7.29289C13.3166 6.90237 12.6834 6.90237 12.2929 7.29289L9 10.5858L7.70711 9.29289C7.31658 8.90237 6.68342 8.90237 6.29289 9.29289C5.90237 9.68342 5.90237 10.3166 6.29289 10.7071L8.29289 12.7071C8.68342 13.0976 9.31658 13.0976 9.70711 12.7071L13.7071 8.70711C14.0976 8.31658 14.0976 7.68342 13.7071 7.29289Z"/>
@@ -202,17 +204,18 @@ export class MenuItem extends LitElement implements MenuItemType {
    */
   shortcutText: string;
   /**
-   * Whether or not to display the menu item in the selected visual state.
-   */
-  selected: boolean;
-  /**
    * Sets the behavior and role of the menu item, defaults to "menuitem".
    */
   type: 'menuitem'|'option'|'button'|'link';
+
   /**
-   * Whether switch within itemEnd is selected. Only needed for first render.
+   * For properties menu-item proxies to a child element via a setter, any
+   * attempt to set the value before firstUpdated() will cause the value to be
+   * dropped since there is no md-menu-item to send the value to. To prevent
+   * this we cache these values and set them on first render.
    */
-  private switchSelectedInternal = false;
+  protected missedPropertySets: Partial<
+      {selected: boolean, typeaheadText: string, switchSelected: boolean}> = {};
 
   constructor() {
     super();
@@ -227,7 +230,6 @@ export class MenuItem extends LitElement implements MenuItemType {
     this.tabIndex = 0;
     this.checked = false;
     this.shortcutText = 'Shortcut';
-    this.selected = false;
     this.type = 'menuitem';
   }
 
@@ -274,13 +276,32 @@ export class MenuItem extends LitElement implements MenuItemType {
    * `headline` property.
    */
   get typeaheadText() {
-    return this.renderRoot.querySelector('md-menu-item')?.typeaheadText ?? '';
+    return this.renderRoot?.querySelector('md-menu-item')?.typeaheadText ?? '';
   }
 
   set typeaheadText(text: string) {
-    const item = this.renderRoot.querySelector('md-menu-item');
-    if (!item) return;
-    item.typeaheadText = text;
+    const item = this.renderRoot?.querySelector('md-menu-item');
+    if (!item) {
+      this.missedPropertySets.typeaheadText = text;
+    } else {
+      item.typeaheadText = text;
+    }
+  }
+
+  /**
+   * Whether or not to display the menu item in the selected visual state.
+   */
+  get selected() {
+    return this.renderRoot?.querySelector('md-menu-item')?.selected ?? false;
+  }
+
+  set selected(selected: boolean) {
+    const item = this.renderRoot?.querySelector('md-menu-item');
+    if (!item) {
+      this.missedPropertySets.selected = selected;
+    } else {
+      item.selected = selected;
+    }
   }
 
   get switchSelected() {
@@ -290,8 +311,8 @@ export class MenuItem extends LitElement implements MenuItemType {
   set switchSelected(value: boolean) {
     if (!this.renderRoot) return;
     const crosSwitch = this.renderRoot.querySelector('cros-switch');
-    if (crosSwitch === null) {
-      this.switchSelectedInternal = value;
+    if (!crosSwitch) {
+      this.missedPropertySets.switchSelected = value;
     } else {
       crosSwitch.selected = value;
     }
@@ -365,7 +386,7 @@ export class MenuItem extends LitElement implements MenuItemType {
           <cros-switch
               slot="end"
               class="slot-end"
-              ?selected=${this.switchSelectedInternal}>
+              ?selected=${!!this.missedPropertySets.switchSelected}>
           </cros-switch>`;
         break;
       default:
@@ -407,7 +428,8 @@ export class MenuItem extends LitElement implements MenuItemType {
           .keepOpen=${keepOpen}
           .disabled=${this.disabled}
           .tabIndex=${this.tabIndex}
-          ?selected=${this.selected}
+           ?selected=${!!this.missedPropertySets.selected}
+           typeahead-text=${ifDefined(this.missedPropertySets.typeaheadText)}
           .type=${this.type}>
         <div slot="headline" id="headline">${this.headline}</div>
         ${startSlot}

@@ -199,7 +199,10 @@ export class Dropdown extends LitElement {
     label: {type: String},
     shaded: {type: Boolean, reflect: true},
     supportingText: {type: String},
+    value: {type: String},
   };
+
+  private preRenderValue: string|undefined = undefined;
 
   /** @export */
   disabled: boolean;
@@ -234,6 +237,26 @@ export class Dropdown extends LitElement {
 
   get mdSelect(): MdOutlinedSelect|null {
     return this.shadowRoot?.querySelector('md-outlined-select') || null;
+  }
+
+  /**
+   * The value of the dropdown, should match the `value` property of a child
+   * dropdown option. Defaults to empty string if there is no selected option.
+   * @export
+   */
+  get value() {
+    if (!this.mdSelect) {
+      return this.preRenderValue ?? '';
+    }
+    return this.mdSelect.value;
+  }
+
+  set value(value: string) {
+    if (!this.mdSelect) {
+      this.preRenderValue = value;
+    } else {
+      this.mdSelect.value = value;
+    }
   }
 
   constructor() {
@@ -272,10 +295,13 @@ export class Dropdown extends LitElement {
       <div id="main-container">
         <div id="dropdown-background"></div>
         <md-outlined-select
+            @change=${this.onChange}
             ?disabled=${this.disabled}
             ?error=${this.error ?? nothing}
             error-text=${ifDefined(errorTextOrUndef)}
-            supporting-text=${this.supportingText || ''}>
+            supporting-text=${this.supportingText || ''}
+            quick
+            value=${ifDefined(this.preRenderValue)}>
           <slot
               name="leading"
               @slotchange=${this.handleIconChange}>
@@ -284,6 +310,12 @@ export class Dropdown extends LitElement {
         </md-outlined-select>
       </div>
     `;
+  }
+
+  private onChange(e: Event) {
+    // Md-select's changeevent won't exit out shadow DOM, redispatch it to
+    // ensure clients can listen to it.
+    this.dispatchEvent(new Event('change', {bubbles: true}));
   }
 
   private toggleErrorStyles(error: boolean) {
