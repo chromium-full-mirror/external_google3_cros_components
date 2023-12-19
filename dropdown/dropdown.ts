@@ -74,6 +74,7 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-input-text-size: var(--cros-body-2-font-size);
       --md-outlined-select-text-field-input-text-weight: var(--cros-body-2-font-weight);
 
+      --md-outlined-field-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-field-supporting-text-leading-space: ${
       CROS_DROPDOWN_OUTLINE_WIDTH}px;
       --md-outlined-field-supporting-text-top-space: ${
@@ -116,7 +117,6 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-disabled-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-disabled-outline-width: 0px;
       --md-outlined-select-text-field-disabled-supporting-text-color: var(--cros-sys-on_surface);
-      --md-outlined-select-text-field-disabled-supporting-text-opacity: 1;
 
       /* Md-menu */
       --md-menu-container-color: var(--cros-bg-color-elevation-3);
@@ -136,7 +136,11 @@ export class Dropdown extends LitElement {
     }
 
     :host([disabled]) .text-labels {
-      color: var(--cros-sys-on_surface);
+      opacity: var(--cros-disabled-opacity);
+    }
+
+    :host([disabled]) #dropdown-background {
+      opacity: var(--cros-disabled-opacity);
     }
 
     /**
