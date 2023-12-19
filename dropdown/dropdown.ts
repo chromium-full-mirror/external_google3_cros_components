@@ -88,8 +88,12 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
 
       /* Error */
-      --md-outlined-field-error-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-content-color: var(--cros-sys-on_surface);
+      --md-outlined-field-error-focus-content-color: var(--cros-sys-on_surface);
+      --md-outlined-field-error-hover-content-color: var(--cros-sys-on_surface);
       --md-outlined-field-error-focus-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-hover-trailing-content-color: var(--cros-sys-secondary);
+      --md-outlined-field-error-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-select-text-field-error-focus-outline-color: var(--cros-sys-error);
       --md-outlined-select-text-field-error-hover-state-layer-opacity: 0;
       --md-outlined-select-text-field-error-hover-supporting-text-color: var(--cros-sys-error);
@@ -149,7 +153,7 @@ export class Dropdown extends LitElement {
      * label correctly.
     */
     :host(:is(.error, [error])) .text-labels {
-      color: var(--cros-sys-on_surface);
+      color: var(--cros-sys-error);
     }
 
     #visible-label {
