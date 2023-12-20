@@ -172,6 +172,7 @@ export class Slider extends LitElement {
                                              nothing;
     return html`
       <md-slider
+        @change=${this.handleChange}
         @input=${this.handleInput}
         ?disabled=${this.disabled}
         .labeled=${this.withLabel}
@@ -192,7 +193,13 @@ export class Slider extends LitElement {
     }
   }
 
-  handleInput(e: Event) {
+  private handleChange(e: Event) {
+    // Md-slider's change event won't exit our shadow DOM, redispatch it to
+    // ensure clients can listen to it.
+    this.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  private handleInput(e: Event) {
     const sliderValue = (e.target as MdSlider).value;
     if (sliderValue !== undefined) {
       this.value = sliderValue;
