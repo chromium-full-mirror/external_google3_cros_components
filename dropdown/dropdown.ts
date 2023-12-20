@@ -304,6 +304,8 @@ export class Dropdown extends LitElement {
         <div id="dropdown-background"></div>
         <md-outlined-select
             @change=${this.onChange}
+            @opened=${this.onOpened}
+            @closed=${this.onClosed}
             ?disabled=${this.disabled}
             ?error=${this.error ?? nothing}
             error-text=${ifDefined(errorTextOrUndef)}
@@ -324,6 +326,21 @@ export class Dropdown extends LitElement {
     // Md-select's changeevent won't exit out shadow DOM, redispatch it to
     // ensure clients can listen to it.
     this.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  // Manually set the arrow colors by listening to opened and closed events
+  // because we can't pierce through the shadow root of the md-select from our
+  // wrapper to read aria-expanded.
+  private onOpened(e: Event) {
+    this.mdSelect?.style.setProperty(
+        '--md-outlined-field-focus-trailing-content-color',
+        'var(--cros-sys-primary)');
+  }
+
+  private onClosed(e: Event) {
+    this.mdSelect?.style.setProperty(
+        '--md-outlined-field-focus-trailing-content-color',
+        'var(--cros-sys-secondary)');
   }
 
   private toggleErrorStyles(error: boolean) {
