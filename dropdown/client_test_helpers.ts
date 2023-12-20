@@ -34,8 +34,17 @@ export function getMdSelect(dropdown: Dropdown): MdOutlinedSelect {
  * MD select.
  */
 export class SelectHarness extends MdSelectHarness {
+  dropdown: Dropdown;
+
   constructor(dropdown: Dropdown) {
     super(getMdSelect(dropdown));
+    this.dropdown = dropdown;
+  }
+
+  /** Helper to add focus to the cros-dropdown. */
+  override async focusWithKeyboard() {
+    this.addPseudoClass(this.dropdown, ':focus-within');
+    await super.focusWithKeyboard();
   }
 }
 
@@ -46,7 +55,7 @@ export function getHarnessFor(dropdown: Dropdown) {
 
 /** Helper to open the dropdown and wait for any animations. */
 export async function openDropdown(dropdown: Dropdown) {
-  const selectHarness = new SelectHarness(dropdown);
+  const selectHarness = getHarnessFor(dropdown);
   await selectHarness.click();
 }
 

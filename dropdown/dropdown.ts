@@ -100,7 +100,7 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-error-supporting-text-color: var(--cros-sys-error);
 
       /* Focus */
-      --md-outlined-field-focus-trailing-content-color: var(--cros-sys-primary);
+      --md-outlined-field-focus-trailing-content-color: var(--cros-sys-secondary);
       --md-outlined-select-text-field-focus-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-focus-leading-icon-color: var(--cros-sys-secondary);
       --md-outlined-select-text-field-focus-supporting-text-color: var(--cros-sys-on_surface);
@@ -135,7 +135,7 @@ export class Dropdown extends LitElement {
       color: var(--cros-sys-on_surface);
     }
 
-    :host(.focused) .text-labels {
+    :host(:focus-within) .text-labels {
       color: var(--cros-sys-primary);
     }
 
