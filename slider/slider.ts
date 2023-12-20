@@ -65,9 +65,11 @@ export class Slider extends LitElement {
     css`
     :host {
       display: inline-block;
+      min-inline-size: 200px;
     }
     md-slider {
       display: block;
+      min-inline-size: inherit;
       --active-disabled: var(--cros-sys-on_surface);
       --inactive-disabled: var(--cros-sys-on_surface);
       --disabled-color: var(--inactive-disabled);
