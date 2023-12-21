@@ -340,6 +340,7 @@ export class MenuItem extends LitElement implements MenuItemType {
   private onTrigger() {
     if (this.itemEnd === 'switch') {
       const crosSwitch = this.renderRoot.querySelector('cros-switch')!;
+      if (this.disabled) return;
       crosSwitch.selected = !crosSwitch.selected;
       if (crosSwitch.selected) {
         this.setAttribute('aria-checked', 'true');
