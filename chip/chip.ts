@@ -19,6 +19,11 @@ const closeIcon = html`
     <path d="M291-232.348 232.348-291l189-189-189-189L291-727.652l189 189 189-189L727.652-669l-189 189 189 189L669-232.348l-189-189-189 189Z"/>
   </svg>`;
 
+const checkedIcon = html`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" id="checked-icon" slot="selected-icon">
+    <path d="M395-277.348 218.348-455l57.891-57.891L395-395.131l288.761-287.76L741.652-624 395-277.348Z"/>
+  </svg>`;
+
 /**
  * A cros-compliant chip component.
  * See spec:
@@ -83,11 +88,13 @@ export class Chip extends LitElement {
       --md-filter-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-filter-chip-pressed-state-layer-opacity: 1;
       --md-filter-chip-selected-container-color: var(--cros-sys-secondary_container);
+      --md-filter-chip-selected-hover-label-text-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-selected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
       --md-filter-chip-selected-hover-state-layer-opacity: 1;
       --md-filter-chip-selected-label-text-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-selected-leading-icon-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-selected-outline-width: 1px;
+      --md-filter-chip-selected-pressed-label-text-color: var(--cros-sys-on_secondary_container);
       --md-filter-chip-selected-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-filter-chip-selected-pressed-state-layer-opacity: 1;
       --md-filter-chip-selected-trailing-icon-color: var(--cros-sys-on_secondary_container);
@@ -193,6 +200,17 @@ export class Chip extends LitElement {
         height: ${ICON_SIZE};
         width: ${ICON_SIZE};
       }
+      #checked-icon {
+        height: ${ICON_SIZE};
+        width: ${ICON_SIZE};
+      }
+      :host([type="filter"]) #checked-icon {
+        fill: var(--cros-sys-on_surface);
+      }
+      :host([type="radio"]) #checked-icon {
+        fill: var(--cros-sys-on_primary);
+      }
+
   `;
 
   /** @nocollapse */
@@ -244,6 +262,7 @@ export class Chip extends LitElement {
             ?disabled=${this.disabled}
             ?selected=${this.selected}>
           <slot slot='icon' name='icon'></slot>
+          ${checkedIcon}
         </md-filter-chip>
         `;
     }
