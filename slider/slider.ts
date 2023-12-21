@@ -193,7 +193,7 @@ export class Slider extends LitElement {
     }
   }
 
-  private handleChange(e: Event) {
+  private handleChange() {
     // Md-slider's change event won't exit our shadow DOM, redispatch it to
     // ensure clients can listen to it.
     this.dispatchEvent(new Event('change', {bubbles: true}));
