@@ -13,6 +13,12 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 const ICON_SIZE = css`20px`;
 const FOCUS_RING_WIDTH = css`2px`;
 const CHIP_PADDING = css`12px`;
+
+const closeIcon = html`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" id="close-icon" slot='remove-trailing-icon'>
+    <path d="M291-232.348 232.348-291l189-189-189-189L291-727.652l189 189 189-189L727.652-669l-189 189 189 189L669-232.348l-189-189-189 189Z"/>
+  </svg>`;
+
 /**
  * A cros-compliant chip component.
  * See spec:
@@ -128,7 +134,6 @@ export class Chip extends LitElement {
       --md-input-chip-disabled-leading-icon-opacity: var(--cros-sys-opacity-disabled);
       --md-input-chip-disabled-outline-color: var(--cros-sys-separator);
       --md-input-chip-disabled-outline-opacity: var(--cros-sys-opacity-disabled);
-      --md-input-chip-disabled-trailing-icon-color: var(--cros-sys-disabled);
       --md-input-chip-focus-label-text-color: var(--cros-sys-on_surface);
       --md-input-chip-focus-leading-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-focus-trailing-icon-color: var(--cros-sys-on_surface);
@@ -151,7 +156,6 @@ export class Chip extends LitElement {
       --md-input-chip-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
       --md-input-chip-pressed-state-layer-opacity: 1;
       --md-input-chip-pressed-trailing-icon-color: var(--cros-sys-on_surface);
-      --md-input-chip-trailing-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-trailing-space: ${CHIP_PADDING};
       }
 
@@ -183,6 +187,11 @@ export class Chip extends LitElement {
       :host([disabled][type="radio"]) md-filter-chip {
         --md-filter-chip-selected-label-text-color: var(--cros-sys-on_surface);
         --md-filter-chip-selected-leading-icon-color: var(--cros-sys-on_surface);
+      }
+      #close-icon {
+        fill: var(--cros-sys-on_surface);
+        height: ${ICON_SIZE};
+        width: ${ICON_SIZE};
       }
   `;
 
@@ -245,6 +254,7 @@ export class Chip extends LitElement {
           ?disabled=${this.disabled}
           ?avatar=${this.avatar}>
             <slot slot='icon' name='icon'></slot>
+            ${closeIcon}
           </md-input-chip>
         `;
     }
