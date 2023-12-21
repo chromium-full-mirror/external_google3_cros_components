@@ -6,8 +6,8 @@
 
 import '@material/web/textfield/outlined-text-field.js';
 
-import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
+import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field.js.js';
 import {ifDefined} from 'lit/directives/if-defined';
 
 /**
@@ -281,6 +281,7 @@ export class Textfield extends LitElement {
     this.valueInitial = value;
     if (this.mdTextfield) {
       this.mdTextfield.value = this.valueInitial;
+      this.checkAndUpdateValidity();
     }
   }
 
@@ -427,14 +428,6 @@ export class Textfield extends LitElement {
   }
 
   override update(changedProperties: PropertyValues<Textfield>) {
-    // There is no corresponding 'valid' event to match md-textfield's
-    // 'invalid' event, so just check on every update to see if it's still
-    // invalid and remove the class if not. It's possible to also just
-    // toggleErrorStyle() on update exclusively, but listening for the invalid
-    // event allows us to sync the style update with MD's style update.
-    if (this.mdTextfield && this.classList.contains('error')) {
-      this.toggleErrorStyles(this.mdTextfield.error);
-    }
     if (changedProperties.has('disabled')) {
       // Work around for b/315384008.
       this.renderRoot.querySelector('md-outlined-text-field')?.requestUpdate();
@@ -483,16 +476,18 @@ export class Textfield extends LitElement {
     `;
   }
 
-  validate() {
-    this.checkAndUpdateValidity();
-  }
-
   focusTextfield() {
     this.mdTextfield!.focus();
   }
 
   blurTextfield() {
     this.mdTextfield!.blur();
+  }
+
+  reportValidity() {
+    const valid = this.mdTextfield!.reportValidity();
+    this.toggleErrorStyles(!valid);
+    return valid;
   }
 
   private maybeRenderLabel() {
@@ -535,6 +530,8 @@ export class Textfield extends LitElement {
     this.classList.toggle('focused');
   }
 
+  // Sync the validity state here to ensure our visible label has the correct
+  // styling, as there is no corresponding `valid` event dispatched.
   private onChange() {
     // If the last committed value contained non numeric characters, we can
     // strip them out here.
