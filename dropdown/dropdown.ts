@@ -52,6 +52,7 @@ export class Dropdown extends LitElement {
 
     md-outlined-select {
       /* Base styles */
+      min-width: var(--cros-dropdown-min-width, 210px);
       --md-outlined-field-top-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-field-bottom-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-field-trailing-content-color: var(--cros-sys-secondary);
