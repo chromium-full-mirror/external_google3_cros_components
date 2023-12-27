@@ -13,8 +13,6 @@ import './dropdown_option'; // So querySelector picks up the correct type.
 
 import {SelectHarness as MdSelectHarness} from '@material/web/select/harness.js';
 import {MdOutlinedSelect} from '@material/web/select/outlined-select.js';
-import {cast} from 'google3/javascript/common/asserts/asserts';
-import {isInstanceOf} from 'google3/javascript/common/asserts/guards';
 
 import {waitForComponentReady} from '../client_test_helpers';
 import {castExists} from '../helpers/helpers';
@@ -24,9 +22,9 @@ import {Dropdown} from './dropdown';
 
 /** Get the internal `md-outlined-select` element. */
 export function getMdSelect(dropdown: Dropdown): MdOutlinedSelect {
-  return cast(
+  return castExists(
       dropdown.renderRoot.querySelector('md-outlined-select'),
-      isInstanceOf(MdOutlinedSelect));
+      'Could not find md-outlined-select inside cros-dropdown');
 }
 
 /**
