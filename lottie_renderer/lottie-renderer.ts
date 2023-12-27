@@ -94,10 +94,26 @@ declare interface TokenColor {
 
 /** The CustomEvent names that LottieRenderer can fire. */
 export enum CrosLottieEvent {
+  /**
+   * Fired when the animation has been loaded on the worker thread and is
+   * ready to play.
+   */
   INITIALIZED = `cros-lottie-initialized`,
+  /**
+   * Fired when the animation has been paused on the worker thread.
+   */
   PAUSED = `cros-lottie-paused`,
+  /**
+   * Fired when the animation has begun playing on the worker thread.
+   */
   PLAYING = `cros-lottie-playing`,
+  /**
+   * Fired when the animation has been resized on the worker thread.
+   */
   RESIZED = `cros-lottie-resized`,
+  /**
+   * Fired when the animation has begun playing on the worker thread.
+   */
   STOPPED = `cros-lottie-stopped`,
 }
 
@@ -281,6 +297,11 @@ export class LottieRenderer extends LitElement {
     loop: {type: Boolean, attribute: true},
     dynamic: {type: Boolean, attribute: true},
   };
+
+  /** @nocollapse */
+  static events = {
+    ...CrosLottieEvent,
+  } as const;
 
   constructor() {
     super();
@@ -620,6 +641,14 @@ export class LottieRenderer extends LitElement {
 customElements.define('cros-lottie-renderer', LottieRenderer);
 
 declare global {
+  interface HTMLElementEventMap {
+    [LottieRenderer.events.INITIALIZED]: Event;
+    [LottieRenderer.events.PAUSED]: Event;
+    [LottieRenderer.events.PLAYING]: Event;
+    [LottieRenderer.events.RESIZED]: Event;
+    [LottieRenderer.events.STOPPED]: Event;
+  }
+
   interface HTMLElementTagNameMap {
     'cros-lottie-renderer': LottieRenderer;
   }
