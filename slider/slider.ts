@@ -119,6 +119,7 @@ export class Slider extends LitElement {
 
   /** @nocollapse */
   static override properties = {
+    ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     value: {type: Number, reflect: true},
     disabled: {type: Boolean},
     withTickMarks: {type: Boolean},
@@ -149,6 +150,7 @@ export class Slider extends LitElement {
 
   constructor() {
     super();
+    this.ariaLabel = '';
     this.value = 0;
     this.disabled = false;
     this.withTickMarks = false;
@@ -175,6 +177,7 @@ export class Slider extends LitElement {
         @change=${this.handleChange}
         @input=${this.handleInput}
         ?disabled=${this.disabled}
+        aria-label=${this.ariaLabel || ''}
         .labeled=${this.withLabel}
         .min=${this.min}
         .max=${this.max}
