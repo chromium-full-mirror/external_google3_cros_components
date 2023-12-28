@@ -323,7 +323,7 @@ export class Dropdown extends LitElement {
     `;
   }
 
-  private onChange(e: Event) {
+  private onChange() {
     // Md-select's changeevent won't exit out shadow DOM, redispatch it to
     // ensure clients can listen to it.
     this.dispatchEvent(new Event('change', {bubbles: true}));

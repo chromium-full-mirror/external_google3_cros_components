@@ -333,7 +333,7 @@ export class MenuItem extends LitElement implements MenuItemType {
     }
   }
 
-  private clickListener(e: MouseEvent) {
+  private clickListener() {
     this.onTrigger();
   }
 
