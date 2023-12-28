@@ -157,11 +157,6 @@ export class Menu extends LitElement implements MenuInterface {
    */
   skipRestoreFocus: boolean;
   /**
-   * Keeps the menu open even if user clicks outside window.
-   * @export
-   */
-  stayOpenOnOutsideClick: boolean;
-  /**
    * Set automatically by `cros-sub-menu-item`. Whether or not this menu is a
    * submenu and should defer handling left keyboard navigations to the parent
    * `cros-sub-menu-item`.
@@ -213,7 +208,6 @@ export class Menu extends LitElement implements MenuInterface {
     // NOTE this comment also applies to the tabindex=0 in the template
     this.defaultFocus = FocusState.LIST_ROOT;
     this.skipRestoreFocus = false;
-    this.stayOpenOnOutsideClick = false;
     this.isSubmenu = false;
     this.usePopover = true;
   }
@@ -284,7 +278,7 @@ export class Menu extends LitElement implements MenuInterface {
           @opened=${this.show}
           @closing=${this.onClosing}
           @opening=${this.onOpening}
-          .stayOpenOnOutsideClick=${this.stayOpenOnOutsideClick}>
+        >
         <slot></slot>
         <md-focus-ring for="menu"></md-focus-ring>
       </md-menu>
