@@ -29,7 +29,7 @@ const DROPDOWN_CONTAINER_ON_SHADED = css`var(--cros-sys-input_field_on_shaded)`;
  * height.
  */
 const CROS_DROPDOWN_OUTLINE_WIDTH = 2;
-const DEFAULT_TOP_BOTTOM_SPACE = 8;
+const DEFAULT_TOP_BOTTOM_SPACE = 6;
 const MD_FIELD_TOP_BOTTOM_SPACE_PX =
     css`${DEFAULT_TOP_BOTTOM_SPACE + CROS_DROPDOWN_OUTLINE_WIDTH}px`;
 
