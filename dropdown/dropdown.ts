@@ -334,13 +334,13 @@ export class Dropdown extends LitElement {
   // Manually set the arrow colors by listening to opened and closed events
   // because we can't pierce through the shadow root of the md-select from our
   // wrapper to read aria-expanded.
-  private onOpened(e: Event) {
+  private onOpened() {
     this.mdSelect?.style.setProperty(
         '--md-outlined-field-focus-trailing-content-color',
         'var(--cros-sys-primary)');
   }
 
-  private onClosed(e: Event) {
+  private onClosed() {
     this.mdSelect?.style.setProperty(
         '--md-outlined-field-focus-trailing-content-color',
         'var(--cros-sys-secondary)');

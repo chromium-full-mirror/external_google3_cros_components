@@ -5,12 +5,10 @@
  */
 
 import '@material/web/menu/menu-item.js';
-import '../placeholder_icon/placeholder-icon';
 import '../switch/switch';
 
 import {CloseMenuEvent, MenuItem as MenuItemType} from '@material/web/menu/menu-item.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
-
 import {ifDefined} from 'lit/directives/if-defined';
 
 const CHECKED_ICON = html`
