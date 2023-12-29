@@ -236,12 +236,7 @@ export class LottieRenderer extends LitElement {
     return this.renderRoot.querySelector('#onscreen-canvas');
   }
 
-  /**
-   * Temporary public API to ensure component color resolution works.
-   * TODO: b/274998765 - Remove legacy usages of this function and then make
-   * private.
-   */
-  onColorSchemeChanged = () => {
+  private readonly onColorSchemeChanged = () => {
     if (!this.dynamic) return;
     this.refreshAnimationColors();
   };
