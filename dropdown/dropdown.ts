@@ -209,6 +209,7 @@ export class Dropdown extends LitElement {
     error: {type: Boolean, attribute: true},
     errorText: {type: String, attribute: true},
     label: {type: String},
+    open: {type: Boolean, reflect: true},
     shaded: {type: Boolean, reflect: true},
     supportingText: {type: String},
     value: {type: String},
@@ -235,6 +236,12 @@ export class Dropdown extends LitElement {
    * @export
    */
   label: string;
+
+  /**
+   * Whether or not the dropdown is open.
+   * @export
+   */
+  open: boolean;
 
   /**
    * When false, will use the darker container designed to sit on app-base. When
@@ -277,6 +284,7 @@ export class Dropdown extends LitElement {
     this.error = false;
     this.errorText = '';
     this.label = '';
+    this.open = false;
     this.shaded = false;
     this.supportingText = '';
   }
@@ -313,6 +321,7 @@ export class Dropdown extends LitElement {
             @closed=${this.onClosed}
             ?disabled=${this.disabled}
             ?error=${this.error ?? nothing}
+            aria-expanded=${this.open ? 'true' : nothing}
             aria-label=${ariaLabel}
             error-text=${ifDefined(errorTextOrUndef)}
             supporting-text=${this.supportingText || ''}
@@ -338,12 +347,14 @@ export class Dropdown extends LitElement {
   // because we can't pierce through the shadow root of the md-select from our
   // wrapper to read aria-expanded.
   private onOpened() {
+    this.open = true;
     this.mdSelect?.style.setProperty(
         '--md-outlined-field-focus-trailing-content-color',
         'var(--cros-sys-primary)');
   }
 
   private onClosed() {
+    this.open = false;
     this.mdSelect?.style.setProperty(
         '--md-outlined-field-focus-trailing-content-color',
         'var(--cros-sys-secondary)');
