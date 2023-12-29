@@ -29,7 +29,9 @@ const DROPDOWN_CONTAINER_ON_SHADED = css`var(--cros-sys-input_field_on_shaded)`;
  * height.
  */
 const CROS_DROPDOWN_OUTLINE_WIDTH = 2;
-const DEFAULT_TOP_BOTTOM_SPACE = 6;
+const DEFAULT_TOP_BOTTOM_SPACE = 8;
+const CROS_DROPDOWN_TOP_BOTTOM_SPACE_PX =
+    css`${DEFAULT_TOP_BOTTOM_SPACE - CROS_DROPDOWN_OUTLINE_WIDTH}px`;
 const MD_FIELD_TOP_BOTTOM_SPACE_PX =
     css`${DEFAULT_TOP_BOTTOM_SPACE + CROS_DROPDOWN_OUTLINE_WIDTH}px`;
 
@@ -79,7 +81,7 @@ export class Dropdown extends LitElement {
       --md-outlined-field-supporting-text-leading-space: ${
       CROS_DROPDOWN_OUTLINE_WIDTH}px;
       --md-outlined-field-supporting-text-top-space: ${
-      MD_FIELD_TOP_BOTTOM_SPACE_PX};
+      CROS_DROPDOWN_TOP_BOTTOM_SPACE_PX};
       --md-outlined-field-supporting-text-trailing-space: ${
       CROS_DROPDOWN_OUTLINE_WIDTH}px;
       --md-outlined-select-text-field-supporting-text-color: var(--cros-sys-on_surface);
@@ -159,7 +161,7 @@ export class Dropdown extends LitElement {
 
     #visible-label {
       font: var(--cros-label-1-font);
-      padding-bottom: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
+      padding-bottom: ${CROS_DROPDOWN_TOP_BOTTOM_SPACE_PX};
       padding-inline-start: ${CROS_DROPDOWN_OUTLINE_WIDTH}px;
     }
 
