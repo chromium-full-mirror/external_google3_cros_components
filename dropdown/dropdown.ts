@@ -204,6 +204,7 @@ export class Dropdown extends LitElement {
 
   /** @nocollapse */
   static override properties = {
+    ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     disabled: {type: Boolean, reflect: true},
     error: {type: Boolean, attribute: true},
     errorText: {type: String, attribute: true},
@@ -298,6 +299,7 @@ export class Dropdown extends LitElement {
   }
 
   override render() {
+    const ariaLabel = this.ariaLabel || this.label;
     const errorTextOrUndef =
         this.error && this.errorText ? this.errorText : undefined;
 
@@ -311,6 +313,7 @@ export class Dropdown extends LitElement {
             @closed=${this.onClosed}
             ?disabled=${this.disabled}
             ?error=${this.error ?? nothing}
+            aria-label=${ariaLabel}
             error-text=${ifDefined(errorTextOrUndef)}
             supporting-text=${this.supportingText || ''}
             quick
