@@ -76,6 +76,7 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-input-text-line-height: var(--cros-body-2-line-height);
       --md-outlined-select-text-field-input-text-size: var(--cros-body-2-font-size);
       --md-outlined-select-text-field-input-text-weight: var(--cros-body-2-font-weight);
+      --md-outlined-select-text-field-leading-icon-size: 20px;
 
       --md-outlined-field-supporting-text-color: var(--cros-sys-on_surface);
       --md-outlined-field-supporting-text-leading-space: ${
@@ -193,6 +194,8 @@ export class Dropdown extends LitElement {
 
     ::slotted(*) {
       color: var(--cros-sys-secondary);
+      height: var(--md-outlined-select-text-field-leading-icon-size);
+      width: var(--md-outlined-select-text-field-leading-icon-size);
     }
   `;
 
