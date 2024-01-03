@@ -262,6 +262,11 @@ export class Dropdown extends LitElement {
     return this.shadowRoot?.querySelector('md-outlined-select') || null;
   }
 
+  get mdField(): HTMLElement|null {
+    return this.mdSelect?.shadowRoot?.querySelector('md-outlined-field') ||
+        null;
+  }
+
   /**
    * The value of the dropdown, should match the `value` property of a child
    * dropdown option. Defaults to empty string if there is no selected option.
@@ -325,7 +330,7 @@ export class Dropdown extends LitElement {
             @closed=${this.onClosed}
             ?disabled=${this.disabled}
             ?error=${this.error ?? nothing}
-            aria-expanded=${this.open ? 'true' : nothing}
+            aria-expanded=${this.open ? 'true' : 'false'}
             aria-label=${ariaLabel}
             error-text=${ifDefined(errorTextOrUndef)}
             supporting-text=${this.supportingText || ''}
@@ -362,6 +367,7 @@ export class Dropdown extends LitElement {
     this.mdSelect?.style.setProperty(
         '--md-outlined-field-focus-trailing-content-color',
         'var(--cros-sys-secondary)');
+    this.mdField!.ariaExpanded = 'false';
   }
 
   private toggleErrorStyles(error: boolean) {
