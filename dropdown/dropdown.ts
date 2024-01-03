@@ -70,6 +70,7 @@ export class Dropdown extends LitElement {
       --md-outlined-select-text-field-container-shape-start-start: ${
       CROS_DROPDOWN_CONTAINER_CORNER_RADIUS};
       --md-outlined-select-text-field-outline-width: 0px;
+      --md-outlined-select-text-field-trailing-icon-size: 20px;
 
       --md-outlined-select-text-field-input-text-color: var(--cros-sys-on_surface);
       --md-outlined-select-text-field-input-text-font: var(--cros-body-2-font-family);
