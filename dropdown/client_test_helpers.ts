@@ -54,7 +54,10 @@ export function getHarnessFor(dropdown: Dropdown) {
 /** Helper to open the dropdown and wait for any animations. */
 export async function openDropdown(dropdown: Dropdown) {
   const selectHarness = getHarnessFor(dropdown);
-  await selectHarness.click();
+  await waitForComponentReady(dropdown);
+  if (!selectHarness.isOpen) {
+    await selectHarness.click();
+  }
 }
 
 /**
