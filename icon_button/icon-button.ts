@@ -336,6 +336,15 @@ export class IconButton extends LitElement {
     this.selected = false;
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    // All aria properties on button just get proxied down to the real <button>
+    // element, as such we set role to presentation so screenreaders ignore
+    // this component and instead only read aria attributes off the inner
+    // interactive element.
+    this.setAttribute('role', 'presentation');
+  }
+
   override render() {
     const ariaLabel = this.ariaLabel || '';
     if (this.buttonStyle === 'toggle') {

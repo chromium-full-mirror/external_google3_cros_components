@@ -223,6 +223,15 @@ export class Button extends LitElement {
     this.disabled = false;
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    // All aria properties on button just get proxied down to the real <button>
+    // element, as such we set role to presentation so screenreaders ignore
+    // this component and instead only read aria attributes off the inner
+    // interactive element.
+    this.setAttribute('role', 'presentation');
+  }
+
   override firstUpdated() {
     this.addEventListener('click', this.clickListener);
   }
