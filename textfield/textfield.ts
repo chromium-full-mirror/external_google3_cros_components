@@ -100,7 +100,7 @@ export class Textfield extends LitElement {
       MD_TEXTFIELD_OUTLINE_WIDTH}px;
       --md-outlined-field-supporting-text-trailing-space: ${
       MD_TEXTFIELD_OUTLINE_WIDTH}px;
-      --md-outlined-field-supporting-text-top-space: 8px;;
+      --md-outlined-field-supporting-text-top-space: 6px;
       --md-outlined-text-field-focus-caret-color: var(--cros-sys-primary);
       --md-outlined-text-field-container-shape-end-end: ${
       MD_TEXTFIELD_CONTAINER_CORNER_RADIUS};
@@ -116,10 +116,10 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-input-text-prefix-color: var(--cros-sys-on_surface);
       --md-outlined-text-field-input-text-suffix-color: var(--cros-sys-secondary);
       --md-outlined-text-field-input-text-suffix-leading-space: 8px;
-      --md-outlined-text-field-input-text-font: var(--cros-body-2-font-family);
-      --md-outlined-text-field-input-text-size: var(--cros-body-2-font-size);
+      --md-outlined-text-field-input-text-font: var(--cros-textfield-font-family, var(--cros-body-2-font-family));
+      --md-outlined-text-field-input-text-size: var(--cros-textfield-font-size, var(--cros-body-2-font-size));
       --md-outlined-text-field-input-text-line-height: var(--cros-body-2-line-height);
-      --md-outlined-text-field-input-text-weight: var(--cros-body-2-font-weight);
+      --md-outlined-text-field-input-text-weight: var(--cros-textfield-font-weight, var(--cros-body-2-font-weight));
       --md-outlined-text-field-outline-width: 0px;
       --md-outlined-text-field-supporting-text-font: var(--cros-label-2-font-family);
       --md-outlined-text-field-supporting-text-size: var(--cros-label-2-font-size);
