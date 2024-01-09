@@ -214,6 +214,10 @@ export class Chip extends LitElement {
   `;
 
   /** @nocollapse */
+  static override shadowRootOptions:
+      ShadowRootInit = {mode: 'open', delegatesFocus: true};
+
+  /** @nocollapse */
   static override properties = {
     disabled: {type: Boolean, reflect: true},
     selected: {type: Boolean},
