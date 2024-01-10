@@ -68,7 +68,6 @@ export class Snackbar extends LitElement {
   static events = {
     /** The snackbar popup timed out and closed itself. */
     TIMEOUT: 'cros-snackbar-timeout',
-    CLOSED: 'cros-snackbar-closed',
   } as const;
 
   constructor() {
@@ -126,7 +125,6 @@ export class Snackbar extends LitElement {
     if (e.newState === 'open') {
       this.startTimeout();
     } else if (e.newState === 'closed') {
-      this.dispatchEvent(new CustomEvent(Snackbar.events.CLOSED));
       // If the snackbar was closed before the timer fired cancel it.
       if (this.pendingTimeout) {
         clearTimeout(this.pendingTimeout);
@@ -165,6 +163,5 @@ declare global {
   }
   interface HTMLElementEventMap {
     [Snackbar.events.TIMEOUT]: Event;
-    [Snackbar.events.CLOSED]: Event;
   }
 }
