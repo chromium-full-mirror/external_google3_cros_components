@@ -461,8 +461,8 @@ export class Textfield extends LitElement {
             pattern=${this.pattern}
             step=1
             placeholder=${this.placeholder}
-            @focusin=${() => this.toggleFocusStyle(true)}
-            @focusout=${() => this.toggleFocusStyle(false)}
+            @focus=${this.toggleFocusStyle}
+            @blur=${this.toggleFocusStyle}
             @change=${this.onChange}
             @input=${this.onInput}
             @invalid=${this.onInvalid}>
@@ -526,13 +526,13 @@ export class Textfield extends LitElement {
     this.classList.toggle('error', error);
   }
 
-  private toggleFocusStyle(toggle: boolean) {
-    this.classList.toggle('focused', toggle);
+  private toggleFocusStyle() {
+    this.classList.toggle('focused');
   }
 
   // Sync the validity state here to ensure our visible label has the correct
   // styling, as there is no corresponding `valid` event dispatched.
-  private async onChange() {
+  private onChange() {
     // If the last committed value contained non numeric characters, we can
     // strip them out here.
     if (this.type === 'integer' && this.value.match(NON_INTEGER_REGEX)) {
@@ -548,13 +548,6 @@ export class Textfield extends LitElement {
           this.value = this.lastValidValue;
       }
     }
-
-    // Calling reportValidity() will focus the text field. Since we do this on
-    // "change" (blur), wait for other focus changes to finish, like tabbing.
-    // TODO: b/318757822 - Remove this for non-form associated textfields.
-    await new Promise<void>((resolve) => {
-      setTimeout(resolve);
-    });
     this.checkAndUpdateValidity();
     this.dispatchEvent(new Event('change', {bubbles: true}));
     this.lastValidValue = this.value;
