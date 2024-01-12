@@ -10,9 +10,12 @@ import '@material/web/chips/suggestion-chip.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
-const ICON_SIZE = css`20px`;
-const FOCUS_RING_WIDTH = css`2px`;
-const CHIP_PADDING = css`12px`;
+/** Size of an icon rendered inside a chip. */
+export const ICON_SIZE = css`20px`;
+/** Width of a focus ring. */
+export const FOCUS_RING_WIDTH = css`2px`;
+/** Horizontal chip padding. */
+export const CHIP_PADDING = css`12px`;
 
 const closeIcon = html`
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" id="close-icon" slot='remove-trailing-icon'>
@@ -28,6 +31,7 @@ const checkedIcon = html`
  * A cros-compliant chip component.
  * See spec:
  * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3167%3A23000&t=ndVwslDMK3OwbNXW-0
+ * Note: For a radio chip please use cros-radio-chip instead.
  */
 export class Chip extends LitElement {
   /** @export */
@@ -35,7 +39,7 @@ export class Chip extends LitElement {
   /** @export */
   label: string;
   /** @export */
-  type: 'filter'|'input'|'radio';
+  type: 'filter'|'input';
   /**
    * Input chips can have a trailing icon (to close chip) or not.
    * @export
@@ -178,23 +182,6 @@ export class Chip extends LitElement {
         --md-focus-ring-color: var(--cros-sys-focus_ring);
         --md-focus-ring-width: ${FOCUS_RING_WIDTH};
       }
-      :host([type="radio"]) md-filter-chip {
-        --md-filter-chip-container-shape: 9999px;
-        --md-filter-chip-label-text-color: var(--cros-sys-on_surface);
-        --md-filter-chip-selected-container-color: var(--cros-sys-primary);
-        --md-filter-chip-selected-hover-state-layer-color: var(--cros-sys-hover_on_prominent);
-        --md-filter-chip-selected-hover-label-text-color: var(--cros-sys-on_primary);
-        --md-filter-chip-selected-hover-leading-icon-color: var(--cros-sys-on_primary);
-        --md-filter-chip-selected-label-text-color: var(--cros-sys-on_primary);
-        --md-filter-chip-selected-leading-icon-color: var(--cros-sys-on_primary);
-        --md-filter-chip-selected-pressed-label-text-color: var(--cros-sys-on_primary);
-        --md-filter-chip-selected-pressed-leading-icon-color: var(--cros-sys-on_primary);
-        --md-filter-chip-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
-      }
-      :host([disabled][type="radio"]) md-filter-chip {
-        --md-filter-chip-selected-label-text-color: var(--cros-sys-on_surface);
-        --md-filter-chip-selected-leading-icon-color: var(--cros-sys-on_surface);
-      }
       #close-icon {
         fill: var(--cros-sys-on_surface);
         height: ${ICON_SIZE};
@@ -207,10 +194,6 @@ export class Chip extends LitElement {
       :host([type="filter"]) #checked-icon {
         fill: var(--cros-sys-on_surface);
       }
-      :host([type="radio"]) #checked-icon {
-        fill: var(--cros-sys-on_primary);
-      }
-
   `;
 
   /** @nocollapse */
@@ -229,8 +212,8 @@ export class Chip extends LitElement {
 
   /** @export */
   set selected(value) {
-    // Selected only makes sense for filter & radio chips.
-    if (this.type !== 'filter' && this.type !== 'radio') {
+    // Selected only makes sense for filter chips.
+    if (this.type !== 'filter') {
       return;
     }
     // Set may be called before shadowroot exists - await updateComplete to
@@ -259,7 +242,7 @@ export class Chip extends LitElement {
   }
 
   override render() {
-    if (this.type === 'filter' || this.type === 'radio') {
+    if (this.type === 'filter') {
       return html`
         <md-filter-chip
             label=${this.label}
