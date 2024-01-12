@@ -169,13 +169,18 @@ interface ResizeDetail {
 }
 
 /**
- * Helper function for converting between the hexadecimal string we get from the
- * computed style to the format that lottie expects, which is an array of four
- * floats. Since these come directly from the computed style and color pipeline,
- * we can be confident that we are only going to be parsing 8 digit hexadecimal
- * strings.
+ * A fixed length array type for encoding Lottie colors. The format is [r, g, b,
+ * alpha], where each entry is a value between [0-1].
  */
-function convertHexToLottieRGBA(hexString: string): number[] {
+declare type LottieRGBAArray = [number, number, number, number];
+
+/**
+ * Helper function for converting between the hexadecimal string we get from the
+ * computed style to LottieRGBAArray type. Since these come directly
+ * from the computed style and color pipeline, we can be confident that we are
+ * only going to be parsing 8 digit hexadecimal strings.
+ */
+function convertHexToLottieRGBA(hexString: string): LottieRGBAArray {
   let r;
   let g;
   let b;
