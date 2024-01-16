@@ -7,7 +7,7 @@
 import '@material/web/ripple/ripple.js';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 import {FOCUS_RING_WIDTH, ICON_SIZE} from './chip';
 
@@ -127,6 +127,7 @@ export class RadioChip extends LitElement {
 
     this.setAttribute('role', 'radio');
     this.setAttribute('tabindex', '0');
+    this.setAttribute('aria-checked', String(this.selected));
     this.addEventListener('keydown', this.onKeydown);
   }
 
@@ -138,6 +139,12 @@ export class RadioChip extends LitElement {
   override firstUpdated() {
     this.renderRoot.querySelector('md-focus-ring')!.attach(this);
     this.renderRoot.querySelector('md-ripple')!.attach(this);
+  }
+
+  override updated(changedProperties: PropertyValues<RadioChip>) {
+    if (changedProperties.has('selected')) {
+      this.setAttribute('aria-checked', String(this.selected));
+    }
   }
 
   override render() {
