@@ -10,6 +10,8 @@
  *
  */
 
+import 'google3/third_party/javascript/cros_components/snackbar/snackbar';
+
 import {html, LitElement} from 'lit';
 
 import {Button} from '../button/button';
