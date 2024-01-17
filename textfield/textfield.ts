@@ -242,6 +242,7 @@ export class Textfield extends LitElement {
     pattern: {type: String, attribute: true},
     autofix: {type: String, attribute: true},
     required: {type: Boolean, attribute: true},
+    noSpinner: {type: Boolean, attribute: true},
   };
 
   /** @nocollapse */
@@ -383,6 +384,11 @@ export class Textfield extends LitElement {
    */
   required: boolean;
 
+  /**
+   * When true, hide the spinner for `type="number"` text fields.
+   */
+  noSpinner: boolean;
+
   get mdTextfield(): MdOutlinedTextField|undefined {
     return this.renderRoot?.querySelector('md-outlined-text-field') ||
         undefined;
@@ -418,6 +424,7 @@ export class Textfield extends LitElement {
     this.placeholder = '';
     this.autofix = 'preserve';
     this.required = false;
+    this.noSpinner = false;
   }
 
   override async firstUpdated() {
@@ -455,6 +462,7 @@ export class Textfield extends LitElement {
             min=${this.min > -1 ? this.min : nothing}
             max=${this.max > -1 ? this.max : nothing}
             ?required=${this.required}
+            ?no-spinner=${this.noSpinner}
             supporting-text=${this.hint}
             ?error=${this.error ?? nothing}
             error-text=${ifDefined(errorTextOrUndef)}
