@@ -9,9 +9,7 @@ import '@material/web/dialog/dialog.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
- * A chromeOS compliant dialog.
- *
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=4733%3A70425&t=sT1EGkVc7oaEEHMC-0
+ * A ChromeOS compliant dialog.
  */
 export class Dialog extends LitElement {
   /** @nocollapse */

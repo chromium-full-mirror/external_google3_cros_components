@@ -55,9 +55,7 @@ const DISABLED_STATE_OVERRIDES = css`
 `;
 
 /**
- * A cros compliant slider component.
- * See spec:
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2978%3A19626
+ * A ChromeOS compliant slider component.
  */
 export class Slider extends LitElement {
   /** @nocollapse */

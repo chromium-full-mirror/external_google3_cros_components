@@ -75,8 +75,7 @@ export type TextfieldAutofixType = 'clear'|'preserve'|'strip';
 const NON_INTEGER_REGEX = /\D/g;
 
 /**
- * Textfield component. See the specs here:
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3227%3A25882&t=50tDpMdSJky6eT9O-0
+ * ChromeOS compliant Textfield component.
  */
 export class Textfield extends LitElement {
   /** @nocollapse */

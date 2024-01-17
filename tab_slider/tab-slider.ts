@@ -33,9 +33,7 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 /**
- * A chromeOS compliant tab-slider.
- *
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?type=design&node-id=2852-19308&mode=design&t=uXwuM7QRyBvvkmwP-0
+ * A ChromeOS compliant tab-slider.
  */
 export class TabSlider extends LitElement {
   private get itemSlot(): HTMLSlotElement {

@@ -12,9 +12,7 @@ import {css, CSSResultGroup, html, LitElement} from 'lit';
 export const TABS_GAP = '8px';
 
 /**
- * A chromeOS compliant tabs component.
- * See spec
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?type=design&node-id=4020-63202
+ * A ChromeOS compliant tabs component.
  */
 export class Tabs extends LitElement {
   get mdTabs(): HTMLElement|null {

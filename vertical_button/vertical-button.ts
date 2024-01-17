@@ -12,8 +12,6 @@ import {styleMap} from 'lit/directives/style-map';
 
 /**
  * A ChromeOS compliant vertical-button.
- * See spec
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?type=design&node-id=9644-165677&mode=design&t=0xBcgechLxIMCLG0-0
  */
 export class VerticalButton extends LitElement {
   static BORDER_RADIUS = 20;

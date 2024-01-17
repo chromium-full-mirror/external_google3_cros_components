@@ -21,8 +21,6 @@ const MIN_WIDTH = css`64px`;
 
 /**
  * A chromeOS compliant button.
- * See spec
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2116%3A4082&t=kbaCFk5KdayGTyuL-0
  */
 export class Button extends LitElement {
   /** @nocollapse */

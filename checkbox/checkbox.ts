@@ -18,8 +18,6 @@ const RIPPLE_SIZE = css`40px`;
 
 /**
  * A ChromeOS compliant checkbox.
- * See spec
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=2796%3A12821&t=yiSJIVSrbtOP4ZCo-0
  */
 export class Checkbox extends LitElement {
   /** @nocollapse */

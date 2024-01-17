@@ -28,10 +28,7 @@ const checkedIcon = html`
   </svg>`;
 
 /**
- * A cros-compliant chip component.
- * See spec:
- * https://www.figma.com/file/1XsFoZH868xLcLPfPZRxLh/CrOS-Next---Component-Library-%26-Spec?node-id=3167%3A23000&t=ndVwslDMK3OwbNXW-0
- * Note: For a radio chip please use cros-radio-chip instead.
+ * A ChromeOS compliant chip component.
  */
 export class Chip extends LitElement {
   /** @export */
