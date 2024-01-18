@@ -222,6 +222,12 @@ export class Card extends LitElement {
     switch (e.key) {
       case 'Enter':
       case ' ':
+        if (e.composedPath()[0] !==
+            this.shadowRoot!.querySelector('#container')) {
+          // If a child element of this card was keyboard-activated, it should
+          // not trigger a click on this card.
+          break;
+        }
         e.currentTarget?.dispatchEvent(
             new MouseEvent('click', {bubbles: true, composed: true}));
         break;
