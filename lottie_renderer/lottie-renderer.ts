@@ -470,7 +470,7 @@ export class LottieRenderer extends LitElement {
     return waitForEvent(this, CrosLottieEvent.STOPPED);
   }
 
-  private async refreshAnimationColors() {
+  async refreshAnimationColors() {
     // We must await update here to ensure the computed style will be up to date
     // with the new color scheme.
     // TODO: b/274998765 - Investigate if this can be removed when using events.
