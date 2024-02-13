@@ -116,6 +116,12 @@ export class Slider extends LitElement {
   ];
 
   /** @nocollapse */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true
+  };
+
+  /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     value: {type: Number, reflect: true},
