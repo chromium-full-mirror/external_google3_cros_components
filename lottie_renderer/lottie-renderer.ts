@@ -55,7 +55,7 @@ const CROS_TOKENS = new Set<string>([
 declare interface MessageData {
   animationData: JSON;
   drawSize: {width: number, height: number};
-  params: {loop: boolean, autoplay: boolean};
+  params: {loop: boolean, subframeEnabled: boolean, autoplay: boolean};
   canvas?: OffscreenCanvas;
 }
 
@@ -499,6 +499,7 @@ export class LottieRenderer extends LitElement {
       drawSize: this.getCanvasDrawBufferSize(),
       params: {
         loop: this.loop,
+        subframeEnabled: false,
         autoplay: this.autoplay,
       },
     });
