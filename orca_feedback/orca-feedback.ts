@@ -8,7 +8,6 @@ import '../button/button';
 import '../chip/chip';
 
 import {Task} from '@lit/task';
-import {ANNOTATION_1_FONT, ANNOTATION_2_FONT, BODY_2_FONT, CROS_SYS_BASE_ELEVATED, CROS_SYS_INPUT_FIELD_ON_BASE, CROS_SYS_ON_SURFACE, CROS_SYS_ON_SURFACE_VARIANT, CROS_SYS_PRIMARY, CROS_SYS_SECONDARY, CROS_SYS_SEPARATOR, DISPLAY_6_FONT, HEADLINE_1_FONT,} from 'google3/third_party/py/chrome_styles/cros_colors_constants';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
@@ -21,7 +20,7 @@ export class OrcaFeedback extends LitElement {
     :host {
       --footer-height: 61px;
       --top-padding: 32px;
-      background-color: ${CROS_SYS_BASE_ELEVATED};
+      background-color: var(--cros-sys-base_elevated);
       display: block;
       padding-top: var(--top-padding);
       width: 512px;
@@ -29,27 +28,27 @@ export class OrcaFeedback extends LitElement {
 
     div.link {
       cursor: pointer;
-      color: ${CROS_SYS_PRIMARY};
+      color: var(--cros-sys-primary);
       text-decoration: underline;
       font: inherit;
       display: inline;
     }
 
     textarea {
-      background-color: ${CROS_SYS_INPUT_FIELD_ON_BASE};
+      background-color: var(--cros-sys-input_field_on_base);
       border-radius: 8px;
-      color: ${CROS_SYS_SECONDARY};
+      color: var(--cros-sys-secondary);
       margin-block: -16px; /* only 8px gap around textbox */
       flex-shrink: 0;
-      font: ${BODY_2_FONT};
+      font: var(--cros-body-2-font);
       height: 104px;
       padding-inline: 16px;
       padding-block: 8px;
     }
 
     textarea::placeholder {
-      font: ${BODY_2_FONT};
-      color: ${CROS_SYS_SECONDARY};
+      font: var(--cros-body-2-font);
+      color: var(--cros-sys-secondary);
     }
 
     .scrollable {
@@ -64,23 +63,23 @@ export class OrcaFeedback extends LitElement {
       padding-inline: 32px;
 
       .heading {
-        font: ${DISPLAY_6_FONT};
-        color: ${CROS_SYS_ON_SURFACE};
+        font: var(--cros-display-6-font);
+        color: var(--cros-sys-on_surface);
       }
 
       .body {
-        font: ${BODY_2_FONT};
-        color: ${CROS_SYS_ON_SURFACE_VARIANT};
+        font: var(--cros-body-2-font);
+        color: var(--cros-sys-on_surface_variant);
       }
 
       .legal-footer-text {
-        font: ${ANNOTATION_1_FONT};
-        color: ${CROS_SYS_ON_SURFACE_VARIANT};
+        font: var(--cros-annotation-1-font);
+        color: var(--cros-sys-on_surface_variant);
       }
 
       .question {
-        font: ${HEADLINE_1_FONT};
-        color: ${CROS_SYS_ON_SURFACE};
+        font: var(--cros-headline-1-font);
+        color: var(--cros-sys-on_surface);
       }
 
       .buttons {
@@ -90,9 +89,9 @@ export class OrcaFeedback extends LitElement {
       }
 
       .extra-info {
-        font: ${ANNOTATION_2_FONT};
-        color: ${CROS_SYS_ON_SURFACE_VARIANT};
-        border: 1px solid ${CROS_SYS_SEPARATOR};
+        font: var(--cros-annotation-2-font);
+        color: var(--cros-sys-on_surface_variant);
+        border: 1px solid var(--cros-sys-separator);
         border-radius: 8px;
         padding: 12px;
         white-space: pre-line;
@@ -115,7 +114,7 @@ export class OrcaFeedback extends LitElement {
       bottom: 0;
       .footer-buttons {
         align-items: center;
-        background-color: ${CROS_SYS_BASE_ELEVATED};
+        background-color: var(--cros-sys-base_elevated);
         box-sizing: border-box;
         display: flex;
         flex-shrink: 0;
@@ -133,7 +132,7 @@ export class OrcaFeedback extends LitElement {
       width: 100%;
       height: 1px;
       flex-shrink: 0;
-      background-color: ${CROS_SYS_SEPARATOR};
+      background-color: var(--cros-sys-separator);
       display: block;
     }
   `;
