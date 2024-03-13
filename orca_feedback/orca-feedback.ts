@@ -4,24 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '../button/button';
+import '../chip/chip';
+
 import {Task} from '@lit/task';
-import 'google3/third_party/javascript/cros_components/button/button';
-import 'google3/third_party/javascript/cros_components/chip/chip';
-import {
-  ANNOTATION_1_FONT,
-  ANNOTATION_2_FONT,
-  BODY_2_FONT,
-  CROS_SYS_BASE_ELEVATED,
-  CROS_SYS_INPUT_FIELD_ON_BASE,
-  CROS_SYS_ON_SURFACE,
-  CROS_SYS_ON_SURFACE_VARIANT,
-  CROS_SYS_PRIMARY,
-  CROS_SYS_SECONDARY,
-  CROS_SYS_SEPARATOR,
-  DISPLAY_6_FONT,
-  HEADLINE_1_FONT,
-} from 'google3/third_party/py/chrome_styles/cros_colors_constants';
-import {CSSResultGroup, LitElement, css, html} from 'lit';
+import {ANNOTATION_1_FONT, ANNOTATION_2_FONT, BODY_2_FONT, CROS_SYS_BASE_ELEVATED, CROS_SYS_INPUT_FIELD_ON_BASE, CROS_SYS_ON_SURFACE, CROS_SYS_ON_SURFACE_VARIANT, CROS_SYS_PRIMARY, CROS_SYS_SECONDARY, CROS_SYS_SEPARATOR, DISPLAY_6_FONT, HEADLINE_1_FONT,} from 'google3/third_party/py/chrome_styles/cros_colors_constants';
+import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 /**
  * Component so that users can send feedback about a particular suggestion that
@@ -178,9 +166,9 @@ export class OrcaFeedback extends LitElement {
     args: () => [this.extraInfoCallback] as const as [() => Promise<string>],
   });
   /** @export */
-  submitFeedback = (userDescription: string) => {};
+  submitFeedback: (userDescription: string) => void = () => {};
   /** @export */
-  openUrl = (url: string) => {};
+  openUrl: (url: string) => void = () => {};
   /**
    * Must be set, to ensure nice user facing strings
    * @export
