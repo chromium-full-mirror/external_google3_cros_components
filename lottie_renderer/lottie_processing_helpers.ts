@@ -34,7 +34,7 @@ export const CROS_TOKENS = [
    */
   'cros.sys.app_base',
   'cros.sys.app_base_shaded',
-  'cros.sys.app_base_elevated',
+  'cros.sys.base_elevated',
   'cros.sys.illo.card.color4',
   'cros.sys.illo.card.on_color4',
   'cros.sys.illo.card.color3',
@@ -45,7 +45,8 @@ export const CROS_TOKENS = [
   'cros.sys.illo.card.on_color1',
 ] as const;
 
-type CrosToken = typeof CROS_TOKENS[number];
+/** Type of the values in the CROS_TOKENS array. */
+export type CrosToken = typeof CROS_TOKENS[number];
 
 
 /** String variant of the name field used for comparison during parsing. */
@@ -163,8 +164,23 @@ function convertHexToLottieRGBA(hexString: string): LottieRGBAArray {
  * Takes in a cros token and returns the corresponding css variable.
  * Eg: cros.sys.illo.base -> --cros-sys-illo-base.
  */
-function convertTokenToCssVariable(token: string) {
+export function convertTokenToCssVariable(token: string) {
   return `--${(token).replaceAll('.', '-')}`;
+}
+
+/** Does a walk over a lottie json object and yields each node in DFS order. */
+export function*
+    walkLottieJson(lottieJson: object|null): IterableIterator<object> {
+  if (lottieJson === null) {
+    return;
+  }
+
+  if (typeof lottieJson === 'object') {
+    for (const value of Object.values(lottieJson)) {
+      yield* walkLottieJson(value);
+    }
+  }
+  yield lottieJson;
 }
 
 function getOrCreateTokenColor(
@@ -206,16 +222,14 @@ export class ProcessedLottieJSON {
    * saving them in the `shapes` and `gradients` map.
    */
   private traverse(jsonObj: object) {
-    if (jsonObj === null || typeof jsonObj !== 'object') return;
-
-    for (const value of Object.values(jsonObj)) {
-      const tokenName = (jsonObj as DynamicallyColoredObject).nm || null;
+    for (const node of walkLottieJson(jsonObj)) {
+      const tokenName = (node as DynamicallyColoredObject).nm || null;
       let tokenColor = null;
       let gradient = null;
       let shape = null;
       if (isValidTokenName(tokenName)) {
         tokenColor = getOrCreateTokenColor(this.colorReferences, tokenName);
-        const gradientObj = jsonObj as LottieGradientFill;
+        const gradientObj = node as LottieGradientFill;
 
         // Attempt to parse the object as a gradient, otherwise we assume it is
         // a regular shape. If more complex animation types get added, this
@@ -224,12 +238,10 @@ export class ProcessedLottieJSON {
           gradient = gradientObj;
           this.numMappedColors++;
         } else {
-          shape = jsonObj as LottieShape;
+          shape = node as LottieShape;
           this.numMappedColors++;
         }
       }
-
-      this.traverse(value);
 
       if (tokenColor) {
         if (gradient) tokenColor.gradients.push(gradient);
