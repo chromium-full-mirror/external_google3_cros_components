@@ -56,7 +56,7 @@ const LOTTIE_GRADIENT_FILL_TYPE = 'gf';
  * A structure in the JSON data that should correspond to something that needs
  * to be dynamically colored.
  */
-interface DynamicallyColoredObject {
+declare interface DynamicallyColoredObject {
   /**
    * The name of a shape. For Material3 compliant animations, this will be the
    * token name of the color to apply, and we use this field to detect which
@@ -75,9 +75,9 @@ interface DynamicallyColoredObject {
  * This definition of this type is taken from
  * https://lottiefiles.github.io/lottie-docs/concepts/#colors
  */
-export interface LottieShape extends DynamicallyColoredObject {
+declare interface LottieShape extends DynamicallyColoredObject {
   /** If the color is represented as an array of four floats: [r, g, b, a]. */
-  c?: {k: LottieRGBAArray};
+  c?: {k: number[]};
   /** If the color is represented as a hex string (less common than `c`). */
   sc?: string;
 }
@@ -87,7 +87,7 @@ export interface LottieShape extends DynamicallyColoredObject {
  * This definition of this type is taken from
  * https://lottiefiles.github.io/lottie-docs/shapes/#gradients
  */
-export interface LottieGradientFill extends DynamicallyColoredObject {
+declare interface LottieGradientFill extends DynamicallyColoredObject {
   /** Gradient color type. */
   g: {
     /** The number of colors in this gradient. */
@@ -117,91 +117,12 @@ export interface LottieGradientFill extends DynamicallyColoredObject {
 }
 
 /**
- * Takes in a css color in one of the following formats
- *   - #rrggbb
- *   - #rrggbbaa
- *   - rgb(0-255,0-255,0-255)
- *   - rgba(0-255,0-255,0-255,0-1)
- *   - color(srgb 0-1 0-1 0-1)
- *   - color-mix() see http://go/mdn/CSS/color_value/color-mix
- * And returns the color in the #rrggbbaa format.
- */
-export function toRGBAHexString(color: string) {
-  /**
-   * Converts a string with a number between 0 and 255 in it to a 2 character
-   * hex string.
-   */
-  function fourBitNumberStringToHex(value: string) {
-    return Number(value.trim()).toString(16).padStart(2, '0');
-  }
-
-  /**
-   * Converts a string with a number between 0 and 1 in it to a 2 character
-   * hex string.
-   */
-  function normalizedNumberStringToHex(value: string) {
-    const n = Math.floor(Number(value.trim()) * 255);
-    return n.toString(16).padStart(2, '0');
-  }
-
-  color = color.trim();
-  if (color.startsWith('color-mix(')) {
-    // color-mix's need to be actually be put into the DOM and rendered for us
-    // to get a final rgb color. We do that here however getComputedStyle can
-    // return any number of rgb formats so we just override color and pass
-    // through to the rest of the logic in this function to noramlize to
-    // #rrggbbaa.
-    const tempDiv = document.createElement('div');
-    tempDiv.style.backgroundColor = color;
-    tempDiv.style.display = 'none';
-    document.body.appendChild(tempDiv);
-    color = getComputedStyle(tempDiv).backgroundColor.trim();
-    tempDiv.remove();
-  }
-
-  // This is not a exhaustive list of all possible ways to represent a color
-  // in CSS. Instead this covers all forms the semantic variable generator
-  // or getComputedStyle() is known to output.
-  if (color.startsWith('#') && color.length === 7) {
-    // #rrggbb.
-    return `${color}ff`;
-  } else if (color.startsWith('#') && color.length === 9) {
-    // #rrggbbaa.
-    return color;
-  } else if (color.startsWith('rgb(')) {
-    // rgb(r,g,b).
-    const [r, g, b] = color.substring(4, color.length - 1)
-                          .split(',')
-                          .map(fourBitNumberStringToHex);
-
-    return `#${r}${g}${b}ff`;
-  } else if (color.startsWith('rgba(')) {
-    // rgba(r,g,b,a).
-    const parts = color.substring(5, color.length - 1).split(',');
-    const [r, g, b] = parts.slice(0, 3).map(fourBitNumberStringToHex);
-    const a = normalizedNumberStringToHex(parts[3]);
-
-    return `#${r}${g}${b}${a}`;
-  } else if (color.startsWith('color(srgb')) {
-    // color(srgb r g b).
-    color = color.replace(/\s+/g, ' ');
-    const [r, g, b] = color.substring(11, color.length - 1)
-                          .split(' ')
-                          .map(normalizedNumberStringToHex);
-
-    return `#${r}${g}${b}ff`;
-  }
-
-  throw new Error(`Could not parse color: "${color}"`);
-}
-
-/**
  * A type for storing a css variable and a list of known shapes within the
- * currently loaded animation that have the css variable color applied.
- * There will be one of these structures per token in CROS_TOKENS that
- * appears in the animation data.
+ * currently loaded animation that have the css variable color applied. There
+ * will be one of these structures per token in CROS_TOKENS that appears in the
+ * animation data.
  */
-interface TokenColor {
+declare interface TokenColor {
   cssVar: string;
   shapes: LottieShape[];
   gradients: LottieGradientFill[];
@@ -211,19 +132,7 @@ interface TokenColor {
  * A fixed length array type for encoding Lottie colors. The format is [r, g, b,
  * alpha], where each entry is a value between [0-1].
  */
-export type LottieRGBAArray = [number, number, number, number];
-
-/**
- * Helper function for converting from a lottie rgba string to a hex string.
- */
-export function convertLottieRGBAToHex(rgba: LottieRGBAArray) {
-  return '#' +
-      rgba.map(n => n * 255)
-          .map(n => Math.round(n))
-          .map(n => n.toString(16))
-          .map(n => n.padStart(2, '0'))
-          .join('');
-}
+declare type LottieRGBAArray = [number, number, number, number];
 
 /**
  * Helper function for converting between the hexadecimal string we get from the
@@ -231,7 +140,7 @@ export function convertLottieRGBAToHex(rgba: LottieRGBAArray) {
  * from the computed style and color pipeline, we can be confident that we are
  * only going to be parsing 8 digit hexadecimal strings.
  */
-export function convertHexToLottieRGBA(hexString: string): LottieRGBAArray {
+function convertHexToLottieRGBA(hexString: string): LottieRGBAArray {
   let r;
   let g;
   let b;
@@ -353,8 +262,7 @@ export class ProcessedLottieJSON {
   updateColors(styles: CSSStyleDeclaration): string[] {
     const warnings = [];
     for (const color of this.colorReferences.values()) {
-      const computedColor =
-          toRGBAHexString(styles.getPropertyValue(color.cssVar).trim());
+      const computedColor = styles.getPropertyValue(color.cssVar).trim();
       const colorArray = convertHexToLottieRGBA(computedColor);
       for (const location of color.shapes) {
         if (location.c) {
