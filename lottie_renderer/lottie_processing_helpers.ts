@@ -179,7 +179,7 @@ export function toRGBAHexString(color: string) {
     // rgba(r,g,b,a).
     const parts = color.substring(5, color.length - 1).split(',');
     const [r, g, b] = parts.slice(0, 3).map(fourBitNumberStringToHex);
-    const a = normalizedNumberStringToHex(parts[3]);
+    const a = normalizedNumberStringToHex(parts[3] as string);
 
     return `#${r}${g}${b}${a}`;
   } else if (color.startsWith('color(srgb')) {
