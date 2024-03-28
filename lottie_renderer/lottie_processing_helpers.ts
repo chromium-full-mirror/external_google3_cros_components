@@ -26,6 +26,15 @@ export const CROS_TOKENS = [
   'cros.sys.illo.color6',
   'cros.sys.illo.base',
   'cros.sys.illo.secondary',
+  'cros.sys.illo.on_primary_container',
+
+  /**
+   * Colors for gradient animatons.
+   */
+  'cros.sys.illo.analog',
+  'cros.sys.illo.complement',
+  'cros.sys.illo.muted',
+  'cros.sys.illo.on_gradient',
 
   /**
    * These are colors outside of the standard illo palette. Some animations
