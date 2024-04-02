@@ -39,6 +39,29 @@ export enum CrosLottieEvent {
   STOPPED = `cros-lottie-stopped`,
 }
 
+/**
+ * A object or class with methods cros-lottie-renderer can use to log warnings
+ * and errors with lottie file processing and playing.
+ */
+export interface LottieRendererLogger {
+  warn(message: string): void;
+  error(message: string): void;
+}
+
+/**
+ * The reason cros-lottie-renderer initalized a animation. Can be either because
+ * of being rendered for the first time, because the color scheme changed or
+ * because the animation changes.
+ */
+export type DataMessageReason =
+    'first-run'|'colors-changed'|'asset-url-changed'|'unknown';
+
+/**
+ * Event fired by cros-lottie-renderer when the web worker has successfully
+ * loaded an animation file.
+ */
+export type CrosLottieInitializedEvent = CustomEvent<DataMessageReason>;
+
 interface ResizeDetail {
   width: number;
   height: number;
@@ -98,6 +121,16 @@ export class LottieRenderer extends LitElement {
    */
   getWorker: () => Worker = defaultGetWorker;
 
+  /**
+   * A object that lottie-renderer can use to log warnings and errors with
+   * attempting to run a lottie file. If unspecified defaults to dumping
+   * logs into the console.
+   * Note lottie renderer only logs recoverable errors. Errors such as having
+   * no web worker are not recoverable will throw an exception instead.
+   * @export
+   */
+  logger: LottieRendererLogger = console;
+
   /** The onscreen canvas controlled by lottie_worker.js. */
   get onscreenCanvas(): HTMLCanvasElement|null {
     return this.renderRoot.querySelector('#onscreen-canvas');
@@ -140,6 +173,15 @@ export class LottieRenderer extends LitElement {
    */
   private resizeObserver: ResizeObserver|null = null;
 
+  /**
+   * Wrapper over a lottie json file that can inject new values for dynamic
+   * colors at runtime.
+   */
+  private processedLottieJSON: ProcessedLottieJSON|null = null;
+
+  /** The reason we sent the last message to the worker. */
+  private lastDataMessageSendReason: DataMessageReason = 'unknown';
+
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -176,11 +218,6 @@ export class LottieRenderer extends LitElement {
     this.dynamic = false;
   }
 
-  /**
-   * Wrapper over a lottie json file that can inject new values for dynamic
-   * colors at runtime.
-   */
-  private processedLottieJSON: ProcessedLottieJSON|null = null;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -195,12 +232,13 @@ export class LottieRenderer extends LitElement {
   override firstUpdated() {
     assertExists(
         this.onscreenCanvas,
-        'Could not find <cavas> element in lottie-renderer');
+        'Could not find <canvas> element in lottie-renderer');
     this.resizeObserver =
         new ResizeObserver(this.onCanvasElementResized.bind(this));
     this.resizeObserver.observe(this.onscreenCanvas);
     this.offscreenCanvas = this.onscreenCanvas.transferControlToOffscreen();
-    this.initAnimation();
+    this.lastDataMessageSendReason = 'first-run';
+    this.pushAssetURLToWorker();
   }
 
   override disconnectedCallback() {
@@ -259,17 +297,33 @@ export class LottieRenderer extends LitElement {
   }
 
   async refreshAnimationColors() {
+    if (!this.processedLottieJSON) {
+      this.logger.warn('Refresh animation colors failed: No animation data.');
+      return;
+    }
+
+    await this.updateColorsAndLog();
+    this.lastDataMessageSendReason = 'colors-changed';
+    this.sendAnimationToWorker(this.processedLottieJSON.getAnimationData());
+  }
+
+  private async updateColorsAndLog() {
+    if (!this.processedLottieJSON) {
+      return;
+    }
+
     // We must await update here to ensure the computed style will be up to date
     // with the new color scheme.
     // TODO: b/274998765 - Investigate if this can be removed when using events.
     this.requestUpdate();
     await this.updateComplete;
-    if (!this.processedLottieJSON) {
-      console.info('Refresh animation colors failed: No animation data.');
-      return;
+
+    const warnings =
+        this.processedLottieJSON.updateColors(getComputedStyle(this));
+    for (const warning of warnings) {
+      this.logger.warn(
+          `Processing lottie json encountered warning: ${warning}`);
     }
-    this.processedLottieJSON.updateColors(getComputedStyle(this));
-    this.sendAnimationToWorker(this.processedLottieJSON.getAnimationData());
   }
 
   private sendAnimationToWorker(animationData: object) {
@@ -278,7 +332,7 @@ export class LottieRenderer extends LitElement {
     // the worker to have been terminated. In these cases, we can just early
     // exit without attempting to send anything to the worker.
     if (!this.worker) {
-      console.info('lottie-renderer has no web worker.');
+      this.logger.warn('sendAnimationToWorker() invoked with no web worker');
       return;
     }
 
@@ -312,9 +366,9 @@ export class LottieRenderer extends LitElement {
    * resolution work. If no `assetUrl` was provided, we don't need to try and
    * fetch or send anything to the worker.
    */
-  private async initAnimation() {
+  private async pushAssetURLToWorker() {
     if (!this.assetUrl) {
-      console.info('No assetUrl provided.');
+      this.logger.warn('pushAssetURLToWorker() invoked with no asset URL.');
       return;
     }
     let animationData: object|null = null;
@@ -334,25 +388,24 @@ export class LottieRenderer extends LitElement {
         req.send(null);
       });
     } catch (error) {
-      console.info(`Unable to load JSON from ${this.assetUrl}`, error);
+      this.logger.error(`Unable to load JSON from asset url: ${error}`);
     }
 
     if (!animationData) {
-      console.info('cros-lottie-renderer fetched null animation data');
+      this.logger.error('Fetched null animation data from asset url.');
       return;
     }
-    this.processedLottieJSON = new ProcessedLottieJSON(animationData);
 
+    this.processedLottieJSON = new ProcessedLottieJSON(animationData);
     // For apps using this component without the Jelly flag, they should ignore
     // the dynamic palette and just use the GM2 colors that are inside the
-    // JSON file itself. We tell processedLottieJSON this so it can skip doing
-    // any logic on updateColors().
+    // JSON file itself.
     if (this.dynamic) {
-      this.processedLottieJSON.updateColors(getComputedStyle(this));
+      await this.updateColorsAndLog();
     }
     if (this.dynamic && this.processedLottieJSON.numMappedColors === 0) {
-      console.warn(
-          `Unable to map cros.sys.illo tokens in ${this.assetUrl}. Please ` +
+      this.logger.warn(
+          `Found 0 cros.sys.illo tokens in provided asset. Please ` +
           `ensure this animation file has been run through the VisD token ` +
           `resolution script.`);
     }
@@ -368,7 +421,8 @@ export class LottieRenderer extends LitElement {
     if (this.animationIsLoaded) {
       await this.stop();
     }
-    await this.initAnimation();
+    this.lastDataMessageSendReason = 'asset-url-changed';
+    await this.pushAssetURLToWorker();
   }
 
   /**
@@ -422,7 +476,7 @@ export class LottieRenderer extends LitElement {
     switch (message) {
       case 'initialized':
         this.animationIsLoaded = true;
-        this.fire(CrosLottieEvent.INITIALIZED);
+        this.fire(CrosLottieEvent.INITIALIZED, this.lastDataMessageSendReason);
         this.sendPendingInfo();
         break;
       case 'playing':
@@ -438,12 +492,14 @@ export class LottieRenderer extends LitElement {
         this.fire(CrosLottieEvent.RESIZED, event.data.size);
         break;
       default:
-        console.warn(`unknown message type received: ${message}`);
+        this.logger.warn(`unknown message type received: ${message}`);
         break;
     }
   }
 
-  private fire(event: CrosLottieEvent, detail: ResizeDetail|null = null) {
+  private fire(
+      event: CrosLottieEvent,
+      detail: ResizeDetail|DataMessageReason|null = null) {
     this.dispatchEvent(
         new CustomEvent(event, {bubbles: true, composed: true, detail}));
   }
@@ -469,7 +525,7 @@ customElements.define('cros-lottie-renderer', LottieRenderer);
 
 declare global {
   interface HTMLElementEventMap {
-    [LottieRenderer.events.INITIALIZED]: Event;
+    [LottieRenderer.events.INITIALIZED]: CrosLottieInitializedEvent;
     [LottieRenderer.events.PAUSED]: Event;
     [LottieRenderer.events.PLAYING]: Event;
     [LottieRenderer.events.RESIZED]: Event;
