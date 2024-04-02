@@ -61,6 +61,9 @@ export type CrosToken = typeof CROS_TOKENS[number];
 /** String variant of the name field used for comparison during parsing. */
 const LOTTIE_GRADIENT_FILL_TYPE = 'gf';
 
+/** O(1) way to look up if a token is valid. */
+const crosTokenLookup = new Set<string>(CROS_TOKENS);
+
 /**
  * A structure in the JSON data that should correspond to something that needs
  * to be dynamically colored.
@@ -96,7 +99,7 @@ export interface LottieShape extends DynamicallyColoredObject {
  * This definition of this type is taken from
  * https://lottiefiles.github.io/lottie-docs/shapes/#gradients
  */
-export interface LottieGradientFill extends DynamicallyColoredObject {
+export interface LottieGradientShape extends DynamicallyColoredObject {
   /** Gradient color type. */
   g: {
     /** The number of colors in this gradient. */
@@ -120,9 +123,15 @@ export interface LottieGradientFill extends DynamicallyColoredObject {
        * relationship between the location of a set of [t, r, g, b] values and
        * an alpha value, is described by a_n = 4p + 2i + 1.
        */
+
       k: number[]
     }
   };
+}
+
+
+function isCrosToken(token: string): token is CrosToken {
+  return crosTokenLookup.has(token);
 }
 
 /**
@@ -213,7 +222,7 @@ export function toRGBAHexString(color: string) {
 interface TokenColor {
   cssVar: string;
   shapes: LottieShape[];
-  gradients: LottieGradientFill[];
+  gradients: Array<{location: LottieGradientShape, stopIndex: number}>;
 }
 
 /**
@@ -295,14 +304,13 @@ function getOrCreateTokenColor(
   return (colors.get(tokenName) as TokenColor);
 }
 
-function isValidTokenName(tokenName: string|null): tokenName is CrosToken {
+function isValidShapeName(tokenName: string|null): tokenName is CrosToken {
   if (tokenName === null) {
     return false;
   }
-  if ((CROS_TOKENS as readonly string[]).includes(tokenName)) {
-    return true;
-  }
-  return false;
+
+  const tokens = tokenName.split(',');
+  return tokens.some(isCrosToken);
 }
 
 /**
@@ -323,29 +331,37 @@ export class ProcessedLottieJSON {
    */
   private traverse(jsonObj: object) {
     for (const node of walkLottieJson(jsonObj)) {
-      const tokenName = (node as DynamicallyColoredObject).nm || null;
-      let tokenColor = null;
-      let gradient = null;
-      let shape = null;
-      if (isValidTokenName(tokenName)) {
-        tokenColor = getOrCreateTokenColor(this.colorReferences, tokenName);
-        const gradientObj = node as LottieGradientFill;
+      const shape =
+          (node as Partial<DynamicallyColoredObject>|
+           Partial<LottieGradientShape>);
+      const shapeName = shape.nm || null;
 
-        // Attempt to parse the object as a gradient, otherwise we assume it is
-        // a regular shape. If more complex animation types get added, this
-        // logic will need to be updated along with the types.
-        if (gradientObj.ty === LOTTIE_GRADIENT_FILL_TYPE) {
-          gradient = gradientObj;
-          this.numMappedColors++;
-        } else {
-          shape = node as LottieShape;
-          this.numMappedColors++;
-        }
+      if (!isValidShapeName(shapeName)) {
+        continue;
       }
 
-      if (tokenColor) {
-        if (gradient) tokenColor.gradients.push(gradient);
-        if (shape) tokenColor.shapes.push(shape);
+      this.numMappedColors++;
+
+      // Attempt to parse the object as a gradient, otherwise we assume it is
+      // a regular shape. If more complex animation types get added, this
+      // logic will need to be updated along with the types.
+      if (shape.ty === LOTTIE_GRADIENT_FILL_TYPE) {
+        const stops = shapeName.split(',');
+        for (let i = 0; i < stops.length; i++) {
+          const stopTokenName = stops[i];
+          if (!isCrosToken(stopTokenName)) {
+            continue;
+          }
+
+          const tokenColor =
+              getOrCreateTokenColor(this.colorReferences, stopTokenName);
+          tokenColor.gradients.push(
+              {location: shape as LottieGradientShape, stopIndex: i});
+        }
+      } else {
+        const tokenColor =
+            getOrCreateTokenColor(this.colorReferences, shapeName);
+        tokenColor.shapes.push(shape as LottieShape);
       }
     }
   }
@@ -383,14 +399,11 @@ export class ProcessedLottieJSON {
         }
       }
 
-      for (const location of color.gradients) {
-        const numOfPoints = location.g.p;
-        for (let i = 0; i < numOfPoints; i++) {
-          const gradientFillPoints = location.g.k.k;
-          gradientFillPoints[(4 * i) + 1] = colorArray[0];
-          gradientFillPoints[(4 * i) + 2] = colorArray[1];
-          gradientFillPoints[(4 * i) + 3] = colorArray[2];
-        }
+      for (const {location, stopIndex} of color.gradients) {
+        const gradientFillPoints = location.g.k.k;
+        gradientFillPoints[(4 * stopIndex) + 1] = colorArray[0];
+        gradientFillPoints[(4 * stopIndex) + 2] = colorArray[1];
+        gradientFillPoints[(4 * stopIndex) + 3] = colorArray[2];
       }
     }
 
