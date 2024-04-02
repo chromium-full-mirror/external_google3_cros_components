@@ -348,7 +348,7 @@ export class ProcessedLottieJSON {
       if (shape.ty === LOTTIE_GRADIENT_FILL_TYPE) {
         const stops = shapeName.split(',');
         for (let i = 0; i < stops.length; i++) {
-          const stopTokenName = stops[i];
+          const stopTokenName = stops[i] as CrosToken;
           if (!isCrosToken(stopTokenName)) {
             continue;
           }
