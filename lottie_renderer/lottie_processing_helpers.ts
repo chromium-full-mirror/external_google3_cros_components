@@ -271,10 +271,14 @@ export function convertHexToLottieRGBA(hexString: string): LottieRGBAArray {
 
 /**
  * Takes in a cros token and returns the corresponding css variable.
- * Eg: cros.sys.illo.base -> --cros-sys-illo-base.
+ * Eg: cros.sys.illo.base-abc -> --cros-sys-illo-base_abc
  */
 export function convertTokenToCssVariable(token: string) {
-  return `--${(token).replaceAll('.', '-')}`;
+  const parts = token.split('.');
+  const namespaces = parts.slice(0, parts.length - 1);
+  const name = parts[parts.length - 1].replaceAll('-', '_');
+
+  return `--${namespaces.join('-')}-${name}`;
 }
 
 /** Does a walk over a lottie json object and yields each node in DFS order. */
