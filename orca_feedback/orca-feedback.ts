@@ -9,6 +9,41 @@ import '../chip/chip';
 
 import {Task} from '@lit/task';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {safeHTML} from 'lit/directives/safe-html';
+import {HtmlSanitizer, HtmlSanitizerBuilder} from 'safevalues';
+
+interface StringSource {
+  getAriaLabelForLink(arg: string): string;
+  MSG_FEEDBACK_TITLE: string;
+  MSG_FEEDBACK_SUBTITLE: string;
+  MSG_FEEDBACK_QUESTION: string;
+  MSG_FEEDBACK_QUESTION_PLACEHOLDER: string;
+  MSG_OFFENSIVE_OR_UNSAFE: string;
+  MSG_FACTUALLY_INCORRECT: string;
+  MSG_LEGAL_ISSUE: string;
+  getFeedbackDisclaimer(
+      linkPolicyBegin: string,
+      linkPolicyEnd: string,
+      linkTermsOfServiceBegin: string,
+      linkTermsOfServiceEnd: string,
+      ): string;
+  MSG_PRIVACY_POLICY: string;
+  MSG_TERMS_OF_SERVICE: string;
+  MSG_CANCEL: string;
+  MSG_SEND: string;
+}
+
+// The santinizer below is being used to sanitize the markup from i18n strings.
+const HTML_SANITIZER: HtmlSanitizer =
+    new HtmlSanitizerBuilder()
+        .onlyAllowElements(new Set<string>(['a']))
+        .onlyAllowAttributes(new Set<string>(['role', 'aria-label', 'href']))
+        .allowClassAttributes()
+        .allowIdAttributes()
+        .build();
+
+const PRIVACY_POLICY_URL = 'https://policies.google.com/privacy';
+const TERMS_OF_SERVICE_URL = 'https://policies.google.com/terms';
 
 /**
  * Component so that users can send feedback about a particular suggestion that
@@ -26,7 +61,7 @@ export class OrcaFeedback extends LitElement {
       width: 512px;
     }
 
-    div.link {
+    a.link {
       cursor: pointer;
       color: var(--cros-sys-primary);
       text-decoration: underline;
@@ -172,12 +207,7 @@ export class OrcaFeedback extends LitElement {
    * Must be set, to ensure nice user facing strings
    * @export
    **/
-  stringSource: {
-    getAriaLabelForLink: (arg: string) => string;
-    MSG_PRIVACY_POLICY: string;
-    MSG_GEN_AI: string;
-    MSG_TERMS_OF_SERVICE: string;
-  } | null = null;
+  stringSource: StringSource|null = null;
   get userDescription(): HTMLTextAreaElement | undefined {
     return this.shadowRoot!.querySelector('#userDescription') as
       | HTMLTextAreaElement
@@ -198,95 +228,113 @@ export class OrcaFeedback extends LitElement {
 
   // Feedback user description includes both the freeform textarea and the selected chips.
   getFeedbackUserDescription() {
+    // The labels on chips are internationalized; we should send `data-label`
+    // (which is in English) to make Listenr report easier to understand.
     const chipsDescription = this.getSelectedChips()
-      .map((chip) => `#${chip.label}`)
-      .join(' ');
+                                 .map((chip) => `#${chip.dataset['label']}`)
+                                 .join(' ');
     return `${this.userDescription?.value ?? ''}\n${chipsDescription}`;
   }
 
   constructor() {
     super();
-    document.title = 'Feedback';
+    document.title = this.stringSource?.MSG_FEEDBACK_TITLE ?? '';
+  }
+
+  override firstUpdated() {
+    this.shadowRoot?.querySelector('#privacy-policy')
+        ?.addEventListener('click', () => this.openPrivacyPolicy());
+    this.shadowRoot?.querySelector('#terms-of-service')
+        ?.addEventListener('click', () => this.openTermsOfService());
+  }
+
+  private openPrivacyPolicy() {
+    this.openUrl(PRIVACY_POLICY_URL);
+  }
+
+  private openTermsOfService() {
+    this.openUrl(TERMS_OF_SERVICE_URL);
   }
 
   override render() {
     return html`
       <div class="scrollable" ?disablescrollingfortesting="${
-        this.disableScrollingForTesting
-      }">
-      <div class="heading">Send feedback</div>
+        this.disableScrollingForTesting}">
+      <div class="heading">${this.stringSource?.MSG_FEEDBACK_TITLE}</div>
       <div class="body">
-      Thanks for sharing your experience. Your feedback helps us create more accurate and beneficial content.
+        ${this.stringSource?.MSG_FEEDBACK_SUBTITLE}
       </div>
-      <div class="question">What didn't work well?</div>
+      <div class="question">${this.stringSource?.MSG_FEEDBACK_QUESTION}</div>
       <textarea
         id="userDescription"
-        placeholder="Share your feedback or describe your issue. Make sure to not include anything that is personal, sensitive, or confidential."
+        placeholder=${
+        this.stringSource?.MSG_FEEDBACK_QUESTION_PLACEHOLDER ?? ''}
         @input=${() => void this.requestUpdate()}
         ></textarea>
       <div class="buttons">
-        <cros-chip label="Offensive/Unsafe" @click=${() =>
-          void this.requestUpdate()}></cros-chip>
-        <cros-chip label="Factually incorrect" @click=${() =>
-          void this.requestUpdate()}></cros-chip>
-        <cros-chip label="Legal issue" @click=${() =>
-          void this.requestUpdate()}></cros-chip>
+        <cros-chip
+          data-label="Offensive/Unsafe"
+          label=${this.stringSource?.MSG_OFFENSIVE_OR_UNSAFE ?? ''}
+          @click=${() => void this.requestUpdate()}
+        >
+        </cros-chip>
+        <cros-chip
+          data-label="Factually incorrect"
+          label=${this.stringSource?.MSG_FACTUALLY_INCORRECT ?? ''}
+          @click=${() => void this.requestUpdate()}
+        >
+        </cros-chip>
+        <cros-chip
+          data-label="Legal issue"
+          label=${this.stringSource?.MSG_LEGAL_ISSUE ?? ''}
+          @click=${() => void this.requestUpdate()}
+        >
+        </cros-chip>
       </div>
-      <div class="legal-footer-text">When you click send, <strong>your country, Chrome version, feedback, and content (shown below)</strong> may be used to train or improve our products and services subject to the <div
-        class="link"
-        role="link"
-        aria-label=${
-          this.stringSource?.getAriaLabelForLink(
-            this.stringSource.MSG_PRIVACY_POLICY,
-          ) ?? ''
-        }
-        tabindex="0"
-        @click=${() =>
-          void this.openUrl('https://policies.google.com/privacy')}>
-          ${this.stringSource?.MSG_PRIVACY_POLICY}</div
-        >, <div
-          class="link"
-          role="link"
-          aria-label=${
-            this.stringSource?.getAriaLabelForLink(
-              this.stringSource.MSG_GEN_AI,
-            ) ?? ''
-          }
-          tabindex="0"
-          @click=${() =>
-            void this.openUrl(
-              'https://policies.google.com/terms/generative-ai',
-            )}>
-          ${this.stringSource?.MSG_GEN_AI}</div
-        >, and <!-- TODO(b/328311147): Convert this to use slots. --> <div
-          class="link"
-          role="link"
-          aria-label=${
-            this.stringSource?.getAriaLabelForLink(
-              this.stringSource.MSG_TERMS_OF_SERVICE,
-            ) ?? ''
-          }
-          tabindex="0"
-          @click=${() =>
-            void this.openUrl('https://policies.google.com/terms')}>
-          ${this.stringSource?.MSG_TERMS_OF_SERVICE}</div
-        >. </div>
+      <div class="legal-footer-text">
+        ${
+        /**
+         * There is no way to pass event handlers directly to safeHTML. Thus we
+         * expose anchor elements by id and add event listeners in firstUpdated.
+         */
+        safeHTML(HTML_SANITIZER.sanitize(
+            this.stringSource?.getFeedbackDisclaimer(
+                /*linkPolicyBegin=*/
+                `<a id="privacy-policy" class="link" role="link" aria-label="${
+                    this.stringSource?.getAriaLabelForLink(
+                        this.stringSource.MSG_PRIVACY_POLICY,
+                        ) ??
+                    ''}" href="${PRIVACY_POLICY_URL}">`,
+                /*linkPolicyEnd=*/ '</a>',
+                /*linkTermsOfServiceBegin=*/
+                `<a id="terms-of-service" class="link" role="link" aria-label="${
+                    this.stringSource?.getAriaLabelForLink(
+                        this.stringSource.MSG_TERMS_OF_SERVICE,
+                        ) ??
+                    ''}" href="${TERMS_OF_SERVICE_URL}">`,
+                /*linkTermsOfServiceEnd=*/ '</a>',
+                ) ??
+            ''))}
+      </div>
       <div class="extra-info">${this.extraInfoTask.render({
-        complete: (extraInfo: string) => extraInfo,
-      })}</div>
+      complete: (extraInfo: string) => extraInfo,
+    })}</div>
   </div>
       <div class="footer">
         <div class="footer-buttons">
-        <cros-button label="Cancel" button-style="secondary" @click=${() =>
-          void this.revertToPreviousScreen()}></cros-button>
         <cros-button
-          label="Submit"
+          label=${this.stringSource?.MSG_CANCEL ?? ''}
+          button-style="secondary"
+          @click=${() => void this.revertToPreviousScreen()}>
+        </cros-button>
+        <cros-button
+          label=${this.stringSource?.MSG_SEND ?? ''}
           button-style="primary"
           ?disabled=${!this.isFeedbackEnabled()}
           @click=${() => {
-            this.submitFeedback(this.getFeedbackUserDescription());
-            this.revertToPreviousScreen();
-          }}
+      this.submitFeedback(this.getFeedbackUserDescription());
+      this.revertToPreviousScreen();
+    }}
         ></cros-button>
         </div class="footer-buttons">
       </div>
