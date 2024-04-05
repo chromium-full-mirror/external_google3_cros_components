@@ -276,8 +276,14 @@ export function convertHexToLottieRGBA(hexString: string): LottieRGBAArray {
 export function convertTokenToCssVariable(token: string) {
   const parts = token.split('.');
   const namespaces = parts.slice(0, parts.length - 1);
-  const name = parts[parts.length - 1].replaceAll('-', '_');
+  // Chromium assumes all array accesses are of type|undefined, cast to a string
+  // since we know for a fact that token.split('.') always returns at least 1
+  // item.
+  const name = (parts[parts.length - 1] as string).replaceAll('-', '_');
 
+  if (namespaces.length === 0) {
+    return `--${name}`;
+  }
   return `--${namespaces.join('-')}-${name}`;
 }
 
