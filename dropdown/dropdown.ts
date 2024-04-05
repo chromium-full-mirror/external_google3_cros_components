@@ -65,6 +65,7 @@ export class Dropdown extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       display: inline-block;
+      --supporting-text-height: 0px;
     }
 
     md-outlined-select {
@@ -73,7 +74,6 @@ export class Dropdown extends LitElement {
       --md-outlined-field-top-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-field-bottom-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
       --md-outlined-field-trailing-content-color: var(--cros-sys-secondary);
-      --supporting-text-height: 0px;
 
       --md-outlined-select-text-field-container-color: ${
       DROPDOWN_CONTAINER_ON_BASE};
@@ -168,7 +168,7 @@ export class Dropdown extends LitElement {
       opacity: var(--cros-disabled-opacity);
     }
 
-    :host([supporting-text]:not([supporting-text=""])) {
+    :host([supporting-text]:not([supporting-text=""])), :host(:is(.error, [error])) {
       --supporting-text-height: ${SUPPORTING_TEXT_HEIGHT_PX}px;
     }
     /**
