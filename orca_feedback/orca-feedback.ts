@@ -241,11 +241,38 @@ export class OrcaFeedback extends LitElement {
     document.title = this.stringSource?.MSG_FEEDBACK_TITLE ?? '';
   }
 
-  override firstUpdated() {
-    this.shadowRoot?.querySelector('#privacy-policy')
-        ?.addEventListener('click', () => this.openPrivacyPolicy());
-    this.shadowRoot?.querySelector('#terms-of-service')
-        ?.addEventListener('click', () => this.openTermsOfService());
+  private privacyLinkClickListener: ((e: Event) => void)|null = null;
+  private termsOfServiceLinkClickListener: ((e: Event) => void)|null = null;
+
+  override updated() {
+    const privacyPolicyLink = this.shadowRoot?.querySelector('#privacy-policy');
+    if (privacyPolicyLink) {
+      if (this.privacyLinkClickListener) {
+        privacyPolicyLink.removeEventListener(
+            'click', this.privacyLinkClickListener);
+      }
+      this.privacyLinkClickListener = (e: Event) => {
+        e.preventDefault();
+        this.openPrivacyPolicy();
+      };
+      privacyPolicyLink.addEventListener(
+          'click', this.privacyLinkClickListener);
+    }
+
+    const termsOfServiceLink =
+        this.shadowRoot?.querySelector('#terms-of-service');
+    if (termsOfServiceLink) {
+      if (this.termsOfServiceLinkClickListener) {
+        termsOfServiceLink.removeEventListener(
+            'click', this.termsOfServiceLinkClickListener);
+      }
+      this.termsOfServiceLinkClickListener = (e: Event) => {
+        e.preventDefault();
+        this.openTermsOfService();
+      };
+      termsOfServiceLink.addEventListener(
+          'click', this.termsOfServiceLinkClickListener);
+    }
   }
 
   private openPrivacyPolicy() {
