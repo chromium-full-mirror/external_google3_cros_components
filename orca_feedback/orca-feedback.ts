@@ -9,8 +9,8 @@ import '../chip/chip';
 
 import {Task} from '@lit/task';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {safeHTML} from 'lit/directives/safe-html';
-import {HtmlSanitizer, HtmlSanitizerBuilder} from 'safevalues';
+
+import {maybeSafeHTML} from './maybe_safe_html';
 
 interface StringSource {
   getAriaLabelForLink(arg: string): string;
@@ -32,15 +32,6 @@ interface StringSource {
   MSG_CANCEL: string;
   MSG_SEND: string;
 }
-
-// The santinizer below is being used to sanitize the markup from i18n strings.
-const HTML_SANITIZER: HtmlSanitizer =
-    new HtmlSanitizerBuilder()
-        .onlyAllowElements(new Set<string>(['a']))
-        .onlyAllowAttributes(new Set<string>(['role', 'aria-label', 'href']))
-        .allowClassAttributes()
-        .allowIdAttributes()
-        .build();
 
 const PRIVACY_POLICY_URL = 'https://policies.google.com/privacy';
 const TERMS_OF_SERVICE_URL = 'https://policies.google.com/terms';
@@ -324,7 +315,7 @@ export class OrcaFeedback extends LitElement {
          * There is no way to pass event handlers directly to safeHTML. Thus we
          * expose anchor elements by id and add event listeners in firstUpdated.
          */
-        safeHTML(HTML_SANITIZER.sanitize(
+        maybeSafeHTML(
             this.stringSource?.getFeedbackDisclaimer(
                 /*linkPolicyBegin=*/
                 `<a id="privacy-policy" class="link" role="link" aria-label="${
@@ -341,7 +332,7 @@ export class OrcaFeedback extends LitElement {
                     ''}" href="${TERMS_OF_SERVICE_URL}">`,
                 /*linkTermsOfServiceEnd=*/ '</a>',
                 ) ??
-            ''))}
+            '')}
       </div>
       <div class="extra-info">${this.extraInfoTask.render({
       complete: (extraInfo: string) => extraInfo,
