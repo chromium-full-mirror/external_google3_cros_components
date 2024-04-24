@@ -47,6 +47,11 @@ export class Switch extends LitElement {
       --md-switch-selected-focus-handle-color: var(--cros-sys-on_primary);
       --md-switch-selected-pressed-handle-color: var(--cros-sys-on_primary);
 
+      --md-switch-selected-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-switch-selected-pressed-state-layer-color: var(--cros-sys-ripple_primary);
+      --md-switch-selected-hover-state-layer-opacity: 1;
+      --md-switch-selected-pressed-state-layer-opacity: 1;
+
       /* unselected */
       --md-switch-track-color: var(--cros-sys-secondary);
       --md-switch-hover-track-color: var(--cros-sys-secondary);
@@ -57,6 +62,11 @@ export class Switch extends LitElement {
       --md-switch-hover-handle-color: var(--cros-sys-on_secondary);
       --md-switch-focus-handle-color: var(--cros-sys-on_secondary);
       --md-switch-pressed-handle-color: var(--cros-sys-on_secondary);
+
+      --md-switch-hover-state-layer-color: var(--cros-sys-hover_on_subtle);
+      --md-switch-pressed-state-layer-color: var(--cros-sys-ripple_neutral_on_subtle);
+      --md-switch-hover-state-layer-opacity: 1;
+      --md-switch-pressed-state-layer-opacity: 1;
     }
 
     md-switch::part(focus-ring) {
@@ -118,6 +128,7 @@ export class Switch extends LitElement {
           ?disabled=${this.disabled}
           ?selected=${this.selected}
           @change=${this.onChange}
+          @keydown=${this.onKeyDown}
           aria-label=${this.ariaLabel ?? nothing}>
       </md-switch>
     `;
@@ -126,6 +137,12 @@ export class Switch extends LitElement {
   private onChange() {
     this.selected = this.mdSwitch!.selected;
     this.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  private onKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      this.click();
+    }
   }
 
   override click() {
