@@ -202,6 +202,12 @@ export class Button extends LitElement {
    */
   overflow: 'truncate'|'stack' = 'truncate';
 
+  /**
+   * The URL that the link button points to.
+   * @export
+   */
+  href = '';
+
   /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
@@ -211,6 +217,7 @@ export class Button extends LitElement {
     inverted: {type: Boolean, reflect: true},
     ariaHasPopup: {type: String, reflect: true, attribute: 'aria-haspopup'},
     overflow: {type: String, reflect: true},
+    href: {type: String},
   };
 
   constructor() {
@@ -252,7 +259,8 @@ export class Button extends LitElement {
             class="button"
             aria-label=${this.ariaLabel || ''}
             aria-haspopup=${ariaHasPopup}
-            ?disabled=${this.disabled}>
+            ?disabled=${this.disabled}
+            href=${this.href}>
           ${this.renderButtonContent()}
         </md-text-button>
         `;
@@ -263,7 +271,8 @@ export class Button extends LitElement {
             class="button"
             aria-label=${this.ariaLabel || ''}
             aria-haspopup=${ariaHasPopup}
-            ?disabled=${this.disabled}>
+            ?disabled=${this.disabled}
+            href=${this.href}>
           ${this.renderButtonContent()}
         </md-filled-button>
         `;

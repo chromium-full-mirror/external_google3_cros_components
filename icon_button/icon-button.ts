@@ -79,6 +79,8 @@ export class IconButton extends LitElement {
   disabled: boolean;
   /** @export */
   selected: boolean;
+  /** @export */
+  href = '';
 
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
@@ -322,6 +324,7 @@ export class IconButton extends LitElement {
     surface: {type: String, reflect: true},
     disabled: {type: Boolean},
     selected: {type: Boolean},
+    href: {type: String},
   };
 
   constructor() {
@@ -353,7 +356,8 @@ export class IconButton extends LitElement {
               toggle
               ?selected=${this.selected}
               ?disabled=${this.disabled}
-              aria-disabled=${this.disabled}>
+              aria-disabled=${this.disabled}
+              href=${this.href}>
             <slot name="icon"></slot>
             <slot name="selectedIcon" slot="selected"></slot>
           </md-filled-icon-button>`;
@@ -364,7 +368,8 @@ export class IconButton extends LitElement {
           <md-icon-button
               ?disabled=${this.disabled}
               aria-label=${ariaLabel}
-              aria-disabled=${this.disabled}>
+              aria-disabled=${this.disabled}
+              href=${this.href}>
             <slot name="icon"></slot>
           </md-icon-button>`;
     }
@@ -373,7 +378,8 @@ export class IconButton extends LitElement {
           <md-filled-tonal-icon-button
               ?disabled=${this.disabled}
               aria-label=${ariaLabel}
-              aria-disabled=${this.disabled}>
+              aria-disabled=${this.disabled}
+              href=${this.href}>
             <slot name="icon"></slot>
           </md-filled-tonal-icon-button>`;
   }
