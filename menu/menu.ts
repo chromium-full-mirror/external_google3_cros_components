@@ -63,6 +63,9 @@ export class Menu extends LitElement implements MenuInterface {
       --md-menu-container-elevation: 0;
       box-shadow: 0px 12px 12px 0px rgba(var(--cros-sys-shadow-rgb), 0.2);
     }
+    md-menu:focus-visible {
+      outline: none;
+    }
   `;
   /** @nocollapse */
   static override properties = {
