@@ -317,6 +317,13 @@ export class Menu extends LitElement implements MenuInterface {
   override focus() {
     this.renderRoot.querySelector('md-menu')?.focus();
   }
+
+  override getBoundingClientRect() {
+    if (!this.mdMenu) {
+      return super.getBoundingClientRect();
+    }
+    return this.mdMenu.getBoundingClientRect();
+  }
 }
 
 customElements.define('cros-menu', Menu);
