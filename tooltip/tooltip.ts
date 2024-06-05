@@ -19,6 +19,11 @@ declare interface HTMLElementWithPopoverAPI extends HTMLElement {
 // The name of the anchor to use for the CSS Anchor Positioning API.
 const ANCHOR_NAME = css`--tooltip-anchor`;
 
+// The amount of time to wait before closing the tooltip, after the user stopped
+// focusing/hovering the anchor or label.
+/* TODO(b/288190663): Confirm correct timeout duration value. **/
+const BLUR_OR_UNFOCUS_TIMEOUT_DURATION = 400;
+
 /** A cros-compliant tooltip component. */
 export class Tooltip extends LitElement {
   /** @nocollapse */
@@ -84,6 +89,9 @@ export class Tooltip extends LitElement {
     this.anchorElement = null;
     this.anchor = '';
     this.label = '';
+
+    this.anchorOrLabelFocused = this.anchorOrLabelFocused.bind(this);
+    this.anchorOrLabelBlurred = this.anchorOrLabelBlurred.bind(this);
   }
 
   /** @export */
@@ -102,6 +110,8 @@ export class Tooltip extends LitElement {
   }
 
   private currentAnchorElement: HTMLElement|null = null;
+  private isAnchorOrLabelFocused = false;
+  private blurOrUnfocusTimeout: number|null = null;
 
   override firstUpdated() {
     // Adds needed popover properties to cros-tooltip.
@@ -111,19 +121,24 @@ export class Tooltip extends LitElement {
     // Sets anchor to this element's ID & adds listeners on hover.
     if (this.anchorElement) {
       this.anchorElement.setAttribute('popovertarget', 'tooltip');
-      this.anchorElement.addEventListener('mouseover', () => {
-        this.openPopover();
-      });
-      this.anchorElement.addEventListener('mouseout', () => {
-        this.closePopover();
-      });
+      this.anchorElement.addEventListener(
+          'mouseover', this.anchorOrLabelFocused);
+      this.anchorElement.addEventListener('focus', this.anchorOrLabelFocused);
+      this.anchorElement.addEventListener(
+          'mouseout', this.anchorOrLabelBlurred);
+      this.anchorElement.addEventListener('blur', this.anchorOrLabelBlurred);
     }
   }
 
   override disconnectedCallback() {
     if (this.anchorElement) {
-      this.anchorElement.removeEventListener('mouseover', this.openPopover);
-      this.anchorElement.removeEventListener('mouseout', this.closePopover);
+      this.anchorElement.removeEventListener(
+          'mouseover', this.anchorOrLabelFocused);
+      this.anchorElement.removeEventListener(
+          'focus', this.anchorOrLabelFocused);
+      this.anchorElement.removeEventListener(
+          'mouseout', this.anchorOrLabelBlurred);
+      this.anchorElement.removeEventListener('blur', this.anchorOrLabelBlurred);
     }
     super.disconnectedCallback();
   }
@@ -139,6 +154,31 @@ export class Tooltip extends LitElement {
   closePopover() {
     const tooltip = this as unknown as HTMLElementWithPopoverAPI;
     tooltip.hidePopover();
+  }
+
+  private anchorOrLabelFocused() {
+    this.isAnchorOrLabelFocused = true;
+    this.openPopover();
+  }
+
+  private anchorOrLabelBlurred() {
+    this.isAnchorOrLabelFocused = false;
+    this.maybeCloseTooltipAfterTimeout();
+  }
+
+  private maybeCloseTooltipAfterTimeout() {
+    // Restart the timeout if one already exists.
+    if (this.blurOrUnfocusTimeout) {
+      clearTimeout(this.blurOrUnfocusTimeout);
+    }
+
+    // Close the tooltip after a set amount of time, but don't close the tooltip
+    // if the user is still focusing the label or the anchor.
+    this.blurOrUnfocusTimeout = setTimeout(() => {
+      if (!this.isAnchorOrLabelFocused) {
+        this.closePopover();
+      }
+    }, BLUR_OR_UNFOCUS_TIMEOUT_DURATION);
   }
 
   // The CSS Anchor Positioning API does not yet allow elements in a shadow DOM
@@ -164,8 +204,14 @@ export class Tooltip extends LitElement {
 
   override render() {
     return html`
-      <div id="tooltip-anchor-overlay"></div>
-      <div id="label">${this.label}</div>
+      <div id="tooltip-anchor-overlay">
+      </div>
+      <div id="label"
+        @mouseover=${this.anchorOrLabelFocused}
+        @mouseout=${this.anchorOrLabelBlurred}
+        @focus=${this.anchorOrLabelFocused}
+        @blur=${this.anchorOrLabelBlurred}
+      >${this.label}</div>
     `;
   }
 }
