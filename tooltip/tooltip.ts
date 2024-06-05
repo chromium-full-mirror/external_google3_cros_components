@@ -16,9 +16,33 @@ declare interface HTMLElementWithPopoverAPI extends HTMLElement {
   hidePopover: () => void;
 }
 
+// The name of the anchor to use for the CSS Anchor Positioning API.
+const ANCHOR_NAME = css`--tooltip-anchor`;
+
 /** A cros-compliant tooltip component. */
 export class Tooltip extends LitElement {
+  /** @nocollapse */
   static override styles: CSSResultGroup = css`
+    /* Remove default CSS Popover API styles. */
+    :host {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    #tooltip-anchor-overlay {
+      anchor-name: ${ANCHOR_NAME};
+      opacity: 0;
+      pointer-events: none;
+      position: fixed;
+    }
+
+    #label {
+      position-anchor: ${ANCHOR_NAME};
+      position: fixed;
+      inset-area: block-end;
+      inset-block-start: 4px;
+    }
   `;
   /** @nocollapse */
   static override properties = {
@@ -42,7 +66,7 @@ export class Tooltip extends LitElement {
   get anchorElement(): HTMLElement|null {
     if (this.anchor) {
       return (this.getRootNode() as Document | ShadowRoot)
-          .getElementById(`${this.anchor}`);
+          .querySelector(`#${this.anchor}`);
     }
     return this.currentAnchorElement;
   }
@@ -81,6 +105,9 @@ export class Tooltip extends LitElement {
   }
 
   private openPopover() {
+    // When the popover opens, move the tooltip to the anchor.
+    this.updateAnchorPosition();
+
     const tooltip = this as unknown as HTMLElementWithPopoverAPI;
     tooltip.showPopover();
   }
@@ -90,8 +117,32 @@ export class Tooltip extends LitElement {
     tooltip.hidePopover();
   }
 
+  // The CSS Anchor Positioning API does not yet allow elements in a shadow DOM
+  // to see anchor names defined in the outer tree scope. To work around this,
+  // there is an internal anchor point (#tooltip-anchor-overlay) that we
+  // position to overlap exactly with the actual anchor element. From there, we
+  // can use the CSS Anchor Positioning API to position the tooltip. See
+  // https://github.com/w3c/csswg-drafts/issues/9408#issuecomment-2105453734 for
+  // more context.
+  private updateAnchorPosition() {
+    if (!this.anchorElement) return;
+
+    const anchorOverlay =
+        this.shadowRoot!.getElementById('tooltip-anchor-overlay')!;
+    const anchorRect = this.anchorElement.getBoundingClientRect();
+
+    // Move the anchor overlay so that it overlaps the anchor element.
+    anchorOverlay.style.top = `${anchorRect.top}px`;
+    anchorOverlay.style.left = `${anchorRect.left}px`;
+    anchorOverlay.style.width = `${anchorRect.width}px`;
+    anchorOverlay.style.height = `${anchorRect.height}px`;
+  }
+
   override render() {
-    return html`<div>${this.label}</div>`;
+    return html`
+      <div id="tooltip-anchor-overlay"></div>
+      <div id="label">${this.label}</div>
+    `;
   }
 }
 
