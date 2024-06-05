@@ -38,10 +38,16 @@ export class Tooltip extends LitElement {
     }
 
     #label {
-      position-anchor: ${ANCHOR_NAME};
-      position: fixed;
+      background-color: var(--cros-sys-inverse_surface);
+      border-radius: 6px;
+      color: var(--cros-sys-surface);
+      font: var(--cros-annotation-1-font);
       inset-area: block-end;
       inset-block-start: 4px;
+      padding: 5px 8px;
+      position-anchor: ${ANCHOR_NAME};
+      position: fixed;
+      text-align: center;
     }
   `;
   /** @nocollapse */
