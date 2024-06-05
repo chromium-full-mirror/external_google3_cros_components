@@ -104,7 +104,7 @@ export class Tooltip extends LitElement {
     super.disconnectedCallback();
   }
 
-  private openPopover() {
+  openPopover() {
     // When the popover opens, move the tooltip to the anchor.
     this.updateAnchorPosition();
 
@@ -112,7 +112,7 @@ export class Tooltip extends LitElement {
     tooltip.showPopover();
   }
 
-  private closePopover() {
+  closePopover() {
     const tooltip = this as unknown as HTMLElementWithPopoverAPI;
     tooltip.hidePopover();
   }
