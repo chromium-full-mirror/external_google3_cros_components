@@ -30,6 +30,24 @@ export class Tooltip extends LitElement {
       padding: 0;
     }
 
+    :host(:not(:popover-open)) {
+      opacity: 0;
+      /* TODO(b/288190663): Update exit animation to match SystemUI. **/
+      transition: all 400ms allow-discrete;
+    }
+
+    :host(:popover-open) {
+      opacity: 1;
+      /* TODO(b/288190663): Update entrance animation to match SystemUI. **/
+      transition: all 300ms allow-discrete;
+    }
+
+    @starting-style {
+      :host(:popover-open) {
+        opacity: 0;
+      }
+    }
+
     #tooltip-anchor-overlay {
       anchor-name: ${ANCHOR_NAME};
       opacity: 0;
