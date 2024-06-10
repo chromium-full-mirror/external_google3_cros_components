@@ -143,6 +143,10 @@ export class Tooltip extends LitElement {
     super.disconnectedCallback();
   }
 
+  get labelElement(): HTMLDivElement {
+    return this.shadowRoot!.querySelector<HTMLDivElement>('#label')!;
+  }
+
   openPopover() {
     // When the popover opens, move the tooltip to the anchor.
     this.updateAnchorPosition();
