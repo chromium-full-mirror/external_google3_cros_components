@@ -19,6 +19,17 @@ declare interface HTMLElementWithPopoverAPI extends HTMLElement {
 // The name of the anchor to use for the CSS Anchor Positioning API.
 const ANCHOR_NAME = css`--tooltip-anchor`;
 
+// Attribute names set for when the tooltip label should be shifted to remain
+// on-screen.
+const ATTR_SHIFT_INLINE_END = 'shift-inline-end';
+const ATTR_SHIFT_INLINE_START = 'shift-inline-start';
+
+// The attribute names here are used in the CSS below. For security reasons, the
+// constants above cannot be substituted into the CSS, hence the duplicated
+// literals here.
+const ATTR_SHIFT_INLINE_END_CSS = css`shift-inline-end`;
+const ATTR_SHIFT_INLINE_START_CSS = css`shift-inline-start`;
+
 // The amount of time to wait before closing the tooltip, after the user stopped
 // focusing/hovering the anchor or label.
 /* TODO(b/288190663): Confirm correct timeout duration value. **/
@@ -65,14 +76,26 @@ export class Tooltip extends LitElement {
       border-radius: 6px;
       color: var(--cros-sys-surface);
       font: var(--cros-annotation-1-font);
-      inset-area: block-end;
+      inset-area: block-end span-all;
       inset-block-start: 4px;
+      max-width: 296px;
       padding: 5px 8px;
       position-anchor: ${ANCHOR_NAME};
       position: fixed;
       text-align: center;
     }
+
+    #label[${ATTR_SHIFT_INLINE_END_CSS}] {
+      inset-area: block-end span-inline-end;
+      text-align: start;
+    }
+
+    #label[${ATTR_SHIFT_INLINE_START_CSS}] {
+      inset-area: block-end span-inline-start;
+      text-align: start;
+    }
   `;
+
   /** @nocollapse */
   static override properties = {
     anchor: {type: String},
@@ -204,6 +227,48 @@ export class Tooltip extends LitElement {
     anchorOverlay.style.left = `${anchorRect.left}px`;
     anchorOverlay.style.width = `${anchorRect.width}px`;
     anchorOverlay.style.height = `${anchorRect.height}px`;
+
+    // After the tooltip has been opened, test different alignments
+    // (start/center/end) to determine which alignment allows for the largest
+    // tooltip width.
+    requestAnimationFrame(() => {
+      const label = this.labelElement;
+
+      // Move the label back to its normal position, centered under the anchor
+      // element, and get its width.
+      label.removeAttribute(ATTR_SHIFT_INLINE_START);
+      label.removeAttribute(ATTR_SHIFT_INLINE_END);
+      const widthWhenInCenter = label.getBoundingClientRect().width;
+
+      // Shift the label to the inline-end (i.e. right for ltr languages), and
+      // get its width.
+      label.setAttribute(ATTR_SHIFT_INLINE_END, '');
+      const widthWhenShiftedToEnd = label.getBoundingClientRect().width;
+
+      // Shift the label to the inline-start (i.e. left for ltr languages), and
+      // get its width.
+      label.removeAttribute(ATTR_SHIFT_INLINE_END);
+      label.setAttribute(ATTR_SHIFT_INLINE_START, '');
+      const widthWhenShiftedToStart = label.getBoundingClientRect().width;
+
+      // Reset the label back to the center before applying the final
+      // adjustments.
+      label.removeAttribute(ATTR_SHIFT_INLINE_END);
+      label.removeAttribute(ATTR_SHIFT_INLINE_START);
+
+      if (widthWhenInCenter >= widthWhenShiftedToStart &&
+          widthWhenInCenter >= widthWhenShiftedToEnd) {
+        // Keep the element in the center.
+        label.removeAttribute(ATTR_SHIFT_INLINE_START);
+        label.removeAttribute(ATTR_SHIFT_INLINE_END);
+      } else if (widthWhenShiftedToStart > widthWhenShiftedToEnd) {
+        // Shift the element to the start.
+        label.setAttribute(ATTR_SHIFT_INLINE_START, '');
+      } else {
+        // Shift the element to the end.
+        label.setAttribute(ATTR_SHIFT_INLINE_END, '');
+      }
+    });
   }
 
   override render() {
