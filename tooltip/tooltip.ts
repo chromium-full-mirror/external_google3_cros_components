@@ -75,7 +75,7 @@ export class Tooltip extends LitElement {
       color: var(--cros-sys-surface);
       font: var(--cros-annotation-1-font);
       inset-area: block-end span-all;
-      inset-block-start: 4px;
+      inset-block-start: var(--cros-tooltip-vertical-offset, 4px);
       max-width: 296px;
       padding: 5px 8px;
       position-anchor: ${ANCHOR_NAME};
