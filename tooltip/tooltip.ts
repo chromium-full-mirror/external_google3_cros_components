@@ -92,24 +92,38 @@ export class Tooltip extends LitElement {
       inset-area: block-end span-inline-start;
       text-align: start;
     }
+
+    :host([truncate]) #label-inner {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
   `;
 
   /** @nocollapse */
   static override properties = {
     anchor: {type: String},
     label: {type: String},
+    truncate: {type: Boolean, reflect: true},
   };
 
   /** @export */
   anchor: string;
   /** @export */
   label: string;
+  /**
+   * If true, the tooltip will be truncated with an ellipsis after 3 lines.
+   * @export
+   */
+  truncate: boolean;
 
   constructor() {
     super();
     this.anchorElement = null;
     this.anchor = '';
     this.label = '';
+    this.truncate = true;
 
     this.anchorOrLabelFocused = this.anchorOrLabelFocused.bind(this);
     this.anchorOrLabelBlurred = this.anchorOrLabelBlurred.bind(this);
@@ -274,11 +288,12 @@ export class Tooltip extends LitElement {
       <div id="tooltip-anchor-overlay">
       </div>
       <div id="label"
-        @mouseover=${this.anchorOrLabelFocused}
-        @mouseout=${this.anchorOrLabelBlurred}
-        @focus=${this.anchorOrLabelFocused}
-        @blur=${this.anchorOrLabelBlurred}
-      >${this.label}</div>
+          @mouseover=${this.anchorOrLabelFocused}
+          @mouseout=${this.anchorOrLabelBlurred}
+          @focus=${this.anchorOrLabelFocused}
+          @blur=${this.anchorOrLabelBlurred}>
+        <div id="label-inner">${this.label}</div>
+    </div>
     `;
   }
 }
