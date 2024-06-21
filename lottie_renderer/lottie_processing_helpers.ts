@@ -44,6 +44,8 @@ export const CROS_TOKENS = [
   'cros.sys.app_base',
   'cros.sys.app_base_shaded',
   'cros.sys.base_elevated',
+  'cros.sys.illo.card.color5',
+  'cros.sys.illo.card.on_color5',
   'cros.sys.illo.card.color4',
   'cros.sys.illo.card.on_color4',
   'cros.sys.illo.card.color3',
