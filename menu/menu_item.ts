@@ -319,8 +319,7 @@ export class MenuItem extends LitElement implements MenuItemType {
   }
 
   set switchSelected(value: boolean) {
-    if (!this.renderRoot) return;
-    const crosSwitch = this.renderRoot.querySelector('cros-switch');
+    const crosSwitch = this.renderRoot?.querySelector('cros-switch');
     if (!crosSwitch) {
       this.missedPropertySets.switchSelected = value;
     } else {
