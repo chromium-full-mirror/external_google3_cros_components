@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
  * Allow popover show and hide functions. See
@@ -182,6 +182,12 @@ export class Tooltip extends LitElement {
     return this.shadowRoot!.querySelector<HTMLDivElement>('#label')!;
   }
 
+  override updated(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('label') && !!this.anchorElement) {
+      this.anchorElement.ariaDescription = this.label;
+    }
+  }
+
   openPopover() {
     // When the popover opens, move the tooltip to the anchor.
     this.updateAnchorPosition();
@@ -288,6 +294,8 @@ export class Tooltip extends LitElement {
       <div id="tooltip-anchor-overlay">
       </div>
       <div id="label"
+          aria-hidden="true"
+          role="tooltip"
           @mouseover=${this.anchorOrLabelFocused}
           @mouseout=${this.anchorOrLabelBlurred}
           @focus=${this.anchorOrLabelFocused}
