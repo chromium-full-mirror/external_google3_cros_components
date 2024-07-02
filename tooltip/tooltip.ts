@@ -207,8 +207,13 @@ export class Tooltip extends LitElement {
   }
 
   private anchorOrLabelBlurred() {
-    this.isAnchorOrLabelFocused = false;
-    this.maybeCloseTooltipAfterTimeout();
+    // After a mouseout event, the anchor may still have keyboard focus, and the
+    // tooltip should not close if the keyboard is still focused on the anchor.
+    const anchorStillHasKeyboardFocus = this.anchorElement?.matches(':focus');
+    if (!anchorStillHasKeyboardFocus) {
+      this.isAnchorOrLabelFocused = false;
+      this.maybeCloseTooltipAfterTimeout();
+    }
   }
 
   private maybeCloseTooltipAfterTimeout() {
