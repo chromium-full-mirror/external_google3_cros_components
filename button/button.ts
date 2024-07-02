@@ -8,7 +8,6 @@ import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
-import {ifDefined} from 'lit-html/directives/if-defined';
 
 // The padding on the label start/end when there is no icons.
 const LABEL_PADDING_START_END = css`16px`;
@@ -212,7 +211,6 @@ export class Button extends LitElement {
   /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
-    ariaExpanded: {type: String, reflect: true, attribute: 'aria-expanded'},
     label: {type: String, reflect: true},
     disabled: {type: Boolean, reflect: true},
     buttonStyle: {type: String, reflect: true, attribute: 'button-style'},
@@ -225,6 +223,7 @@ export class Button extends LitElement {
   constructor() {
     super();
     this.ariaLabel = '';
+    this.ariaHasPopup = 'false';
     this.label = '';
     this.disabled = false;
   }
@@ -251,17 +250,15 @@ export class Button extends LitElement {
   }
 
   override render() {
-    const ariaHasPopup = (this.ariaHasPopup ?? '') as 'false' | 'true' |
+    const ariaHasPopup = (this.ariaHasPopup ?? 'false') as 'false' | 'true' |
         'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
-    const ariaExpanded = (this.ariaExpanded ?? '') as 'true' | 'false';
 
     if (this.buttonStyle === 'floating') {
       return html`
         <md-text-button
             class="button"
             aria-label=${this.ariaLabel || ''}
-            aria-haspopup=${ifDefined(ariaHasPopup)}
-            aria-expanded=${ifDefined(ariaExpanded)}
+            aria-haspopup=${ariaHasPopup}
             ?disabled=${this.disabled}
             href=${this.href}>
           ${this.renderButtonContent()}
@@ -273,8 +270,7 @@ export class Button extends LitElement {
         <md-filled-button
             class="button"
             aria-label=${this.ariaLabel || ''}
-            aria-haspopup=${ifDefined(ariaHasPopup)}
-            aria-expanded=${ifDefined(ariaExpanded)}
+            aria-haspopup=${ariaHasPopup}
             ?disabled=${this.disabled}
             href=${this.href}>
           ${this.renderButtonContent()}
