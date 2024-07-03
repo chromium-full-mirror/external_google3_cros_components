@@ -32,8 +32,7 @@ const ATTR_SHIFT_INLINE_START_CSS = css`shift-inline-start`;
 
 // The amount of time to wait before closing the tooltip, after the user stopped
 // focusing/hovering the anchor or label.
-/* TODO(b/288190663): Confirm correct timeout duration value. **/
-const BLUR_OR_UNFOCUS_TIMEOUT_DURATION = 400;
+const BLUR_OR_UNFOCUS_TIMEOUT_DURATION = 200;
 
 /** A cros-compliant tooltip component. */
 export class Tooltip extends LitElement {
