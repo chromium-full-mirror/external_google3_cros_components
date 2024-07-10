@@ -23,8 +23,8 @@ export class Menu extends LitElement implements MenuInterface {
       --cros-menu-width: 96px;
     }
     md-menu {
-      --md-menu-container-color: var(--cros-bg-color-elevation-3);
-      --md-menu-item-container-color: var(--cros-bg-color-elevation-3);
+      --md-menu-container-color: var(--cros-sys-base_elevated);
+      --md-menu-item-container-color: var(--cros-sys-base_elevated);
       --md-menu-item-label-text-font: var(--cros-button-2-font-family);
       --md-menu-item-label-text-size: var(--cros-button-2-font-size);
       --md-menu-item-label-text-line-height: var(--cros-button-2-line-height);
