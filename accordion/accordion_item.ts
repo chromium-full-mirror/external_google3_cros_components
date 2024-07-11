@@ -15,6 +15,7 @@ export class AccordionItem extends LitElement {
   static override styles: CSSResultGroup = css`
     .accordion-row {
       align-items: center;
+      cursor: pointer;
       display: flex;
       flex-direction: row;
       height: 48px;
@@ -64,7 +65,7 @@ export class AccordionItem extends LitElement {
   override render() {
     return html`
       <div class="container">
-        <div class="accordion-row">
+        <div class="accordion-row" @click=${this.onRowClick}>
           <div class="leading">
             <slot name="leading"></slot>
           </div>
@@ -89,6 +90,10 @@ export class AccordionItem extends LitElement {
         </section>
       </div>
     `;
+  }
+
+  private onRowClick() {
+    this.expanded = !this.expanded;
   }
 }
 
