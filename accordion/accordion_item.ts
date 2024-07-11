@@ -45,6 +45,22 @@ export class AccordionItem extends LitElement {
     }
   `;
 
+  /** @nocollapse */
+  static override properties = {
+    expanded: {type: Boolean, reflect: true},
+  };
+
+  /**
+   * Whether or not the accordion content is visible.
+   * @export
+   */
+  expanded: boolean;
+
+  constructor() {
+    super();
+    this.expanded = false;
+  }
+
   override render() {
     return html`
       <div class="container">
@@ -68,7 +84,7 @@ export class AccordionItem extends LitElement {
             <cros-placeholder-icon slot="icon"></cros-placeholder-icon>
           </cros-icon-button>
         </div>
-        <section class="content">
+        <section class="content" ?hidden=${!this.expanded}>
           <slot></slot>
         </section>
       </div>
