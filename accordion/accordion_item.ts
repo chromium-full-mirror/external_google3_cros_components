@@ -9,6 +9,7 @@ import '../placeholder_icon/placeholder-icon';
 import '@material/web/focus/md-focus-ring.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {ClassInfo, classMap} from 'lit/directives/class-map';
 
 /** A chromeOS compliant accordion-item for use in <cros-accordion>. */
 export class AccordionItem extends LitElement {
@@ -35,7 +36,10 @@ export class AccordionItem extends LitElement {
 
     .title-and-subtitle {
       flex: 1;
-      margin-inline: 16px;
+    }
+
+    .has-leading .title-and-subtitle {
+      padding-inline-start: 16px;
     }
 
     .title {
@@ -48,11 +52,25 @@ export class AccordionItem extends LitElement {
       font: var(--cros-body-2-font);
     }
 
+    .content {
+      padding: 16px;
+      padding-block-start: 0;
+    }
+
+    .container::after {
+      background: var(--cros-sys-separator);
+      content: '';
+      display: block;
+      height: 1px;
+      width: 100%;
+    }
+
     md-focus-ring {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-focus-ring-width: 2px;
       --md-focus-ring-active-width: 2px;
       --md-focus-ring-shape: 8px;
+      --md-focus-ring-outward-offset: 1px;
     }
   `;
 
@@ -73,8 +91,12 @@ export class AccordionItem extends LitElement {
   }
 
   override render() {
+    const containerClasses: ClassInfo = {
+      'has-leading': this.hasLeading(),
+    };
+
     return html`
-      <div class="container">
+      <div class="container ${classMap(containerClasses)}">
         <div
             class="accordion-row"
             part="row"
@@ -82,7 +104,7 @@ export class AccordionItem extends LitElement {
             @keydown=${this.onRowKeyDown}
             tabindex="0">
           <div class="leading">
-            <slot name="leading"></slot>
+            <slot name="leading" @slotchange=${this.onLeadingSlotChange}></slot>
           </div>
           <section class="title-and-subtitle">
             <div class="title">
@@ -107,6 +129,25 @@ export class AccordionItem extends LitElement {
         </section>
       </div>
     `;
+  }
+
+  /**
+   * Returns true if the accordion item has content in its leading slot.
+   */
+  private hasLeading(): boolean {
+    return (this.shadowRoot
+                ?.querySelector<HTMLSlotElement>('slot[name="leading"]')
+                ?.assignedElements()
+                .length ??
+            0) > 0;
+  }
+
+  // The padding before the title/subtitle changes based on whether there is
+  // content in the `leading` slot. It's currently not possible to detect slot
+  // content via CSS. When the `leading` slot changes, we request an update to
+  // force the element to re-render and thus apply the `has-leading` class.
+  private onLeadingSlotChange() {
+    this.requestUpdate();
   }
 
   private onRowClick() {
