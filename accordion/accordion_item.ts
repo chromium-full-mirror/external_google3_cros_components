@@ -6,6 +6,7 @@
 
 import '../icon_button/icon-button';
 import '../placeholder_icon/placeholder-icon';
+import '@material/web/focus/md-focus-ring.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
@@ -20,8 +21,10 @@ export class AccordionItem extends LitElement {
       flex-direction: row;
       height: 48px;
       justify-content: space-between;
+      outline: none;
       padding: 16px;
       padding-inline-end: 12px;
+      position: relative;
     }
 
     .leading {
@@ -44,6 +47,13 @@ export class AccordionItem extends LitElement {
       color: var(--cros-sys-on_surface_variant);
       font: var(--cros-body-2-font);
     }
+
+    md-focus-ring {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: 2px;
+      --md-focus-ring-active-width: 2px;
+      --md-focus-ring-shape: 8px;
+    }
   `;
 
   /** @nocollapse */
@@ -65,7 +75,7 @@ export class AccordionItem extends LitElement {
   override render() {
     return html`
       <div class="container">
-        <div class="accordion-row" @click=${this.onRowClick}>
+        <div class="accordion-row" @click=${this.onRowClick} tabindex="0">
           <div class="leading">
             <slot name="leading"></slot>
           </div>
@@ -84,6 +94,7 @@ export class AccordionItem extends LitElement {
             <!-- TODO(b/352115367): Replace placeholder icon with chevron. -->
             <cros-placeholder-icon slot="icon"></cros-placeholder-icon>
           </cros-icon-button>
+          <md-focus-ring></md-focus-ring>
         </div>
         <section class="content" ?hidden=${!this.expanded}>
           <slot></slot>
