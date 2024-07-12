@@ -5,6 +5,7 @@
  */
 
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
+import '../menu/menu';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
@@ -50,23 +51,31 @@ export class IconDropdown extends LitElement {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
   };
 
-
   override render() {
     return html`
       <div>
         ${this.renderButtonContent()}
+        ${this.renderMenuContent()}
       </div>
     `;
   }
 
   private renderButtonContent() {
     return html`
-      <md-filled-tonal-icon-button aria-label=${this.ariaLabel ?? ''}>
+      <md-filled-tonal-icon-button id="button" aria-label=${
+        this.ariaLabel ?? ''}>
         <div class="button-icon-container">
           <span class="dropdown-icon"><slot name="button-icon"></slot></span>
           <span class="dropdown-arrow">${ARROW_DROP_DOWN_SVG}</span>
         </div>
       </md-filled-tonal-icon-button>
+    `;
+  }
+
+  private renderMenuContent() {
+    return html`
+      <cros-menu anchor="button">
+      </cros-menu>
     `;
   }
 }
