@@ -75,7 +75,11 @@ export class AccordionItem extends LitElement {
   override render() {
     return html`
       <div class="container">
-        <div class="accordion-row" @click=${this.onRowClick} tabindex="0">
+        <div
+            class="accordion-row"
+            @click=${this.onRowClick}
+            @keydown=${this.onRowKeyDown}
+            tabindex="0">
           <div class="leading">
             <slot name="leading"></slot>
           </div>
@@ -88,6 +92,7 @@ export class AccordionItem extends LitElement {
             </div>
           </section>
           <cros-icon-button
+            @keydown=${this.onButtonKeyDown}
             buttonStyle="floating"
             surface="base"
             shape="square">
@@ -104,6 +109,27 @@ export class AccordionItem extends LitElement {
   }
 
   private onRowClick() {
+    this.toggleExpanded();
+  }
+
+  private onButtonKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      // Stop propagation so the row keydown handler doesn't also toggle the
+      // accordion.
+      e.stopPropagation();
+      this.toggleExpanded();
+    }
+  }
+
+  private onRowKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.toggleExpanded();
+    }
+  }
+
+  private toggleExpanded() {
     this.expanded = !this.expanded;
   }
 }
