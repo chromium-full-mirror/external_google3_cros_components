@@ -75,6 +75,7 @@ export class IconDropdown extends LitElement {
   private renderMenuContent() {
     return html`
       <cros-menu anchor="button">
+        <slot></slot>
       </cros-menu>
     `;
   }

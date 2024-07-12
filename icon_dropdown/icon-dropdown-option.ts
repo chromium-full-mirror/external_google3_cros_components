@@ -1,0 +1,65 @@
+/**
+ * @license
+ * Copyright 2024 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {SelectOption} from '@material/web/select/select-option.js';
+import {css} from 'lit';
+
+import {MenuItem} from '../menu/menu_item';
+
+/** A chromeOS compliant option to be used in cros-icon-dropdown. */
+export class IconDropdownOption extends MenuItem implements SelectOption {
+  /** @nocollapse */
+  static override styles = [
+    MenuItem.styles, css`
+      md-menu-item {
+        --md-menu-item-label-text-font: var(--cros-dropdown-option-text-font, var(--cros-button-2-font-family));
+      }
+    `
+  ];
+
+  /** @nocollapse */
+  static override properties = {
+    ...MenuItem.properties,
+    value: {type: String, reflect: true},
+  };
+
+  /**
+   * Internal value associated with the option.
+   */
+  private internalValue: string;
+
+  get value() {
+    if (this.internalValue === '') {
+      return this.headline;
+    }
+
+    return this.internalValue;
+  }
+
+  set value(value: string) {
+    this.internalValue = value;
+  }
+
+  // SelectOption implementation:
+  get displayText() {
+    return this.headline;
+  }
+
+  constructor() {
+    super();
+
+    this.type = 'option';
+    this.internalValue = '';
+  }
+}
+
+customElements.define('cros-icon-dropdown-option', IconDropdownOption);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'cros-icon-dropdown-option': IconDropdownOption;
+  }
+}
