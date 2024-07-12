@@ -77,6 +77,7 @@ export class AccordionItem extends LitElement {
       <div class="container">
         <div
             class="accordion-row"
+            part="row"
             @click=${this.onRowClick}
             @keydown=${this.onRowKeyDown}
             tabindex="0">
