@@ -8,7 +8,7 @@ import '../button/button';
 import '../chip/chip';
 
 import {Task} from '@lit/task';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing} from 'lit';
 
 import {maybeSafeHTML} from './maybe_safe_html';
 
@@ -137,6 +137,14 @@ export class OrcaFeedback extends LitElement {
 
         .value {
         }
+
+        .extra-image {
+          border-radius: 8px;
+          display: inline-block;
+          float: inline-end;
+          height: 58px;
+          margin-inline-start: 12px;
+        }
       }
     }
 
@@ -186,6 +194,10 @@ export class OrcaFeedback extends LitElement {
     extraInfoCallback: {
       attribute: false,
     },
+    extraImage: {
+      type: String,
+      attribute: 'extra-image',
+    },
     revertToPreviousScreen: {},
     disableScrollingForTesting: {},
     resizingEnabled: {
@@ -204,6 +216,11 @@ export class OrcaFeedback extends LitElement {
   };
   /** @export */
   extraInfoCallback = async () => '';
+  /**
+   * Optional, extra image URL to be displayed in the feedback form.
+   * @export
+   */
+  extraImage = '';
   /** @export */
   revertToPreviousScreen = () => {};
   /** @export */
@@ -375,7 +392,10 @@ export class OrcaFeedback extends LitElement {
                 ) ??
             '')}
       </div>
-      <div class="extra-info">${this.extraInfoTask.render({
+      <div class="extra-info">${
+        this.extraImage.length > 0 ?
+            html`<img class="extra-image" src=${this.extraImage} />` :
+            nothing}${this.extraInfoTask.render({
       complete: (extraInfo: string) => extraInfo,
     })}</div>
   </div>
