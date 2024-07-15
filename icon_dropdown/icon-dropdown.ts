@@ -9,6 +9,10 @@ import '../menu/menu';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
+import {type MenuItemTriggeredEvent} from '../menu/menu_item';
+
+import {IconDropdownOption} from './icon-dropdown-option';
+
 /** The SVG to use in the trailing icon slot when the dropdown is closed. */
 const ARROW_DROP_DOWN_SVG = html`
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 -960 960 960">
@@ -49,11 +53,30 @@ export class IconDropdown extends LitElement {
   /** @nocollapse */
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
+    value: {type: String},
   };
+
+  /** @nocollapse */
+  static events = {CHANGE: 'change'} as const;
+
+  /**
+   * The value of the first selected option in the dropdown or an empty string
+   * if no options are selected.
+   * @export
+   */
+  value: string;
+
+  constructor() {
+    super();
+
+    // TODO: b/339905985 - Set inital value to the first selected option in
+    // first update.
+    this.value = '';
+  }
 
   override render() {
     return html`
-      <div>
+      <div @cros-menu-item-triggered=${this.onMenuItemTriggered}>
         ${this.renderButtonContent()}
         ${this.renderMenuContent()}
       </div>
@@ -79,11 +102,32 @@ export class IconDropdown extends LitElement {
       </cros-menu>
     `;
   }
+
+  /**
+   * Handles dropdown option selection. If the selected option is the same as
+   * the current value, do nothing. Otherwise, update the value and dispatch a
+   * change event.
+   *
+   * @param e The event object.
+   */
+  private onMenuItemTriggered(e: MenuItemTriggeredEvent) {
+    const menuItem = e.detail.menuItem as IconDropdownOption;
+    if (menuItem?.value === this.value) {
+      return;
+    }
+    this.value = menuItem?.value ?? '';
+    this.dispatchEvent(
+        new Event(IconDropdown.events.CHANGE, {bubbles: true, composed: true}));
+  }
 }
 
 customElements.define('cros-icon-dropdown', IconDropdown);
 
 declare global {
+  interface HTMLElementEventMap {
+    [IconDropdown.events.CHANGE]: Event;
+  }
+
   interface HTMLElementTagNameMap {
     'cros-icon-dropdown': IconDropdown;
   }
