@@ -7,7 +7,7 @@
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css} from 'lit';
 
-import {MenuItem} from '../menu/menu_item';
+import {MenuItem, MenuItemTriggeredEvent} from '../menu/menu_item';
 
 /** A chromeOS compliant option to be used in cros-icon-dropdown. */
 export class IconDropdownOption extends MenuItem implements SelectOption {
@@ -53,12 +53,49 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
 
     this.type = 'option';
     this.internalValue = '';
+    this.keepOpen = false;
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', this.onClickHandler);
+    this.addEventListener('keydown', this.onKeyDownHandler);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('click', this.onClickHandler);
+    this.removeEventListener('keydown', this.onKeyDownHandler);
+  }
+
+  private onClickHandler = () => {
+    this.onItemTriggered();
+  };
+
+  private onKeyDownHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.onItemTriggered();
+    }
+  };
+
+  protected onItemTriggered() {
+    // TODO: Update selected state.
+    this.dispatchEvent(
+        new CustomEvent(IconDropdownOption.events.MENU_ITEM_TRIGGERED, {
+          bubbles: true,
+          composed: true,
+          detail: {menuItem: this},
+        }));
   }
 }
 
 customElements.define('cros-icon-dropdown-option', IconDropdownOption);
 
 declare global {
+  interface HTMLElementEventMap {
+    [MenuItem.events.MENU_ITEM_TRIGGERED]: MenuItemTriggeredEvent;
+  }
+
   interface HTMLElementTagNameMap {
     'cros-icon-dropdown-option': IconDropdownOption;
   }
