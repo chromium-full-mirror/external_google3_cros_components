@@ -54,6 +54,7 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     this.type = 'option';
     this.internalValue = '';
     this.keepOpen = false;
+    this.selected = false;
   }
 
   override connectedCallback() {
@@ -78,8 +79,9 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     }
   };
 
+  // Notifies the parent icon-dropdown that this option was triggered.
   protected onItemTriggered() {
-    // TODO: Update selected state.
+    this.selected = true;
     this.dispatchEvent(
         new CustomEvent(IconDropdownOption.events.MENU_ITEM_TRIGGERED, {
           bubbles: true,
