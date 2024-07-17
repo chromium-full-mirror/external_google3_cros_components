@@ -7,6 +7,7 @@
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '../menu/menu';
 
+import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 
 import {type MenuItemTriggeredEvent} from '../menu/menu_item';
@@ -74,6 +75,14 @@ export class IconDropdown extends LitElement {
     this.value = '';
   }
 
+  get crosMenu() {
+    return this.renderRoot?.querySelector('cros-menu');
+  }
+
+  get options(): SelectOption[] {
+    return (this.crosMenu?.items ?? []) as SelectOption[];
+  }
+
   override render() {
     return html`
       <div @cros-menu-item-triggered=${this.onMenuItemTriggered}>
@@ -112,12 +121,26 @@ export class IconDropdown extends LitElement {
    */
   private onMenuItemTriggered(e: MenuItemTriggeredEvent) {
     const menuItem = e.detail.menuItem as IconDropdownOption;
-    if (menuItem?.value === this.value) {
+    // If menu item with [itemEnd="switch"] the detail will not be sent.
+    // TODO: b/339905985 - Handle menu-item where [itemEnd="switch"]. These
+    // menu-items are not standard options and probably need to be handle by the
+    // parent component to implement the correct behavior.
+    if (!menuItem) {
       return;
     }
-    this.value = menuItem?.value ?? '';
+    if (menuItem.value === this.value) {
+      return;
+    }
+    this.value = menuItem.value ?? '';
+    this.updateOptionsSelected();
     this.dispatchEvent(
         new Event(IconDropdown.events.CHANGE, {bubbles: true, composed: true}));
+  }
+
+  private updateOptionsSelected() {
+    for (const option of this.options) {
+      option.selected = option.value === this.value;
+    }
   }
 }
 
