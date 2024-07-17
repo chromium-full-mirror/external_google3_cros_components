@@ -43,6 +43,23 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     this.internalValue = value;
   }
 
+  // When extending a lit element, it seems that getters and setters get
+  // clobbered. To avoid this we specifically reimplement needed getters/setters
+  // below to ensure they function correctly on cros-icon-dropdown-option. These
+  // should be identical to the functions they override in cros-menu-item.
+  override get selected() {
+    return this.renderRoot?.querySelector('md-menu-item')?.selected ?? false;
+  }
+
+  override set selected(selected: boolean) {
+    const item = this.renderRoot?.querySelector('md-menu-item');
+    if (!item) {
+      this.missedPropertySets.selected = selected;
+    } else {
+      item.selected = selected;
+    }
+  }
+
   // SelectOption implementation:
   get displayText() {
     return this.headline;
