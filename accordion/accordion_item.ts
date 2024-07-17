@@ -61,10 +61,10 @@ export class AccordionItem extends LitElement {
   static override styles: CSSResultGroup = css`
     .accordion-row {
       align-items: center;
+      box-sizing: border-box;
       cursor: pointer;
       display: flex;
       flex-direction: row;
-      height: 48px;
       justify-content: space-between;
       outline: none;
       padding: 16px;
