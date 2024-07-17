@@ -31,6 +31,18 @@ export class IconDropdown extends LitElement {
       font: var(--cros-body-0-font);
     }
 
+    :host([shape="circle"]) md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-shape: 100vmax;
+      --md-filled-tonal-icon-button-container-height: 40px;
+      --md-filled-tonal-icon-button-container-width: 48px;
+    }
+
+    :host([shape="square"]) md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-shape: 12px;
+      --md-filled-tonal-icon-button-container-height: 40px;
+      --md-filled-tonal-icon-button-container-width: 40px;
+    }
+
     .button-icon-container {
       display: flex;
       place-content: center;
@@ -48,7 +60,6 @@ export class IconDropdown extends LitElement {
     md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-icon-size: 20px;
       --md-filled-tonal-icon-button-container-height: 40px;
-      --md-filled-tonal-icon-button-container-shape: 12px;
       --md-filled-tonal-icon-button-container-width: 40px;
     }
   `;
@@ -57,6 +68,7 @@ export class IconDropdown extends LitElement {
   static override properties = {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     value: {type: String},
+    shape: {type: String, reflect: true},
   };
 
   /** @nocollapse */
@@ -69,12 +81,19 @@ export class IconDropdown extends LitElement {
    */
   value: string;
 
+  /**
+   * The shape of the dropdown icon button. Used to apply CSS.
+   * @export
+   */
+  shape: 'circle'|'square';
+
   protected menuRef = createRef<Menu>();
 
   constructor() {
     super();
 
     this.value = '';
+    this.shape = 'square';
   }
 
   get crosMenu() {
