@@ -96,7 +96,7 @@ export class AccordionItem extends LitElement {
     .container::after {
       background: var(--cros-sys-separator);
       content: '';
-      display: block;
+      display: var(--cros-accordion-item-separator-display, block);
       height: 1px;
       width: 100%;
     }
