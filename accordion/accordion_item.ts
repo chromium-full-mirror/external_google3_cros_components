@@ -72,6 +72,7 @@ export class AccordionItem extends LitElement {
 
     .title-and-subtitle {
       flex: 1;
+      padding-inline-end: 16px;
     }
 
     .has-leading .title-and-subtitle {
