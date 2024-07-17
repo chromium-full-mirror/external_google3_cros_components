@@ -5,11 +5,47 @@
  */
 
 import '../icon_button/icon-button';
-import '../placeholder_icon/placeholder-icon';
 import '@material/web/focus/md-focus-ring.js';
 
 import {css, CSSResultGroup, html, LitElement} from 'lit';
 import {ClassInfo, classMap} from 'lit/directives/class-map';
+
+/**
+ * The SVG to use in the accordion item's icon button when the accordion row is
+ * collapsed.
+ */
+const CHEVRON_DOWN_ICON = html`
+    <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+        slot="icon"
+        class="chevron-icon">
+      <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M5.41 6L10 10.9447L14.59 6L16 7.52227L10 14L4 7.52227L5.41 6Z" />
+    </svg>`;
+
+/**
+ * The SVG to use in the accordion item's icon button when the accordion row is
+ * expanded.
+ */
+const CHEVRON_UP_ICON = html`
+    <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+        slot="icon"
+        class="chevron-icon">
+      <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M5.41 14L10 9.05533L14.59 14L16 12.4777L10 6L4 12.4777L5.41 14Z" />
+    </svg>`;
+
 
 /** A chromeOS compliant accordion-item for use in <cros-accordion>. */
 export class AccordionItem extends LitElement {
@@ -63,6 +99,10 @@ export class AccordionItem extends LitElement {
       display: block;
       height: 1px;
       width: 100%;
+    }
+
+    .chevron-icon {
+      fill: var(--cros-sys-on_surface);
     }
 
     md-focus-ring {
@@ -119,8 +159,7 @@ export class AccordionItem extends LitElement {
             buttonStyle="floating"
             surface="base"
             shape="square">
-            <!-- TODO(b/352115367): Replace placeholder icon with chevron. -->
-            <cros-placeholder-icon slot="icon"></cros-placeholder-icon>
+            ${this.expanded ? CHEVRON_UP_ICON : CHEVRON_DOWN_ICON}
           </cros-icon-button>
           <md-focus-ring></md-focus-ring>
         </div>
