@@ -9,7 +9,9 @@ import '../menu/menu';
 
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {createRef, ref} from 'lit/directives/ref';
 
+import {type Menu} from '../menu/menu';
 import {type MenuItemTriggeredEvent} from '../menu/menu_item';
 
 import {IconDropdownOption} from './icon-dropdown-option';
@@ -67,6 +69,8 @@ export class IconDropdown extends LitElement {
    */
   value: string;
 
+  protected menuRef = createRef<Menu>();
+
   constructor() {
     super();
 
@@ -95,7 +99,10 @@ export class IconDropdown extends LitElement {
   private renderButtonContent() {
     return html`
       <md-filled-tonal-icon-button id="button" aria-label=${
-        this.ariaLabel ?? ''}>
+        this.ariaLabel ?? ''}
+        @click=${() => this.toggleMenu()}
+        @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
+      >
         <div class="button-icon-container">
           <span class="dropdown-icon"><slot name="button-icon"></slot></span>
           <span class="dropdown-arrow">${ARROW_DROP_DOWN_SVG}</span>
@@ -104,9 +111,20 @@ export class IconDropdown extends LitElement {
     `;
   }
 
+  private onKeydown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.toggleMenu();
+    }
+  }
+
+  private toggleMenu() {
+    this.menuRef.value?.open ? this.menuRef.value?.close() :
+                               this.menuRef.value?.show();
+  }
+
   private renderMenuContent() {
     return html`
-      <cros-menu anchor="button">
+      <cros-menu anchor="button" ${ref(this.menuRef)}>
         <slot></slot>
       </cros-menu>
     `;
