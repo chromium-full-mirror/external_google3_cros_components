@@ -27,20 +27,38 @@ export class IconDropdown extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      --_button-icon-size: 20px;
+
       display: inline-block;
       font: var(--cros-body-0-font);
+    }
+
+    :host([size="large"]) {
+      --_button-icon-size: 24px;
     }
 
     :host([shape="circle"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 100vmax;
       --md-filled-tonal-icon-button-container-height: 40px;
       --md-filled-tonal-icon-button-container-width: 48px;
+      --md-icon-button-icon-size: var(--_button-icon-size);
+    }
+
+    :host([shape="circle"][size="large"]) md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-height: 56px;
+      --md-filled-tonal-icon-button-container-width: 72px;
     }
 
     :host([shape="square"]) md-filled-tonal-icon-button {
       --md-filled-tonal-icon-button-container-shape: 12px;
       --md-filled-tonal-icon-button-container-height: 40px;
       --md-filled-tonal-icon-button-container-width: 40px;
+    }
+
+    :host([shape="square"][size="large"]) md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-shape: 16px;
+      --md-filled-tonal-icon-button-container-height: 56px;
+      --md-filled-tonal-icon-button-container-width: 72px;
     }
 
     .button-icon-container {
@@ -58,9 +76,12 @@ export class IconDropdown extends LitElement {
     }
 
     md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-icon-size: 20px;
-      --md-filled-tonal-icon-button-container-height: 40px;
-      --md-filled-tonal-icon-button-container-width: 40px;
+      --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
+    }
+
+    slot[name='button-icon']::slotted(*) {
+      height: var(--_button-icon-size);
+      width: var(--_button-icon-size);
     }
   `;
 
@@ -69,6 +90,7 @@ export class IconDropdown extends LitElement {
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     value: {type: String},
     shape: {type: String, reflect: true},
+    size: {type: String, reflect: true},
   };
 
   /** @nocollapse */
@@ -87,6 +109,12 @@ export class IconDropdown extends LitElement {
    */
   shape: 'circle'|'square';
 
+  /**
+   * The size of the dropdown icon button. Used to apply CSS.
+   * @export
+   */
+  size: 'default'|'large';
+
   protected menuRef = createRef<Menu>();
 
   constructor() {
@@ -94,6 +122,7 @@ export class IconDropdown extends LitElement {
 
     this.value = '';
     this.shape = 'square';
+    this.size = 'default';
   }
 
   get crosMenu() {
