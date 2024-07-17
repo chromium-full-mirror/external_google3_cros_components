@@ -7,8 +7,9 @@
 import '../icon_button/icon-button';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {ClassInfo, classMap} from 'lit/directives/class-map';
+import {StyleInfo, styleMap} from 'lit/directives/style-map';
 
 /**
  * Fired when an accordion item is expanded.
@@ -97,6 +98,30 @@ export class AccordionItem extends LitElement {
     }
 
     .content {
+      overflow: hidden;
+      transition-duration: 300ms;
+      transition-property: height;
+      transition-timing-function: cubic-bezier(0.40, 0.00, 0.00, 0.97);
+    }
+
+    .content:not([data-expanded]) {
+      min-height: 0;
+      height: 0;
+    }
+
+    .content:not([data-expanded]):not([data-transitioning]) {
+      visibility: hidden;
+    }
+
+    .content[data-expanded] {
+      height: var(--cros-accordion-item-content-height);
+    }
+
+    .content[data-expanded]:not([data-transitioning]) {
+      height: auto;
+    }
+
+    .content-inner {
       padding: 16px;
       padding-block-start: 0;
     }
@@ -148,6 +173,8 @@ export class AccordionItem extends LitElement {
     super.willUpdate(changedProperties);
 
     if (changedProperties.has('expanded')) {
+      this.setTransitioning(true);
+
       if (this.expanded) {
         this.dispatchEvent(new CustomEvent(
             AccordionItem.events.ACCORDION_ITEM_EXPANDED,
@@ -159,6 +186,10 @@ export class AccordionItem extends LitElement {
   override render() {
     const containerClasses: ClassInfo = {
       'has-leading': this.hasLeading(),
+    };
+
+    const contentStyle: StyleInfo = {
+      '--cros-accordion-item-content-height': `${this.contentHeight}px`
     };
 
     return html`
@@ -189,8 +220,13 @@ export class AccordionItem extends LitElement {
           </cros-icon-button>
           <md-focus-ring></md-focus-ring>
         </div>
-        <section class="content" ?hidden=${!this.expanded}>
-          <slot></slot>
+        <section class="content"
+            @transitionend=${this.onTransitionEnd}
+            style=${styleMap(contentStyle)}
+            ?data-expanded=${this.expanded ?? nothing}>
+          <div class="content-inner">
+            <slot></slot>
+          </div>
         </section>
       </div>
     `;
@@ -233,6 +269,27 @@ export class AccordionItem extends LitElement {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       this.toggleExpanded();
+    }
+  }
+
+  /**
+   * Returns the height of the accordion item's content, for the purposes of
+   * setting a fixed height so that a CSS transition is possible.
+   */
+  private get contentHeight() {
+    return this.shadowRoot?.querySelector('.content-inner')?.clientHeight ?? 0;
+  }
+
+  private onTransitionEnd(e: TransitionEvent) {
+    this.setTransitioning(false);
+  }
+
+  private setTransitioning(isTransitioning: boolean) {
+    const contentElement = this.shadowRoot?.querySelector('.content');
+    if (isTransitioning) {
+      contentElement?.setAttribute('data-transitioning', '');
+    } else {
+      contentElement?.removeAttribute('data-transitioning');
     }
   }
 
