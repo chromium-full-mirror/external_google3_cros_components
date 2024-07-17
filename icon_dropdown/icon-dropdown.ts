@@ -8,7 +8,7 @@ import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '../menu/menu';
 
 import {SelectOption} from '@material/web/select/select-option.js';
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {createRef, ref} from 'lit/directives/ref';
 
 import {type Menu} from '../menu/menu';
@@ -74,8 +74,6 @@ export class IconDropdown extends LitElement {
   constructor() {
     super();
 
-    // TODO: b/339905985 - Set inital value to the first selected option in
-    // first update.
     this.value = '';
   }
 
@@ -85,6 +83,12 @@ export class IconDropdown extends LitElement {
 
   get options(): SelectOption[] {
     return (this.crosMenu?.items ?? []) as SelectOption[];
+  }
+
+  override updated(changedProperties: PropertyValues<IconDropdown>) {
+    if (changedProperties.has('value')) {
+      this.updateOptionsSelected();
+    }
   }
 
   override render() {
