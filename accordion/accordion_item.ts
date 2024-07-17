@@ -7,8 +7,15 @@
 import '../icon_button/icon-button';
 import '@material/web/focus/md-focus-ring.js';
 
-import {css, CSSResultGroup, html, LitElement} from 'lit';
+import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {ClassInfo, classMap} from 'lit/directives/class-map';
+
+/**
+ * Fired when an accordion item is expanded.
+ */
+export type AccordionItemExpandedEvent = CustomEvent<{
+  accordionItem: AccordionItem,
+}>;
 
 /**
  * The SVG to use in the accordion item's icon button when the accordion row is
@@ -120,6 +127,12 @@ export class AccordionItem extends LitElement {
     expanded: {type: Boolean, reflect: true},
   };
 
+  /** @nocollapse */
+  static events = {
+    /** Triggers when an accordion item is expanded. */
+    ACCORDION_ITEM_EXPANDED: 'cros-accordion-item-expanded',
+  } as const;
+
   /**
    * Whether or not the accordion content is visible.
    * @export
@@ -129,6 +142,18 @@ export class AccordionItem extends LitElement {
   constructor() {
     super();
     this.expanded = false;
+  }
+
+  override willUpdate(changedProperties: PropertyValues<this>) {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('expanded')) {
+      if (this.expanded) {
+        this.dispatchEvent(new CustomEvent(
+            AccordionItem.events.ACCORDION_ITEM_EXPANDED,
+            {bubbles: true, composed: true, detail: {accordionItem: this}}));
+      }
+    }
   }
 
   override render() {
@@ -219,6 +244,9 @@ export class AccordionItem extends LitElement {
 customElements.define('cros-accordion-item', AccordionItem);
 
 declare global {
+  interface HTMLElementEventMap {
+    [AccordionItem.events.ACCORDION_ITEM_EXPANDED]: AccordionItemExpandedEvent;
+  }
   interface HTMLElementTagNameMap {
     'cros-accordion-item': AccordionItem;
   }
