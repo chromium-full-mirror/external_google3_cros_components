@@ -142,8 +142,7 @@ export class AccordionItem extends LitElement {
       --md-focus-ring-color: var(--cros-sys-focus_ring);
       --md-focus-ring-width: 2px;
       --md-focus-ring-active-width: 2px;
-      --md-focus-ring-shape: 8px;
-      --md-focus-ring-outward-offset: 1px;
+      --md-focus-ring-shape: 12px;
     }
   `;
 
@@ -226,7 +225,7 @@ export class AccordionItem extends LitElement {
             shape="square">
             ${this.expanded ? CHEVRON_UP_ICON : CHEVRON_DOWN_ICON}
           </cros-icon-button>
-          <md-focus-ring></md-focus-ring>
+          <md-focus-ring inward></md-focus-ring>
         </div>
         <section class="content"
             @transitionend=${this.onTransitionEnd}
