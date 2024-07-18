@@ -150,6 +150,7 @@ export class AccordionItem extends LitElement {
   /** @nocollapse */
   static override properties = {
     expanded: {type: Boolean, reflect: true},
+    quick: {type: Boolean, reflect: true},
   };
 
   /** @nocollapse */
@@ -164,9 +165,16 @@ export class AccordionItem extends LitElement {
    */
   expanded: boolean;
 
+  /**
+   * Whether or not to skip animations.
+   * @export
+   */
+  quick: boolean;
+
   constructor() {
     super();
     this.expanded = false;
+    this.quick = false;
   }
 
   override willUpdate(changedProperties: PropertyValues<this>) {
@@ -285,6 +293,10 @@ export class AccordionItem extends LitElement {
   }
 
   private setTransitioning(isTransitioning: boolean) {
+    if (this.quick) {
+      return;
+    }
+
     const contentElement = this.shadowRoot?.querySelector('.content');
     if (isTransitioning) {
       contentElement?.setAttribute('data-transitioning', '');
