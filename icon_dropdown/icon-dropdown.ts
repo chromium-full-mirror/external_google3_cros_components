@@ -29,9 +29,11 @@ export class IconDropdown extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      --_button-container-color: var(--cros-sys-surface_variant);
       --_button-container-height: 40px;
       --_button-container-shape: 12px;
       --_button-container-width: 40px;
+      --_button-icon-color: var(--cros-sys-on_surface);
       --_button-icon-size: 20px;
       display: inline-block;
       font: var(--cros-body-0-font);
@@ -52,28 +54,47 @@ export class IconDropdown extends LitElement {
       --_button-container-shape: 16px;
     }
 
+    :host([surface="base"]) md-icon-button {
+      --_button-icon-color: var(--cros-sys-on_surface);
+    }
+
+    :host([surface="prominent"]) md-icon-button {
+      --_button-icon-color: var(--cros-sys-on_primary);
+    }
+
+    :host([surface="subtle"]) md-icon-button {
+      --_button-icon-color: var(--cros-sys-on_primary_container);
+    }
+
     .button-icon-container {
       display: flex;
       place-content: center;
     }
 
     .button-icon-container .dropdown-arrow {
+      color: var(--_button-icon-color);
+      fill: var(--_button-icon-color);
       /* 5px overlap with the button icon. */
       margin-inline: -5px 1px;
     }
 
     .button-icon-container .dropdown-icon {
+      color: var(--_button-icon-color);
+      fill: var(--_button-icon-color);
       margin-inline: 4px 0;
     }
 
     md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-color: var(--_button-container-color);
       --md-filled-tonal-icon-button-container-height: var(--_button-container-height);
-      --md-filled-tonal-icon-button-container-width: var(--_button-container-width);
       --md-filled-tonal-icon-button-container-shape: var(--_button-container-shape);
+      --md-filled-tonal-icon-button-container-width: var(--_button-container-width);
+      --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
       --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
     }
 
     md-icon-button {
+      --md-icon-button-icon-color: var(--_button-icon-color);
       --md-icon-button-icon-size: var(--_button-icon-size);
       --md-icon-button-state-layer-height: var(--_button-container-height);
       --md-icon-button-state-layer-shape: var(--_button-container-shape);
@@ -81,8 +102,10 @@ export class IconDropdown extends LitElement {
     }
 
     slot[name='button-icon']::slotted(*) {
-      height: var(--_button-icon-size);
-      width: var(--_button-icon-size);
+      block-size: var(--_button-icon-size);
+      color: var(--_button-icon-color);
+      fill: var(--_button-icon-color);
+      inline-size: var(--_button-icon-size);
     }
   `;
 
@@ -93,6 +116,7 @@ export class IconDropdown extends LitElement {
     shape: {type: String, reflect: true},
     size: {type: String, reflect: true},
     buttonStyle: {type: String},
+    surface: {type: String, reflect: true},
   };
 
   /** @nocollapse */
@@ -123,6 +147,12 @@ export class IconDropdown extends LitElement {
    */
   buttonStyle: 'filled'|'floating';
 
+  /**
+   * @export
+   * The background the icon button sits on. Used to apply CSS.
+   */
+  surface: 'base'|'prominent'|'subtle';
+
   protected menuRef = createRef<Menu>();
 
   constructor() {
@@ -132,6 +162,7 @@ export class IconDropdown extends LitElement {
     this.shape = 'square';
     this.size = 'default';
     this.buttonStyle = 'filled';
+    this.surface = 'base';
   }
 
   get crosMenu() {
