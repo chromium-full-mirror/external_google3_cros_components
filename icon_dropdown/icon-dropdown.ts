@@ -27,38 +27,27 @@ export class IconDropdown extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      --_button-container-height: 40px;
+      --_button-container-shape: 12px;
+      --_button-container-width: 40px;
       --_button-icon-size: 20px;
-
       display: inline-block;
       font: var(--cros-body-0-font);
     }
 
+    :host([shape="circle"]) {
+      --_button-container-shape: 100vmax;
+      --_button-container-width: 48px;
+    }
+
     :host([size="large"]) {
+      --_button-container-height: 56px;
+      --_button-container-width: 72px;
       --_button-icon-size: 24px;
     }
 
-    :host([shape="circle"]) md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-container-shape: 100vmax;
-      --md-filled-tonal-icon-button-container-height: 40px;
-      --md-filled-tonal-icon-button-container-width: 48px;
-      --md-icon-button-icon-size: var(--_button-icon-size);
-    }
-
-    :host([shape="circle"][size="large"]) md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-container-height: 56px;
-      --md-filled-tonal-icon-button-container-width: 72px;
-    }
-
-    :host([shape="square"]) md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-container-shape: 12px;
-      --md-filled-tonal-icon-button-container-height: 40px;
-      --md-filled-tonal-icon-button-container-width: 40px;
-    }
-
-    :host([shape="square"][size="large"]) md-filled-tonal-icon-button {
-      --md-filled-tonal-icon-button-container-shape: 16px;
-      --md-filled-tonal-icon-button-container-height: 56px;
-      --md-filled-tonal-icon-button-container-width: 72px;
+    :host([shape="square"][size="large"]) {
+      --_button-container-shape: 16px;
     }
 
     .button-icon-container {
@@ -76,6 +65,9 @@ export class IconDropdown extends LitElement {
     }
 
     md-filled-tonal-icon-button {
+      --md-filled-tonal-icon-button-container-height: var(--_button-container-height);
+      --md-filled-tonal-icon-button-container-width: var(--_button-container-width);
+      --md-filled-tonal-icon-button-container-shape: var(--_button-container-shape);
       --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
     }
 
