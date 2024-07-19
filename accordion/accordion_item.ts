@@ -219,6 +219,7 @@ export class AccordionItem extends LitElement {
             </div>
           </section>
           <cros-icon-button
+            aria-expanded=${this.expanded ? 'true' : 'false'}
             @keydown=${this.onButtonKeyDown}
             buttonStyle="floating"
             surface="base"
