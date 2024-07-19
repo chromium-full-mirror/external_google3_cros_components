@@ -5,11 +5,13 @@
  */
 
 import '@material/web/iconbutton/filled-tonal-icon-button.js';
+import '@material/web/iconbutton/icon-button.js';
 import '../menu/menu';
 
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {createRef, ref} from 'lit/directives/ref';
+import {html as staticHtml, literal} from 'lit/static-html';
 
 import {type Menu} from '../menu/menu';
 import {type MenuItemTriggeredEvent} from '../menu/menu_item';
@@ -71,6 +73,13 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
     }
 
+    md-icon-button {
+      --md-icon-button-icon-size: var(--_button-icon-size);
+      --md-icon-button-state-layer-height: var(--_button-container-height);
+      --md-icon-button-state-layer-shape: var(--_button-container-shape);
+      --md-icon-button-state-layer-width: var(--_button-container-width);
+    }
+
     slot[name='button-icon']::slotted(*) {
       height: var(--_button-icon-size);
       width: var(--_button-icon-size);
@@ -83,6 +92,7 @@ export class IconDropdown extends LitElement {
     value: {type: String},
     shape: {type: String, reflect: true},
     size: {type: String, reflect: true},
+    buttonStyle: {type: String},
   };
 
   /** @nocollapse */
@@ -107,6 +117,12 @@ export class IconDropdown extends LitElement {
    */
   size: 'default'|'large';
 
+  /**
+   * Whether the dropdown icon button style is filled or floating button.
+   * @export
+   */
+  buttonStyle: 'filled'|'floating';
+
   protected menuRef = createRef<Menu>();
 
   constructor() {
@@ -115,6 +131,7 @@ export class IconDropdown extends LitElement {
     this.value = '';
     this.shape = 'square';
     this.size = 'default';
+    this.buttonStyle = 'filled';
   }
 
   get crosMenu() {
@@ -141,18 +158,29 @@ export class IconDropdown extends LitElement {
   }
 
   private renderButtonContent() {
-    return html`
-      <md-filled-tonal-icon-button id="button" aria-label=${
-        this.ariaLabel ?? ''}
+    const tag = this.buttonStyle === 'floating' ?
+        literal`md-icon-button` :
+        literal`md-filled-tonal-icon-button`;
+
+    return staticHtml`
+      <${tag}
+        id="button"
+        aria-label=${this.ariaLabel ?? ''}
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
       >
+        ${this.getAnchorContent()}
+      </${tag}>
+    `;
+  }
+
+  private getAnchorContent() {
+    return html`
         <div class="button-icon-container">
           <span class="dropdown-icon"><slot name="button-icon"></slot></span>
           <span class="dropdown-arrow">${ARROW_DROP_DOWN_SVG}</span>
         </div>
-      </md-filled-tonal-icon-button>
-    `;
+      `;
   }
 
   private onKeydown(e: KeyboardEvent) {
