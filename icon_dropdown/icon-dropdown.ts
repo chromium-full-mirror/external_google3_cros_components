@@ -26,6 +26,11 @@ const ARROW_DROP_DOWN_SVG = html`
 
 /** A chromeOS compliant icon-dropdown. */
 export class IconDropdown extends LitElement {
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
@@ -34,6 +39,7 @@ export class IconDropdown extends LitElement {
       --_button-container-shape: 12px;
       --_button-container-width: 40px;
       --_button-icon-color: var(--cros-sys-on_surface);
+      --_button-icon-focus-color: var(--cros-sys-on_surface);
       --_button-icon-size: 20px;
       display: inline-block;
       font: var(--cros-body-0-font);
@@ -56,14 +62,17 @@ export class IconDropdown extends LitElement {
 
     :host([surface="base"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_surface);
+      --_button-icon-focus-color: var(--cros-sys-on_surface);;
     }
 
     :host([surface="prominent"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_primary);
+      --_button-icon-focus-color: var(--cros-sys-on_primary);
     }
 
     :host([surface="subtle"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_primary_container);
+      --_button-icon-focus-color: var(--cros-sys-on_primary_container);
     }
 
     .button-icon-container {
@@ -90,15 +99,27 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-container-shape: var(--_button-container-shape);
       --md-filled-tonal-icon-button-container-width: var(--_button-container-width);
       --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
+      --md-filled-tonal-icon-button-icon-focus-color: var(--_button-icon-focus-color);
       --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
     }
 
     md-icon-button {
+      --md-icon-button-focus-icon-color: var(--_button-icon-focus-color);
       --md-icon-button-icon-color: var(--_button-icon-color);
       --md-icon-button-icon-size: var(--_button-icon-size);
       --md-icon-button-state-layer-height: var(--_button-container-height);
       --md-icon-button-state-layer-shape: var(--_button-container-shape);
       --md-icon-button-state-layer-width: var(--_button-container-width);
+    }
+
+    md-filled-tonal-icon-button::part(focus-ring),
+    md-icon-button::part(focus-ring) {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: 2px;
+    }
+    :host([surface="prominent"]) md-filled-tonal-icon-button::part(focus-ring),
+    :host([surface="prominent"]) md-icon-button::part(focus-ring) {
+      --md-focus-ring-color: var(--cros-sys-inverse_focus_ring);
     }
 
     slot[name='button-icon']::slotted(*) {
@@ -165,6 +186,14 @@ export class IconDropdown extends LitElement {
     this.surface = 'base';
   }
 
+  get anchor() {
+    if (this.buttonStyle === 'floating') {
+      return this.renderRoot?.querySelector('md-icon-button');
+    }
+
+    return this.renderRoot?.querySelector('md-filled-tonal-icon-button');
+  }
+
   get crosMenu() {
     return this.renderRoot?.querySelector('cros-menu');
   }
@@ -173,10 +202,25 @@ export class IconDropdown extends LitElement {
     return (this.crosMenu?.items ?? []) as SelectOption[];
   }
 
+  override focus() {
+    // TODO: b/339905985 - Let the menu handle focus when the menu is open.
+    this.anchor?.focus();
+  }
+
   override updated(changedProperties: PropertyValues<IconDropdown>) {
     if (changedProperties.has('value')) {
       this.updateOptionsSelected();
     }
+  }
+
+  /**
+   * IconDropdown acts as a `select` element thus it requires the option list
+   * and "field" to be updated to display and focus correctly.
+   */
+  override async getUpdateComplete() {
+    await this.anchor?.updateComplete;
+    await this.crosMenu?.updateComplete;
+    return super.getUpdateComplete();
   }
 
   override render() {
