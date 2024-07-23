@@ -260,13 +260,18 @@ export class IconDropdown extends LitElement {
 
   private onKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
       this.toggleMenu();
     }
   }
 
   private toggleMenu() {
-    this.menuRef.value?.open ? this.menuRef.value?.close() :
-                               this.menuRef.value?.show();
+    if (!this.menuRef.value) {
+      return;
+    }
+    this.menuRef.value.open ? this.menuRef.value.close() :
+                              this.menuRef.value.show();
   }
 
   private renderMenuContent() {
