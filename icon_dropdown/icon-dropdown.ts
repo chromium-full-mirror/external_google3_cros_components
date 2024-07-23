@@ -38,6 +38,8 @@ export class IconDropdown extends LitElement {
       --_button-container-height: 40px;
       --_button-container-hover-color: var(--cros-sys-hover_on_subtle);
       --_button-container-hover-opacity: 1;
+      --_button-container-pressed-opacity: 1;
+      --_button-container-pressed-color: var(--cros-sys-ripple_neutral_on_subtle);
       --_button-container-shape: 12px;
       --_button-container-width: 40px;
       --_button-focus-ring-color: var(--cros-sys-focus_ring);
@@ -75,12 +77,14 @@ export class IconDropdown extends LitElement {
       --_button-icon-focus-color: var(--cros-sys-on_primary);
       --_button-icon-hover-color: var(--cros-sys-on_primary);
       --_button-container-hover-color: var(--cros-sys-hover_on_prominent);
+      --_button-container-pressed-color: var(--cros-sys-ripple_neutral_on_prominent);
     }
 
     :host([surface="subtle"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_primary_container);
       --_button-icon-focus-color: var(--cros-sys-on_primary_container);
       --_button-icon-hover-color: var(--cros-sys-on_primary_container);
+      --_button-container-pressed-color: var(--cros-sys-ripple_neutral_on_subtle);
     }
 
     .button-icon-container {
@@ -111,6 +115,11 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
       --md-filled-tonal-icon-button-icon-focus-color: var(--_button-icon-focus-color);
       --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
+      --md-filled-tonal-icon-button-pressed-state-layer-opacity: var(--_button-container-pressed-opacity);
+      --md-filled-tonal-icon-button-pressed-icon-color: var(--_button-icon-pressed-color);
+      --md-filled-tonal-icon-button-pressed-state-layer-color: var(--_button-container-pressed-color);;
+      --md-filled-tonal-icon-button-pressed-state-layer-opacity: 1;
+
     }
 
     md-icon-button {
@@ -123,6 +132,9 @@ export class IconDropdown extends LitElement {
       --md-icon-button-state-layer-height: var(--_button-container-height);
       --md-icon-button-state-layer-shape: var(--_button-container-shape);
       --md-icon-button-state-layer-width: var(--_button-container-width);
+      --md-icon-button-pressed-icon-color: var(--_button-icon-pressed-color);
+      --md-icon-button-pressed-state-layer-color: var(--_button-container-pressed-color);
+      --md-icon-button-pressed-state-layer-opacity: var(--_button-container-pressed-opacity);
     }
 
     md-filled-tonal-icon-button::part(focus-ring),
