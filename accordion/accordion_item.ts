@@ -83,6 +83,17 @@ export class AccordionItem extends LitElement {
       padding-inline: 16px 12px;
     }
 
+    :host([variant="compact"]) {
+      .accordion-row {
+        padding-block: 8px;
+        padding-inline: 14px 8px;
+      }
+
+      .title {
+        font: var(--cros-button-2-font);
+      }
+    }
+
     .title-and-subtitle {
       flex: 1;
       padding-inline-end: 16px;
@@ -176,7 +187,8 @@ export class AccordionItem extends LitElement {
    */
   quick: boolean;
 
-  // TODO(b/352151998): Implement 'compact' style variant.
+  // TODO(b/352151998): The `compact` variant should also change the
+  // leading icon size.
   /**
    * How the accordion-item should be styled. One of {default, compact,
    * text-only}.
@@ -233,6 +245,7 @@ export class AccordionItem extends LitElement {
             aria-expanded=${this.expanded ? 'true' : 'false'}
             @keydown=${this.onButtonKeyDown}
             buttonStyle="floating"
+            size=${this.variant === 'compact' ? 'small' : 'default'}
             surface="base"
             shape="square">
             ${this.expanded ? CHEVRON_UP_ICON : CHEVRON_DOWN_ICON}
@@ -265,7 +278,7 @@ export class AccordionItem extends LitElement {
   }
 
   private renderSubtitle() {
-    if (this.variant === 'text-only') {
+    if (this.variant === 'text-only' || this.variant === 'compact') {
       return nothing;
     }
 
