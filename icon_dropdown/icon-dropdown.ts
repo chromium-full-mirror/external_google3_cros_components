@@ -36,10 +36,15 @@ export class IconDropdown extends LitElement {
     :host {
       --_button-container-color: var(--cros-sys-surface_variant);
       --_button-container-height: 40px;
+      --_button-container-hover-color: var(--cros-sys-hover_on_subtle);
+      --_button-container-hover-opacity: 1;
       --_button-container-shape: 12px;
       --_button-container-width: 40px;
+      --_button-focus-ring-color: var(--cros-sys-focus_ring);
+      --_button-focus-ring-width: 2px;
       --_button-icon-color: var(--cros-sys-on_surface);
       --_button-icon-focus-color: var(--cros-sys-on_surface);
+      --_button-icon-hover-color: var(--cros-sys-on_surface);
       --_button-icon-size: 20px;
       display: inline-block;
       font: var(--cros-body-0-font);
@@ -62,17 +67,20 @@ export class IconDropdown extends LitElement {
 
     :host([surface="base"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_surface);
-      --_button-icon-focus-color: var(--cros-sys-on_surface);;
+      --_button-icon-focus-color: var(--cros-sys-on_surface);
     }
 
     :host([surface="prominent"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_primary);
       --_button-icon-focus-color: var(--cros-sys-on_primary);
+      --_button-icon-hover-color: var(--cros-sys-on_primary);
+      --_button-container-hover-color: var(--cros-sys-hover_on_prominent);
     }
 
     :host([surface="subtle"]) md-icon-button {
       --_button-icon-color: var(--cros-sys-on_primary_container);
       --_button-icon-focus-color: var(--cros-sys-on_primary_container);
+      --_button-icon-hover-color: var(--cros-sys-on_primary_container);
     }
 
     .button-icon-container {
@@ -98,6 +106,8 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-container-height: var(--_button-container-height);
       --md-filled-tonal-icon-button-container-shape: var(--_button-container-shape);
       --md-filled-tonal-icon-button-container-width: var(--_button-container-width);
+      --md-filled-tonal-icon-button-hover-state-layer-color: var(--_button-container-hover-color);
+      --md-filled-tonal-icon-button-hover-state-layer-opacity: var(--_button-container-hover-opacity);
       --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
       --md-filled-tonal-icon-button-icon-focus-color: var(--_button-icon-focus-color);
       --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
@@ -105,6 +115,9 @@ export class IconDropdown extends LitElement {
 
     md-icon-button {
       --md-icon-button-focus-icon-color: var(--_button-icon-focus-color);
+      --md-icon-button-hover-icon-color: var(--_button-icon-hover-color);
+      --md-icon-button-hover-state-layer-color: var(--_button-container-hover-color);
+      --md-icon-button-hover-state-layer-opacity: var(--_button-container-hover-opacity);
       --md-icon-button-icon-color: var(--_button-icon-color);
       --md-icon-button-icon-size: var(--_button-icon-size);
       --md-icon-button-state-layer-height: var(--_button-container-height);
@@ -114,18 +127,16 @@ export class IconDropdown extends LitElement {
 
     md-filled-tonal-icon-button::part(focus-ring),
     md-icon-button::part(focus-ring) {
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-focus-ring-width: 2px;
+      --md-focus-ring-color: var(--_button-focus-ring-color);
+      --md-focus-ring-width: var(--_button-focus-ring-width);
     }
     :host([surface="prominent"]) md-filled-tonal-icon-button::part(focus-ring),
     :host([surface="prominent"]) md-icon-button::part(focus-ring) {
-      --md-focus-ring-color: var(--cros-sys-inverse_focus_ring);
+      --_button-focus-ring-color: var(--cros-sys-inverse_focus_ring);
     }
 
     slot[name='button-icon']::slotted(*) {
       block-size: var(--_button-icon-size);
-      color: var(--_button-icon-color);
-      fill: var(--_button-icon-color);
       inline-size: var(--_button-icon-size);
     }
   `;
