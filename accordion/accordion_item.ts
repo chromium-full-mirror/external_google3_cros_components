@@ -78,6 +78,11 @@ export class AccordionItem extends LitElement {
       justify-content: center;
     }
 
+    :host([variant="text-only"]) .accordion-row {
+      padding-block: 8px;
+      padding-inline: 16px 12px;
+    }
+
     .title-and-subtitle {
       flex: 1;
       padding-inline-end: 16px;
@@ -172,7 +177,6 @@ export class AccordionItem extends LitElement {
   quick: boolean;
 
   // TODO(b/352151998): Implement 'compact' style variant.
-  // TODO(b/352151998): Implement 'text-only' style variant.
   /**
    * How the accordion-item should be styled. One of {default, compact,
    * text-only}.
@@ -218,16 +222,12 @@ export class AccordionItem extends LitElement {
             @click=${this.onRowClick}
             @keydown=${this.onRowKeyDown}
             tabindex="0">
-          <div class="leading">
-            <slot name="leading" @slotchange=${this.onLeadingSlotChange}></slot>
-          </div>
+          ${this.renderLeading()}
           <section class="title-and-subtitle">
             <div class="title">
               <slot name="title"></slot>
             </div>
-            <div class="subtitle">
-              <slot name="subtitle"></slot>
-            </div>
+            ${this.renderSubtitle()}
           </section>
           <cros-icon-button
             aria-expanded=${this.expanded ? 'true' : 'false'}
@@ -247,6 +247,31 @@ export class AccordionItem extends LitElement {
             <slot></slot>
           </div>
         </section>
+      </div>
+    `;
+  }
+
+  private renderLeading() {
+    if (this.variant === 'text-only') {
+      return nothing;
+    }
+
+    return html`
+      <div class="leading">
+        <slot name="leading" @slotchange=${this.onLeadingSlotChange}>
+        </slot>
+      </div>
+    `;
+  }
+
+  private renderSubtitle() {
+    if (this.variant === 'text-only') {
+      return nothing;
+    }
+
+    return html`
+      <div class="subtitle">
+        <slot name="subtitle"></slot>
       </div>
     `;
   }
