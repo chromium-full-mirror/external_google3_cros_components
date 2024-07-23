@@ -150,6 +150,7 @@ export class AccordionItem extends LitElement {
   static override properties = {
     expanded: {type: Boolean, reflect: true},
     quick: {type: Boolean, reflect: true},
+    variant: {type: String, reflect: true}
   };
 
   /** @nocollapse */
@@ -170,10 +171,20 @@ export class AccordionItem extends LitElement {
    */
   quick: boolean;
 
+  // TODO(b/352151998): Implement 'compact' style variant.
+  // TODO(b/352151998): Implement 'text-only' style variant.
+  /**
+   * How the accordion-item should be styled. One of {default, compact,
+   * text-only}.
+   * @export
+   */
+  variant: 'default'|'compact'|'text-only';
+
   constructor() {
     super();
     this.expanded = false;
     this.quick = false;
+    this.variant = 'default';
   }
 
   override willUpdate(changedProperties: PropertyValues<this>) {
