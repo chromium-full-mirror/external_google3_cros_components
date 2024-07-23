@@ -231,6 +231,9 @@ export class AccordionItem extends LitElement {
         <div
             class="accordion-row"
             part="row"
+            aria-expanded=${this.expanded ? 'true' : 'false'}
+            aria-owns="content-inner"
+            role="button"
             @click=${this.onRowClick}
             @keydown=${this.onRowKeyDown}
             tabindex="0">
@@ -242,8 +245,8 @@ export class AccordionItem extends LitElement {
             ${this.renderSubtitle()}
           </section>
           <cros-icon-button
-            aria-expanded=${this.expanded ? 'true' : 'false'}
-            @keydown=${this.onButtonKeyDown}
+            tabindex="-1"
+            aria-hidden="true"
             buttonStyle="floating"
             size=${this.variant === 'compact' ? 'small' : 'default'}
             surface="base"
@@ -256,7 +259,7 @@ export class AccordionItem extends LitElement {
             @transitionend=${this.onTransitionEnd}
             style=${styleMap(contentStyle)}
             ?data-expanded=${this.expanded ?? nothing}>
-          <div class="content-inner">
+          <div class="content-inner" id="content-inner">
             <slot></slot>
           </div>
         </section>
@@ -310,16 +313,6 @@ export class AccordionItem extends LitElement {
 
   private onRowClick() {
     this.toggleExpanded();
-  }
-
-  private onButtonKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      // Stop propagation so the row keydown handler doesn't also toggle the
-      // accordion.
-      e.stopPropagation();
-      this.toggleExpanded();
-    }
   }
 
   private onRowKeyDown(e: KeyboardEvent) {
