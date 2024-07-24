@@ -336,10 +336,6 @@ export class IconDropdown extends LitElement {
     // propagate.
     e.stopPropagation();
     const menuItem = e.detail.menuItem as IconDropdownOption;
-    // If menu item with [itemEnd="switch"] the detail will not be sent.
-    // TODO: b/339905985 - Handle menu-item where [itemEnd="switch"]. These
-    // menu-items are not standard options and probably need to be handle by the
-    // parent component to implement the correct behavior.
     if (!menuItem) {
       return;
     }

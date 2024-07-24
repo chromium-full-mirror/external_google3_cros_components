@@ -72,6 +72,23 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     }
   }
 
+  override get switchSelected() {
+    const crosSwitch = this.renderRoot?.querySelector('cros-switch');
+    if (crosSwitch) {
+      return crosSwitch.selected;
+    }
+    return this.missedPropertySets.switchSelected ?? false;
+  }
+
+  override set switchSelected(value: boolean) {
+    const crosSwitch = this.renderRoot?.querySelector('cros-switch');
+    if (!crosSwitch) {
+      this.missedPropertySets.switchSelected = value;
+    } else {
+      crosSwitch.selected = value;
+    }
+  }
+
   // SelectOption implementation:
   get displayText() {
     return this.headline;
@@ -110,8 +127,11 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
 
   // Notifies the parent icon-dropdown that this option was triggered.
   protected onItemTriggered() {
-    // TODO: b/339905985 - Exit early if menu-item has [itemEnd="switch"] or
-    // keepOpen is set and add tests.
+    // If the itemEnd is "switch" then do not notify the parent icon-dropdown
+    // that this option was triggered.
+    if (this.itemEnd === 'switch') {
+      return;
+    }
     this.selected = true;
     this.dispatchEvent(
         new CustomEvent(IconDropdownOption.events.OPTION_TRIGGERED, {
