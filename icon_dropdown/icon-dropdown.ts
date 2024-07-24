@@ -15,9 +15,8 @@ import {createRef, ref} from 'lit/directives/ref';
 import {html as staticHtml, literal} from 'lit/static-html';
 
 import {type Menu} from '../menu/menu';
-import {type MenuItemTriggeredEvent} from '../menu/menu_item';
 
-import {IconDropdownOption} from './icon-dropdown-option';
+import {IconDropdownOption, type OptionTriggeredEvent} from './icon-dropdown-option';
 
 /** The SVG to use in the trailing icon slot when the dropdown is closed. */
 const ARROW_DROP_DOWN_SVG = html`
@@ -267,7 +266,7 @@ export class IconDropdown extends LitElement {
 
   override render() {
     return html`
-      <div @cros-menu-item-triggered=${this.onMenuItemTriggered}>
+      <div @cros-icon-dropdown-option-triggered=${this.onOptionTriggered}>
         ${this.renderButtonContent()}
         ${this.renderMenuContent()}
       </div>
@@ -332,7 +331,10 @@ export class IconDropdown extends LitElement {
    *
    * @param e The event object.
    */
-  private onMenuItemTriggered(e: MenuItemTriggeredEvent) {
+  private onOptionTriggered(e: OptionTriggeredEvent) {
+    // OptionTriggeredEvent only notifies the parent dropdown and should not
+    // propagate.
+    e.stopPropagation();
     const menuItem = e.detail.menuItem as IconDropdownOption;
     // If menu item with [itemEnd="switch"] the detail will not be sent.
     // TODO: b/339905985 - Handle menu-item where [itemEnd="switch"]. These

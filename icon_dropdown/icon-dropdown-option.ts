@@ -7,7 +7,13 @@
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css} from 'lit';
 
-import {MenuItem, MenuItemTriggeredEvent} from '../menu/menu_item';
+import {MenuItem} from '../menu/menu_item';
+
+/**
+ * Event type for when an option is triggered.
+ * @export
+ */
+export type OptionTriggeredEvent = CustomEvent<{menuItem: IconDropdownOption}>;
 
 /** A chromeOS compliant option to be used in cros-icon-dropdown. */
 export class IconDropdownOption extends MenuItem implements SelectOption {
@@ -25,6 +31,12 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     ...MenuItem.properties,
     value: {type: String, reflect: true},
   };
+
+  /** @nocollapse */
+  static override events = {
+    ...MenuItem.events,
+    OPTION_TRIGGERED: 'cros-icon-dropdown-option-triggered',
+  } as const;
 
   /**
    * Internal value associated with the option.
@@ -98,9 +110,11 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
 
   // Notifies the parent icon-dropdown that this option was triggered.
   protected onItemTriggered() {
+    // TODO: b/339905985 - Exit early if menu-item has [itemEnd="switch"] or
+    // keepOpen is set and add tests.
     this.selected = true;
     this.dispatchEvent(
-        new CustomEvent(IconDropdownOption.events.MENU_ITEM_TRIGGERED, {
+        new CustomEvent(IconDropdownOption.events.OPTION_TRIGGERED, {
           bubbles: true,
           composed: true,
           detail: {menuItem: this},
@@ -112,7 +126,7 @@ customElements.define('cros-icon-dropdown-option', IconDropdownOption);
 
 declare global {
   interface HTMLElementEventMap {
-    [MenuItem.events.MENU_ITEM_TRIGGERED]: MenuItemTriggeredEvent;
+    [IconDropdownOption.events.OPTION_TRIGGERED]: OptionTriggeredEvent;
   }
 
   interface HTMLElementTagNameMap {
