@@ -10,6 +10,7 @@ import '../menu/menu';
 
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined';
 import {createRef, ref} from 'lit/directives/ref';
 import {html as staticHtml, literal} from 'lit/static-html';
 
@@ -35,6 +36,8 @@ export class IconDropdown extends LitElement {
   static override styles: CSSResultGroup = css`
     :host {
       --_button-container-color: var(--cros-sys-surface_variant);
+      --_button_container-disabled-color: var(--cros-sys-disabled_container);
+      --_button-container-disabled-opacity: 1;
       --_button-container-height: 40px;
       --_button-container-hover-color: var(--cros-sys-hover_on_subtle);
       --_button-container-hover-opacity: 1;
@@ -45,6 +48,8 @@ export class IconDropdown extends LitElement {
       --_button-focus-ring-color: var(--cros-sys-focus_ring);
       --_button-focus-ring-width: 2px;
       --_button-icon-color: var(--cros-sys-on_surface);
+      --_button-icon-disabled-color: var(--cros-sys-disabled);
+      --_button-icon-disabled-opacity: var(--cros-sys-disabled-opacity);
       --_button-icon-focus-color: var(--cros-sys-on_surface);
       --_button-icon-hover-color: var(--cros-sys-on_surface);
       --_button-icon-size: 20px;
@@ -110,6 +115,10 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-container-height: var(--_button-container-height);
       --md-filled-tonal-icon-button-container-shape: var(--_button-container-shape);
       --md-filled-tonal-icon-button-container-width: var(--_button-container-width);
+      --md-filled-tonal-icon-button-disabled-container-color: var(--_button_container-disabled-color);
+      --md-filled-tonal-icon-button-disabled-container-opacity: var(--_button-container-disabled-opacity);
+      --md-filled-tonal-icon-button-disabled-icon-color: var(--_button-icon-disabled-color);
+      --md-filled-tonal-icon-button-disabled-icon-opacity: var(--_button-icon-disabled-opacity);
       --md-filled-tonal-icon-button-hover-state-layer-color: var(--_button-container-hover-color);
       --md-filled-tonal-icon-button-hover-state-layer-opacity: var(--_button-container-hover-opacity);
       --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
@@ -123,6 +132,8 @@ export class IconDropdown extends LitElement {
     }
 
     md-icon-button {
+      --md-icon-button-disabled-icon-color: var(--_button-icon-disabled-color);
+      --md-icon-button-disabled-icon-opacity: var(--_button-icon-disabled-opacity);
       --md-icon-button-focus-icon-color: var(--_button-icon-focus-color);
       --md-icon-button-hover-icon-color: var(--_button-icon-hover-color);
       --md-icon-button-hover-state-layer-color: var(--_button-container-hover-color);
@@ -161,6 +172,7 @@ export class IconDropdown extends LitElement {
     size: {type: String, reflect: true},
     buttonStyle: {type: String},
     surface: {type: String, reflect: true},
+    disabled: {type: Boolean},
   };
 
   /** @nocollapse */
@@ -197,6 +209,12 @@ export class IconDropdown extends LitElement {
    */
   surface: 'base'|'prominent'|'subtle';
 
+  /**
+   * Whether the dropdown icon button is disabled.
+   * @export
+   */
+  disabled: boolean;
+
   protected menuRef = createRef<Menu>();
 
   constructor() {
@@ -207,6 +225,7 @@ export class IconDropdown extends LitElement {
     this.size = 'default';
     this.buttonStyle = 'filled';
     this.surface = 'base';
+    this.disabled = false;
   }
 
   get anchor() {
@@ -266,6 +285,7 @@ export class IconDropdown extends LitElement {
         aria-label=${this.ariaLabel ?? ''}
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
+        .disabled=${ifDefined(this.disabled)}
       >
         ${this.getAnchorContent()}
       </${tag}>
