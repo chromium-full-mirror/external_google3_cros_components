@@ -153,6 +153,7 @@ export class AccordionItem extends LitElement {
     .content-inner {
       padding: 16px;
       padding-block-start: 0;
+      padding-inline-end: 12px;
     }
 
     .container::after {
