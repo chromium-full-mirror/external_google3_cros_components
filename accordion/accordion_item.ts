@@ -247,12 +247,16 @@ export class AccordionItem extends LitElement {
             part="row"
             aria-expanded=${this.expanded ? 'true' : 'false'}
             aria-owns="content-inner"
+            aria-labelledby="title-and-subtitle"
             role="button"
             @click=${this.onRowClick}
             @keydown=${this.onRowKeyDown}
             tabindex="0">
           ${this.renderLeading()}
-          <section class="title-and-subtitle">
+          <section
+              aria-hidden="true"
+              class="title-and-subtitle"
+              id="title-and-subtitle">
             <div class="title">
               <slot name="title"></slot>
             </div>
