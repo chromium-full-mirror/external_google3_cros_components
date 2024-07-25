@@ -120,6 +120,12 @@ export class AccordionItem extends LitElement {
       transition-timing-function: cubic-bezier(0.40, 0.00, 0.00, 0.97);
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      section.content {
+        transition-duration: 0s;
+      }
+    }
+
     .content:not([data-expanded]) {
       min-height: 0;
       height: 0;
@@ -336,6 +342,15 @@ export class AccordionItem extends LitElement {
 
   private setTransitioning(isTransitioning: boolean) {
     if (this.quick) {
+      return;
+    }
+
+    // If the user has set their system to prefer reduced motion, we
+    // should skip applying the `data-transitioning` attribute. Note that
+    // the CSS above also has a media query to skip the transition.
+    const prefersReducedMotion =
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
       return;
     }
 
