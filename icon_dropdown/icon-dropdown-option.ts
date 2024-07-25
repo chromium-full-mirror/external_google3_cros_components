@@ -111,7 +111,6 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
 
     this.internalValue = '';
     this.keepOpen = false;
-    this.selected = false;
   }
 
   override connectedCallback() {
@@ -143,7 +142,7 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     if (this.itemEnd === 'switch') {
       return;
     }
-    this.selected = true;
+    this.checked = true;
     this.dispatchEvent(
         new CustomEvent(IconDropdownOption.events.OPTION_TRIGGERED, {
           bubbles: true,

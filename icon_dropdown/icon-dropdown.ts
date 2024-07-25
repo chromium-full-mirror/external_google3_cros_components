@@ -192,8 +192,8 @@ export class IconDropdown extends LitElement {
   } as const;
 
   /**
-   * The value of the first selected option in the dropdown or an empty string
-   * if no options are selected.
+   * The value of the first checked option in the dropdown or an empty string
+   * if no options are checked.
    * @export
    */
   value: string;
@@ -273,7 +273,7 @@ export class IconDropdown extends LitElement {
 
   override updated(changedProperties: PropertyValues<IconDropdown>) {
     if (changedProperties.has('value')) {
-      this.updateOptionsSelected();
+      this.updateOptionsActivated();
     }
   }
 
@@ -368,7 +368,7 @@ export class IconDropdown extends LitElement {
   }
 
   /**
-   * Handles dropdown option selection. If the selected option is the same as
+   * Handles dropdown option selection. If the checked option is the same as
    * the current value, do nothing. Otherwise, update the value and dispatch a
    * change event.
    *
@@ -386,14 +386,14 @@ export class IconDropdown extends LitElement {
       return;
     }
     this.value = menuItem.value ?? '';
-    this.updateOptionsSelected();
+    this.updateOptionsActivated();
     this.dispatchEvent(
         new Event(IconDropdown.events.CHANGE, {bubbles: true, composed: true}));
   }
 
-  private updateOptionsSelected() {
-    for (const option of this.options) {
-      option.selected = option.value === this.value;
+  private updateOptionsActivated() {
+    for (const option of this.options as IconDropdownOption[]) {
+      option.checked = option.value === this.value;
     }
   }
 }
