@@ -344,7 +344,7 @@ export class AccordionItem extends LitElement {
     return this.shadowRoot?.querySelector('.content-inner')?.clientHeight ?? 0;
   }
 
-  private onTransitionEnd(e: TransitionEvent) {
+  private onTransitionEnd() {
     this.setTransitioning(false);
   }
 
