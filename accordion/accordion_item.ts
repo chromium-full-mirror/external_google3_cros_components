@@ -19,6 +19,11 @@ export type AccordionItemExpandedEvent = CustomEvent<{
 }>;
 
 /**
+ * Variants control how the accordion-item should be styled.
+ */
+export type AccordionItemVariant = 'default'|'compact'|'text-only';
+
+/**
  * The SVG to use in the accordion item's icon button when the accordion row is
  * collapsed.
  */
@@ -200,7 +205,7 @@ export class AccordionItem extends LitElement {
    * text-only}.
    * @export
    */
-  variant: 'default'|'compact'|'text-only';
+  variant: AccordionItemVariant;
 
   constructor() {
     super();

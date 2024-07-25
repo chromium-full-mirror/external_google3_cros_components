@@ -8,7 +8,7 @@ import '../card/card';
 
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
-import {AccordionItem, type AccordionItemExpandedEvent} from './accordion_item';
+import {AccordionItem, type AccordionItemExpandedEvent, type AccordionItemVariant} from './accordion_item';
 
 /** A chromeOS compliant accordion. */
 export class Accordion extends LitElement {
@@ -27,6 +27,7 @@ export class Accordion extends LitElement {
   static override properties = {
     autoCollapse: {type: Boolean, attribute: 'auto-collapse'},
     quick: {type: Boolean},
+    variant: {type: String},
   };
 
   /**
@@ -45,10 +46,18 @@ export class Accordion extends LitElement {
    */
   quick: boolean;
 
+  /**
+   * How each accordion-item child should be styled. One of {default,
+   * compact, text-only}.
+   * @export
+   */
+  variant: AccordionItemVariant;
+
   constructor() {
     super();
     this.autoCollapse = false;
     this.quick = false;
+    this.variant = 'default';
 
     this.addEventListener(
         AccordionItem.events.ACCORDION_ITEM_EXPANDED,
@@ -61,6 +70,15 @@ export class Accordion extends LitElement {
       for (const child of this.children) {
         if (child instanceof AccordionItem) {
           child.quick = this.quick;
+        }
+      }
+    }
+
+    if (changedProperties.has('variant')) {
+      // Set the `variant` property on all child `<cros-accordion-item>`s.
+      for (const child of this.children) {
+        if (child instanceof AccordionItem) {
+          child.variant = this.variant;
         }
       }
     }
