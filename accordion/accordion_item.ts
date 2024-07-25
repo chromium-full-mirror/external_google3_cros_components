@@ -240,44 +240,55 @@ export class AccordionItem extends LitElement {
       '--cros-accordion-item-content-height': `${this.contentHeight}px`
     };
 
+    // The aria-level="3" and role="heading" are used to conform to the WAI
+    // ARIA pattern on accordions:
+    // https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/
     return html`
-      <div class="container ${classMap(containerClasses)}">
-        <div
-            class="accordion-row"
-            part="row"
-            aria-expanded=${this.expanded ? 'true' : 'false'}
-            aria-owns="content-inner"
-            aria-labelledby="title-and-subtitle"
-            role="button"
-            @click=${this.onRowClick}
-            @keydown=${this.onRowKeyDown}
-            tabindex="0">
-          ${this.renderLeading()}
-          <section
+      <div class="container ${classMap(containerClasses)}" >
+        <div aria-level="3" role="heading">
+          <div
+              class="accordion-row"
+              id="accordion-row"
+              part="row"
+              aria-expanded=${this.expanded ? 'true' : 'false'}
+              aria-controls="content-inner"
+              aria-labelledby="title-and-subtitle"
+              role="button"
+              @click=${this.onRowClick}
+              @keydown=${this.onRowKeyDown}
+              tabindex="0">
+            ${this.renderLeading()}
+            <section
+                aria-hidden="true"
+                class="title-and-subtitle"
+                id="title-and-subtitle">
+              <div class="title">
+                <slot name="title"></slot>
+              </div>
+              ${this.renderSubtitle()}
+            </section>
+            <cros-icon-button
+              tabindex="-1"
               aria-hidden="true"
-              class="title-and-subtitle"
-              id="title-and-subtitle">
-            <div class="title">
-              <slot name="title"></slot>
-            </div>
-            ${this.renderSubtitle()}
-          </section>
-          <cros-icon-button
-            tabindex="-1"
-            aria-hidden="true"
-            buttonStyle="floating"
-            size=${this.variant === 'compact' ? 'small' : 'default'}
-            surface="base"
-            shape="square">
-            ${this.expanded ? CHEVRON_UP_ICON : CHEVRON_DOWN_ICON}
-          </cros-icon-button>
-          <md-focus-ring inward></md-focus-ring>
+              buttonStyle="floating"
+              size=${this.variant === 'compact' ? 'small' : 'default'}
+              surface="base"
+              shape="square">
+              ${this.expanded ? CHEVRON_UP_ICON : CHEVRON_DOWN_ICON}
+            </cros-icon-button>
+            <md-focus-ring inward></md-focus-ring>
+          </div>
         </div>
         <section class="content"
             @transitionend=${this.onTransitionEnd}
             style=${styleMap(contentStyle)}
             ?data-expanded=${this.expanded ?? nothing}>
-          <div class="content-inner" id="content-inner" part="content">
+          <div
+              aria-labelledby="title-and-subtitle"
+              class="content-inner"
+              id="content-inner"
+              part="content"
+              role="region">
             <slot></slot>
           </div>
         </section>
