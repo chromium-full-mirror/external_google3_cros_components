@@ -17,6 +17,18 @@ export type OptionTriggeredEvent = CustomEvent<{menuItem: IconDropdownOption}>;
 
 /** A chromeOS compliant option to be used in cros-icon-dropdown. */
 export class IconDropdownOption extends MenuItem implements SelectOption {
+  static override shadowRootOptions = {
+    ...MenuItem.shadowRootOptions,
+    // Set mode to open to allow to shadowRoot from outside the component.
+    // This is needed for keyboard navigation implemented by underlying
+    // md-menu-item.
+    mode: 'open' as const,
+    // We want delegate focus to be false here because MenuItem handles focus.
+    // Delegating focus will cause options with itemend=switch to not announce
+    // correctly with Chromevox.
+    delegatesFocus: false,
+  };
+
   /** @nocollapse */
   static override styles = [
     MenuItem.styles, css`
@@ -97,7 +109,6 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
   constructor() {
     super();
 
-    this.type = 'option';
     this.internalValue = '';
     this.keepOpen = false;
     this.selected = false;
