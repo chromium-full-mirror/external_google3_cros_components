@@ -273,7 +273,7 @@ export class AccordionItem extends LitElement {
             @transitionend=${this.onTransitionEnd}
             style=${styleMap(contentStyle)}
             ?data-expanded=${this.expanded ?? nothing}>
-          <div class="content-inner" id="content-inner">
+          <div class="content-inner" id="content-inner" part="content">
             <slot></slot>
           </div>
         </section>
