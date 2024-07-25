@@ -28,6 +28,9 @@ function renderTick() {
       </svg>`;
 }
 
+/** The style options for the Card component. */
+export type CardStyle = 'outline'|'filled'|'elevated';
+
 /** A chromeOS compliant card. */
 export class Card extends LitElement {
   /**
@@ -164,7 +167,7 @@ export class Card extends LitElement {
   interactive = false;
 
   /** @export */
-  cardStyle: 'outline'|'filled'|'elevated' = 'outline';
+  cardStyle: CardStyle = 'outline';
 
   /**
    * The card's aria role. Allowed values are a short list of expected roles for

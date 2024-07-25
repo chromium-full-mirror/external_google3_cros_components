@@ -8,6 +8,8 @@ import '../card/card';
 
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
+import {CardStyle} from '../card/card';
+
 import {AccordionItem, type AccordionItemExpandedEvent, type AccordionItemVariant} from './accordion_item';
 
 /** A chromeOS compliant accordion. */
@@ -28,6 +30,7 @@ export class Accordion extends LitElement {
     autoCollapse: {type: Boolean, attribute: 'auto-collapse'},
     quick: {type: Boolean},
     variant: {type: String},
+    cardStyle: {type: String, attribute: 'card-style'},
   };
 
   /**
@@ -53,11 +56,18 @@ export class Accordion extends LitElement {
    */
   variant: AccordionItemVariant;
 
+  /**
+   * The style of the card. One of {outline, filled, elevated}.
+   * @export
+   */
+  cardStyle: CardStyle;
+
   constructor() {
     super();
     this.autoCollapse = false;
     this.quick = false;
     this.variant = 'default';
+    this.cardStyle = 'outline';
 
     this.addEventListener(
         AccordionItem.events.ACCORDION_ITEM_EXPANDED,
@@ -86,7 +96,7 @@ export class Accordion extends LitElement {
 
   override render() {
     return html`
-      <cros-card cardStyle="outline">
+      <cros-card cardStyle=${this.cardStyle}>
         <slot></slot>
       </cros-card>
     `;
