@@ -59,6 +59,8 @@ const CHEVRON_UP_ICON = html`
           d="M5.41 14L10 9.05533L14.59 14L16 12.4777L10 6L4 12.4777L5.41 14Z" />
     </svg>`;
 
+const LEADING_PADDING =
+    css`var(--cros-accordion-item-leading-padding-inline-end, 16px)`;
 
 /** A chromeOS compliant accordion-item for use in <cros-accordion>. */
 export class AccordionItem extends LitElement {
@@ -101,11 +103,11 @@ export class AccordionItem extends LitElement {
 
     .title-and-subtitle {
       flex: 1;
-      padding-inline-end: 16px;
+      padding-inline-end: ${LEADING_PADDING};
     }
 
     .has-leading .title-and-subtitle {
-      padding-inline-start: 16px;
+      padding-inline-start: ${LEADING_PADDING};
     }
 
     .title {
