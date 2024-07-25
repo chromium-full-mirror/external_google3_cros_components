@@ -18,10 +18,18 @@ import {type Menu} from '../menu/menu';
 
 import {IconDropdownOption, type OptionTriggeredEvent} from './icon-dropdown-option';
 
+// TODO: b/355342209 - Investigate moving SVGs into build command or asset
+// compatible with Chromium build process.
 /** The SVG to use in the trailing icon slot when the dropdown is closed. */
 const ARROW_DROP_DOWN_SVG = html`
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 -960 960 960">
     <path d="M480-376.348 274.848-581.5h410.304L480-376.348Z"/>
+  </svg>`;
+
+/** The SVG to use in the trailing icon slot when the dropdown is closed. */
+const ARROW_DROP_UP_SVG = html`
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 -960 960 960">
+    <path d="M274.848-378.5 480-583.652 685.152-378.5H274.848Z"/>
   </svg>`;
 
 /** A chromeOS compliant icon-dropdown. */
@@ -172,10 +180,16 @@ export class IconDropdown extends LitElement {
     buttonStyle: {type: String},
     surface: {type: String, reflect: true},
     disabled: {type: Boolean},
+    // Not intended to be set by markup. Reactive only for updating arrow icon.
+    menuOpen: {type: Boolean, attribute: false},
   };
 
   /** @nocollapse */
-  static events = {CHANGE: 'change'} as const;
+  static events = {
+    CHANGE: 'change',
+    MENU_OPENED: 'opened',
+    MENU_CLOSED: 'closed'
+  } as const;
 
   /**
    * The value of the first selected option in the dropdown or an empty string
@@ -214,6 +228,14 @@ export class IconDropdown extends LitElement {
    */
   disabled: boolean;
 
+  /**
+   * Whether the dropdown menu is open. Used to determine which arrow icon to
+   * show and update the dropdown state when menu is closed via the menu's
+   * internal event.
+   * @export
+   */
+  private menuOpen: boolean;
+
   protected menuRef = createRef<Menu>();
 
   constructor() {
@@ -225,6 +247,7 @@ export class IconDropdown extends LitElement {
     this.buttonStyle = 'filled';
     this.surface = 'base';
     this.disabled = false;
+    this.menuOpen = false;
   }
 
   get anchor() {
@@ -291,11 +314,15 @@ export class IconDropdown extends LitElement {
     `;
   }
 
+  private getArrowIcon() {
+    return this.menuOpen ? ARROW_DROP_UP_SVG : ARROW_DROP_DOWN_SVG;
+  }
+
   private getAnchorContent() {
     return html`
         <div class="button-icon-container">
           <span class="dropdown-icon"><slot name="button-icon"></slot></span>
-          <span class="dropdown-arrow">${ARROW_DROP_DOWN_SVG}</span>
+          <span class="dropdown-arrow">${this.getArrowIcon()}</span>
         </div>
       `;
   }
@@ -318,10 +345,26 @@ export class IconDropdown extends LitElement {
 
   private renderMenuContent() {
     return html`
-      <cros-menu anchor="button" ${ref(this.menuRef)}>
+      <cros-menu
+        anchor="button"
+        ${ref(this.menuRef)}
+        .open=${this.menuOpen}
+        @opened=${this.onMenuOpened}
+        @closed=${this.onMenuClosed}
+      >
         <slot></slot>
       </cros-menu>
     `;
+  }
+
+  // This is to ensure the menuOpen property is updated when the menu is opened.
+  private onMenuOpened() {
+    this.menuOpen = true;
+  }
+
+  // This is to ensure the menuOpen property is updated when the menu is closed.
+  private onMenuClosed() {
+    this.menuOpen = false;
   }
 
   /**
@@ -360,6 +403,8 @@ customElements.define('cros-icon-dropdown', IconDropdown);
 declare global {
   interface HTMLElementEventMap {
     [IconDropdown.events.CHANGE]: Event;
+    [IconDropdown.events.MENU_OPENED]: Event;
+    [IconDropdown.events.MENU_CLOSED]: Event;
   }
 
   interface HTMLElementTagNameMap {
