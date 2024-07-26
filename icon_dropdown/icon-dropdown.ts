@@ -32,6 +32,14 @@ const ARROW_DROP_UP_SVG = html`
     <path d="M274.848-378.5 480-583.652 685.152-378.5H274.848Z"/>
   </svg>`;
 
+/** Custom CSS for styling anchor button. */
+const ANCHOR_PRIMARY_ICON_CONTAINER_PADDING_INLINE =
+    css`var(--cros-icon-dropdown-icon-padding-inline, var(--_button-icon-padding))`;
+const ANCHOR_PRIMARY_ICON_SIZE =
+    css`var(--cros-icon-dropdown-icon-size, var(--_button-icon-size))`;
+const ANCHOR_ARROW_ICON_SIZE =
+    css`var(--cros-icon-dropdown-arrow-icon-size, var(--_button-arrow-icon-size))`;
+
 /** A chromeOS compliant icon-dropdown. */
 export class IconDropdown extends LitElement {
   static override shadowRootOptions = {
@@ -42,6 +50,7 @@ export class IconDropdown extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
     :host {
+      --_button-arrow-icon-size: 20px;
       --_button-container-color: var(--cros-sys-surface_variant);
       --_button_container-disabled-color: var(--cros-sys-disabled_container);
       --_button-container-disabled-opacity: 1;
@@ -59,6 +68,7 @@ export class IconDropdown extends LitElement {
       --_button-icon-disabled-opacity: var(--cros-sys-disabled-opacity);
       --_button-icon-focus-color: var(--cros-sys-on_surface);
       --_button-icon-hover-color: var(--cros-sys-on_surface);
+      --_button-icon-container-padding-inline: 4px 1px;
       --_button-icon-size: 20px;
       display: inline-block;
       font: var(--cros-body-0-font);
@@ -67,12 +77,14 @@ export class IconDropdown extends LitElement {
     :host([shape="circle"]) {
       --_button-container-shape: 100vmax;
       --_button-container-width: 48px;
+      --_button-icon-padding-inline: 8px 6px;
     }
 
     :host([size="large"]) {
       --_button-container-height: 56px;
       --_button-container-width: 72px;
       --_button-icon-size: 24px;
+      --_button-icon-padding-inline: 18px 15px;
     }
 
     :host([shape="square"][size="large"]) {
@@ -100,21 +112,36 @@ export class IconDropdown extends LitElement {
     }
 
     .button-icon-container {
+      align-items: center;
+      box-sizing: border-box;
+      block-size: var(--_button-container-height);
       display: flex;
+      inline-size: var(--_button-container-width);
       place-content: center;
+      padding-inline: ${ANCHOR_PRIMARY_ICON_CONTAINER_PADDING_INLINE};
     }
 
     .button-icon-container .dropdown-arrow {
+      align-self: center;
+      align-items: center;
+      display: flex;
+      /* 5px overlap with the button icon. */
+      margin-inline-start: -5px;
+    }
+
+    .button-icon-container .dropdown-arrow svg {
+      block-size: ${ANCHOR_ARROW_ICON_SIZE};
       color: var(--_button-icon-color);
       fill: var(--_button-icon-color);
-      /* 5px overlap with the button icon. */
-      margin-inline: -5px 1px;
+      inline-size: ${ANCHOR_ARROW_ICON_SIZE};
     }
 
     .button-icon-container .dropdown-icon {
+      align-self: center;
+      block-size: ${ANCHOR_PRIMARY_ICON_SIZE};
       color: var(--_button-icon-color);
       fill: var(--_button-icon-color);
-      margin-inline: 4px 0;
+      inline-size: ${ANCHOR_PRIMARY_ICON_SIZE};
     }
 
     md-filled-tonal-icon-button {
@@ -130,7 +157,7 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-hover-state-layer-opacity: var(--_button-container-hover-opacity);
       --md-filled-tonal-icon-button-icon-color: var(--_button-icon-color);
       --md-filled-tonal-icon-button-icon-focus-color: var(--_button-icon-focus-color);
-      --md-filled-tonal-icon-button-icon-size: var(--_button-icon-size);
+      --md-filled-tonal-icon-button-icon-size: ${ANCHOR_PRIMARY_ICON_SIZE};
       --md-filled-tonal-icon-button-pressed-state-layer-opacity: var(--_button-container-pressed-opacity);
       --md-filled-tonal-icon-button-pressed-icon-color: var(--_button-icon-pressed-color);
       --md-filled-tonal-icon-button-pressed-state-layer-color: var(--_button-container-pressed-color);;
@@ -146,7 +173,7 @@ export class IconDropdown extends LitElement {
       --md-icon-button-hover-state-layer-color: var(--_button-container-hover-color);
       --md-icon-button-hover-state-layer-opacity: var(--_button-container-hover-opacity);
       --md-icon-button-icon-color: var(--_button-icon-color);
-      --md-icon-button-icon-size: var(--_button-icon-size);
+      --md-icon-button-icon-size: ${ANCHOR_PRIMARY_ICON_SIZE};
       --md-icon-button-state-layer-height: var(--_button-container-height);
       --md-icon-button-state-layer-shape: var(--_button-container-shape);
       --md-icon-button-state-layer-width: var(--_button-container-width);
@@ -166,8 +193,8 @@ export class IconDropdown extends LitElement {
     }
 
     slot[name='button-icon']::slotted(*) {
-      block-size: var(--_button-icon-size);
-      inline-size: var(--_button-icon-size);
+      block-size: ${ANCHOR_PRIMARY_ICON_SIZE};
+      inline-size: ${ANCHOR_PRIMARY_ICON_SIZE};
     }
   `;
 
