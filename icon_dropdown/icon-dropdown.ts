@@ -266,6 +266,25 @@ export class IconDropdown extends LitElement {
     return (this.crosMenu?.items ?? []) as SelectOption[];
   }
 
+  /** Returns index of first option with matching value. */
+  get selectedIndex(): number {
+    return this.options.findIndex(option => option.value === this.value);
+  }
+
+  /**
+   * Sets value equal to the value of the first option with matching index. If
+   * no matching index is found then value is set to an empty string.
+   */
+  set selectedIndex(index: number) {
+    const options = this.options;
+    if (index < 0 || index >= options.length) {
+      this.value = '';
+    } else {
+      this.value = options[index].value;
+    }
+    this.updateOptionsActivated();
+  }
+
   override focus() {
     // TODO: b/339905985 - Let the menu handle focus when the menu is open.
     this.anchor?.focus();
