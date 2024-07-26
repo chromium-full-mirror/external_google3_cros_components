@@ -33,7 +33,7 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
   static override styles = [
     MenuItem.styles, css`
       md-menu-item {
-        --md-menu-item-label-text-font: var(--cros-dropdown-option-text-font, var(--cros-button-2-font-family));
+        --md-menu-item-label-text-font: var(--cros-icon-dropdown-option-text-font, var(--cros-button-2-font-family));
       }
     `
   ];
