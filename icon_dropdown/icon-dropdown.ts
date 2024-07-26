@@ -290,6 +290,16 @@ export class IconDropdown extends LitElement {
     this.anchor?.focus();
   }
 
+  override async firstUpdated() {
+    await this.crosMenu?.updateComplete;
+    if (this.value === '') {
+      const items = (this.crosMenu?.items) as IconDropdownOption[] ?? [];
+      this.value = items.find(option => option.checked)?.value ?? '';
+    } else {
+      this.updateOptionsActivated();
+    }
+  }
+
   override updated(changedProperties: PropertyValues<IconDropdown>) {
     if (changedProperties.has('value')) {
       this.updateOptionsActivated();
