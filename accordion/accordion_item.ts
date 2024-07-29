@@ -169,10 +169,11 @@ export class AccordionItem extends LitElement {
     }
 
     md-focus-ring {
-      --md-focus-ring-color: var(--cros-sys-focus_ring);
-      --md-focus-ring-width: 2px;
       --md-focus-ring-active-width: 2px;
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-duration: 0s;
       --md-focus-ring-shape: 12px;
+      --md-focus-ring-width: 2px;
     }
   `;
 
