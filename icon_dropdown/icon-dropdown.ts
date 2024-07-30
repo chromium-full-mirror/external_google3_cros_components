@@ -12,7 +12,6 @@ import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
 import {createRef, ref} from 'lit/directives/ref';
-import {html as staticHtml, literal} from 'lit/static-html';
 
 import {type Menu} from '../menu/menu';
 
@@ -307,7 +306,7 @@ export class IconDropdown extends LitElement {
     if (index < 0 || index >= options.length) {
       this.value = '';
     } else {
-      this.value = options[index].value;
+      this.value = options[index]!.value;
     }
     this.updateOptionsActivated();
   }
@@ -352,21 +351,39 @@ export class IconDropdown extends LitElement {
     `;
   }
 
+  // TODO: Once Chromium lit dependency can support use of static html, replace
+  // if block with single literal tag depending the button style similiar to
+  // how MWC does it.
   private renderButtonContent() {
-    const tag = this.buttonStyle === 'floating' ?
-        literal`md-icon-button` :
-        literal`md-filled-tonal-icon-button`;
+    const anchorId = 'button';
+    const ariaLabel = ifDefined(this.ariaLabel ?? '');
+    const disabled = ifDefined(this.disabled ?? '');
+    const anchorContent = this.getAnchorContent();
 
-    return staticHtml`
-      <${tag}
-        id="button"
-        aria-label=${this.ariaLabel ?? ''}
+    if (this.buttonStyle === 'floating') {
+      return html`
+      <md-icon-button
+        id="${anchorId}"
+        aria-label=${ariaLabel}
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
-        .disabled=${ifDefined(this.disabled)}
+        .disabled=${disabled}
       >
-        ${this.getAnchorContent()}
-      </${tag}>
+        ${anchorContent}
+      </md-icon-button>
+    `;
+    }
+
+    return html`
+      <md-filled-tonal-icon-button
+        id="${anchorId}"
+        aria-label=${ariaLabel}
+        @click=${() => this.toggleMenu()}
+        @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
+        .disabled=${disabled}
+      >
+        ${anchorContent}
+      </md-filled-tonal-icon-button>
     `;
   }
 
