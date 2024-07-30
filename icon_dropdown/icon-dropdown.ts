@@ -13,7 +13,7 @@ import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
 import {createRef, ref} from 'lit/directives/ref';
 
-import {type Menu} from '../menu/menu';
+import {type Menu, type MenuType} from '../menu/menu';
 
 import {IconDropdownOption, type OptionTriggeredEvent} from './icon-dropdown-option';
 
@@ -206,6 +206,7 @@ export class IconDropdown extends LitElement {
     buttonStyle: {type: String},
     surface: {type: String, reflect: true},
     disabled: {type: Boolean},
+    menuType: {type: String, attribute: 'menu-type'},
     // Not intended to be set by markup. Reactive only for updating arrow icon.
     menuOpen: {type: Boolean, attribute: false},
   };
@@ -255,6 +256,12 @@ export class IconDropdown extends LitElement {
   disabled: boolean;
 
   /**
+   * The type of menu to use. Used to ensure correct aria-role is set.
+   * @export
+   */
+  menuType: MenuType;
+
+  /**
    * Whether the dropdown menu is open. Used to determine which arrow icon to
    * show and update the dropdown state when menu is closed via the menu's
    * internal event.
@@ -274,6 +281,7 @@ export class IconDropdown extends LitElement {
     this.surface = 'base';
     this.disabled = false;
     this.menuOpen = false;
+    this.menuType = 'listbox';
   }
 
   get anchor() {
@@ -365,6 +373,7 @@ export class IconDropdown extends LitElement {
       <md-icon-button
         id="${anchorId}"
         aria-label=${ariaLabel}
+        aria-owns=${ifDefined(this.crosMenu?.id)}
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
         .disabled=${disabled}
@@ -378,6 +387,7 @@ export class IconDropdown extends LitElement {
       <md-filled-tonal-icon-button
         id="${anchorId}"
         aria-label=${ariaLabel}
+        aria-owns=${ifDefined(this.crosMenu?.id)}
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
         .disabled=${disabled}
@@ -422,6 +432,7 @@ export class IconDropdown extends LitElement {
         anchor="button"
         ${ref(this.menuRef)}
         .open=${this.menuOpen}
+        .type=${this.menuType}
         @opened=${this.onMenuOpened}
         @closed=${this.onMenuClosed}
       >
