@@ -11,6 +11,12 @@ import {Corner, FocusState, MdMenu, Menu as MenuInterface} from '@material/web/m
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 
 /**
+ * Type used to set menuType property on cros-menu. Aligns with the `role`
+ * attribute of the `md-menu` component.
+ */
+export type MenuType = 'menu'|'listbox';
+
+/**
  * A chromeOS menu component.
  */
 export class Menu extends LitElement implements MenuInterface {
@@ -81,6 +87,7 @@ export class Menu extends LitElement implements MenuInterface {
         {type: Boolean, attribute: 'stay-open-on-outside-click'},
     isSubmenu: {type: Boolean, attribute: 'is-submenu'},
     usePopover: {type: Boolean, attribute: 'use-popover'},
+    type: {type: String}
   };
 
   /** @nocollapse */
@@ -173,6 +180,12 @@ export class Menu extends LitElement implements MenuInterface {
    */
   usePopover: boolean;
 
+  /**
+   * Determines which role menu should use thus adjusting keyboard navigation.
+   * @export
+   */
+  type: MenuType;
+
   get mdMenu(): MdMenu {
     return this.renderRoot.querySelector('md-menu') as MdMenu;
   }
@@ -211,6 +224,7 @@ export class Menu extends LitElement implements MenuInterface {
     this.skipRestoreFocus = false;
     this.isSubmenu = false;
     this.usePopover = true;
+    this.type = 'menu';
   }
 
   override firstUpdated() {
@@ -265,6 +279,7 @@ export class Menu extends LitElement implements MenuInterface {
       <md-menu
           id="menu"
           tabindex="0"
+          role=${this.type}
           .anchorElement=${this.anchorElement}
           .open=${this.open}
           .hasOverflow=${this.hasOverflow}
