@@ -21,7 +21,7 @@ export type AccordionItemExpandedEvent = CustomEvent<{
 /**
  * Variants control how the accordion-item should be styled.
  */
-export type AccordionItemVariant = 'default'|'compact'|'text-only';
+export type AccordionItemVariant = 'default'|'compact'|'title-only';
 
 /**
  * The SVG to use in the accordion item's icon button when the accordion row is
@@ -85,7 +85,7 @@ export class AccordionItem extends LitElement {
       justify-content: center;
     }
 
-    :host([variant="text-only"]) .accordion-row {
+    :host([variant="title-only"]) .accordion-row {
       padding-block: 8px;
       padding-inline: 16px 12px;
     }
@@ -206,7 +206,7 @@ export class AccordionItem extends LitElement {
   // leading icon size.
   /**
    * How the accordion-item should be styled. One of {default, compact,
-   * text-only}.
+   * title-only}.
    * @export
    */
   variant: AccordionItemVariant;
@@ -298,7 +298,7 @@ export class AccordionItem extends LitElement {
   }
 
   private renderLeading() {
-    if (this.variant === 'text-only') {
+    if (this.variant === 'title-only') {
       return nothing;
     }
 
@@ -311,7 +311,7 @@ export class AccordionItem extends LitElement {
   }
 
   private renderSubtitle() {
-    if (this.variant === 'text-only' || this.variant === 'compact') {
+    if (this.variant === 'title-only' || this.variant === 'compact') {
       return nothing;
     }
 

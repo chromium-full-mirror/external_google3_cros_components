@@ -51,7 +51,7 @@ export class Accordion extends LitElement {
 
   /**
    * How each accordion-item child should be styled. One of {default,
-   * compact, text-only}.
+   * compact, title-only}.
    * @export
    */
   variant: AccordionItemVariant;
