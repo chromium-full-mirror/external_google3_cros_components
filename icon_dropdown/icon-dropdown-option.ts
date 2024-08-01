@@ -5,7 +5,7 @@
  */
 
 import {SelectOption} from '@material/web/select/select-option.js';
-import {css} from 'lit';
+import {css, PropertyValues} from 'lit';
 
 import {MenuItem} from '../menu/menu_item';
 
@@ -126,6 +126,15 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     super.disconnectedCallback();
     this.removeEventListener('click', this.onClickHandler);
     this.removeEventListener('keydown', this.onKeyDownHandler);
+  }
+
+  override updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('checked')) {
+      const ariaSelected = this.checked ? 'true' : 'false';
+      this.renderRoot?.querySelector('md-menu-item')
+          ?.setAttribute('aria-selected', ariaSelected);
+    }
   }
 
   private onClickHandler = () => {
