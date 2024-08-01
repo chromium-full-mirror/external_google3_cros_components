@@ -165,32 +165,38 @@ export class Chip extends LitElement {
       --md-input-chip-pressed-state-layer-opacity: 1;
       --md-input-chip-pressed-trailing-icon-color: var(--cros-sys-on_surface);
       --md-input-chip-trailing-space: ${CHIP_PADDING};
-      }
+    }
 
-      :host([avatar]) md-input-chip {
-        --md-input-chip-container-shape: 9999px;
-      }
+    md-filter-chip,
+    md-suggestion-chip,
+    md-input-chip {
+      max-width: 100%;
+    }
 
-      md-filter-chip::part(focus-ring),
-      md-filter-chip::part(trailing-focus-ring),
-      md-suggestion-chip::part(focus-ring),
-      md-input-chip::part(focus-ring),
-      md-input-chip::part(trailing-focus-ring) {
-        --md-focus-ring-color: var(--cros-sys-focus_ring);
-        --md-focus-ring-width: ${FOCUS_RING_WIDTH};
-      }
-      #close-icon {
-        fill: var(--cros-sys-on_surface);
-        height: ${ICON_SIZE};
-        width: ${ICON_SIZE};
-      }
-      #checked-icon {
-        height: ${ICON_SIZE};
-        width: ${ICON_SIZE};
-      }
-      :host([type="filter"]) #checked-icon {
-        fill: var(--cros-sys-on_surface);
-      }
+    :host([avatar]) md-input-chip {
+      --md-input-chip-container-shape: 9999px;
+    }
+
+    md-filter-chip::part(focus-ring),
+    md-filter-chip::part(trailing-focus-ring),
+    md-suggestion-chip::part(focus-ring),
+    md-input-chip::part(focus-ring),
+    md-input-chip::part(trailing-focus-ring) {
+      --md-focus-ring-color: var(--cros-sys-focus_ring);
+      --md-focus-ring-width: ${FOCUS_RING_WIDTH};
+    }
+    #close-icon {
+      fill: var(--cros-sys-on_surface);
+      height: ${ICON_SIZE};
+      width: ${ICON_SIZE};
+    }
+    #checked-icon {
+      height: ${ICON_SIZE};
+      width: ${ICON_SIZE};
+    }
+    :host([type="filter"]) #checked-icon {
+      fill: var(--cros-sys-on_surface);
+    }
   `;
 
   /** @nocollapse */
