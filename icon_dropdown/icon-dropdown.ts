@@ -8,6 +8,7 @@ import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '@material/web/iconbutton/icon-button.js';
 import '../menu/menu';
 
+import {FocusState} from '@material/web/menu/menu.js';
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
@@ -439,14 +440,24 @@ export class IconDropdown extends LitElement {
         .type=${this.menuType}
         @opened=${this.onMenuOpened}
         @closed=${this.onMenuClosed}
+        .defaultFocus=${FocusState.FIRST_ITEM}
       >
         <slot></slot>
       </cros-menu>
     `;
   }
 
+  protected maybeFocusOnActiveItem() {
+    if (this.menuType === 'listbox') {
+      const selectedItem = (this.crosMenu?.items as IconDropdownOption[] ??
+                            []).find(option => option.value === this.value);
+      selectedItem?.focus();
+    }
+  }
+
   // This is to ensure the menuOpen property is updated when the menu is opened.
   private onMenuOpened() {
+    this.maybeFocusOnActiveItem();
     this.menuOpen = true;
   }
 
