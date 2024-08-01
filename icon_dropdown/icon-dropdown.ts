@@ -332,11 +332,13 @@ export class IconDropdown extends LitElement {
     } else {
       this.updateOptionsActivated();
     }
+    this.updateActiveDescendant();
   }
 
   override updated(changedProperties: PropertyValues<IconDropdown>) {
     if (changedProperties.has('value')) {
       this.updateOptionsActivated();
+      this.updateActiveDescendant();
     }
   }
 
@@ -364,6 +366,7 @@ export class IconDropdown extends LitElement {
   // how MWC does it.
   private renderButtonContent() {
     const anchorId = 'button';
+    const menuId = 'icon-dropdown-menu';
     const ariaLabel = ifDefined(this.ariaLabel ?? '');
     const disabled = ifDefined(this.disabled ?? '');
     const anchorContent = this.getAnchorContent();
@@ -373,7 +376,7 @@ export class IconDropdown extends LitElement {
       <md-icon-button
         id="${anchorId}"
         aria-label=${ariaLabel}
-        aria-owns=${ifDefined(this.crosMenu?.id)}
+        aria-controls="${menuId}"
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
         .disabled=${disabled}
@@ -387,7 +390,7 @@ export class IconDropdown extends LitElement {
       <md-filled-tonal-icon-button
         id="${anchorId}"
         aria-label=${ariaLabel}
-        aria-owns=${ifDefined(this.crosMenu?.id)}
+        aria-controls="${menuId}"
         @click=${() => this.toggleMenu()}
         @keydown=${(e: KeyboardEvent) => this.onKeydown(e)}
         .disabled=${disabled}
@@ -429,6 +432,7 @@ export class IconDropdown extends LitElement {
   private renderMenuContent() {
     return html`
       <cros-menu
+        id="icon-dropdown-menu"
         anchor="button"
         ${ref(this.menuRef)}
         .open=${this.menuOpen}
@@ -470,7 +474,6 @@ export class IconDropdown extends LitElement {
       return;
     }
     this.value = menuItem.value ?? '';
-    this.updateOptionsActivated();
     this.dispatchEvent(
         new Event(IconDropdown.events.CHANGE, {bubbles: true, composed: true}));
   }
@@ -479,6 +482,18 @@ export class IconDropdown extends LitElement {
     for (const option of this.options as IconDropdownOption[]) {
       option.checked = option.value === this.value;
     }
+  }
+
+  private updateActiveDescendant() {
+    const mdMenu = this.crosMenu?.mdMenu;
+    const selectedIndex = this.selectedIndex;
+    let activeDescendantId = '';
+    // selectedIndex is -1 when no option is selected. Due to the implementation
+    // it will never be larger than the number of options.
+    if (selectedIndex > -1) {
+      activeDescendantId = this.options[selectedIndex]!.id;
+    }
+    mdMenu?.setAttribute('aria-activedescendant', activeDescendantId);
   }
 }
 
