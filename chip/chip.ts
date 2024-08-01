@@ -242,10 +242,10 @@ export class Chip extends LitElement {
     if (this.type === 'filter') {
       return html`
         <md-filter-chip
-            label=${this.label}
             ?disabled=${this.disabled}
             ?selected=${this.selected}>
           <slot slot='icon' name='icon'></slot>
+          ${this.label}
           ${checkedIcon}
         </md-filter-chip>
         `;
@@ -253,19 +253,18 @@ export class Chip extends LitElement {
     if (this.trailingIcon || this.avatar) {
       return html`
         <md-input-chip
-          label=${this.label}
           ?disabled=${this.disabled}
           ?avatar=${this.avatar}>
             <slot slot='icon' name='icon'></slot>
+            ${this.label}
             ${closeIcon}
           </md-input-chip>
         `;
     }
     return html`
-      <md-suggestion-chip
-        label=${this.label}
-        ?disabled=${this.disabled}>
-          <slot slot='icon' name='icon'></slot>
+      <md-suggestion-chip ?disabled=${this.disabled}>
+        <slot slot='icon' name='icon'></slot>
+        ${this.label}
       </md-suggestion-chip>
       `;
   }
