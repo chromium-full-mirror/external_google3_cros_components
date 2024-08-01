@@ -109,6 +109,9 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
   constructor() {
     super();
 
+    // Default type to 'option' to match cros-icon-dropdown default menutype of
+    // 'listbox'.
+    this.type = 'option';
     this.internalValue = '';
     this.keepOpen = false;
   }
