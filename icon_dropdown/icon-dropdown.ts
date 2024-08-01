@@ -441,6 +441,7 @@ export class IconDropdown extends LitElement {
         @opened=${this.onMenuOpened}
         @closed=${this.onMenuClosed}
         .defaultFocus=${FocusState.FIRST_ITEM}
+        part="menu"
       >
         <slot></slot>
       </cros-menu>
