@@ -157,10 +157,11 @@ export class Tooltip extends LitElement {
       this.anchorElement.setAttribute('popovertarget', 'tooltip');
       this.anchorElement.addEventListener(
           'mouseover', this.anchorOrLabelFocused);
-      this.anchorElement.addEventListener('focus', this.anchorOrLabelFocused);
+      this.anchorElement.addEventListener('focusin', this.anchorOrLabelFocused);
       this.anchorElement.addEventListener(
           'mouseout', this.anchorOrLabelBlurred);
-      this.anchorElement.addEventListener('blur', this.anchorOrLabelBlurred);
+      this.anchorElement.addEventListener(
+          'focusout', this.anchorOrLabelBlurred);
     }
   }
 
