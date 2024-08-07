@@ -105,6 +105,8 @@ export class Tooltip extends LitElement {
     anchor: {type: String},
     label: {type: String},
     truncate: {type: Boolean, reflect: true},
+    followAnchorOnScroll:
+        {type: Boolean, reflect: true, attribute: 'follow-anchor'},
   };
 
   /** @export */
@@ -116,6 +118,11 @@ export class Tooltip extends LitElement {
    * @export
    */
   truncate: boolean;
+  /**
+   * If true, the tooltip will follow the anchor element when the page scrolls.
+   * @export
+   */
+  followAnchorOnScroll: boolean;
 
   constructor() {
     super();
@@ -123,6 +130,7 @@ export class Tooltip extends LitElement {
     this.anchor = '';
     this.label = '';
     this.truncate = true;
+    this.followAnchorOnScroll = false;
 
     this.anchorOrLabelFocused = this.anchorOrLabelFocused.bind(this);
     this.anchorOrLabelBlurred = this.anchorOrLabelBlurred.bind(this);
@@ -146,6 +154,15 @@ export class Tooltip extends LitElement {
   private currentAnchorElement: HTMLElement|null = null;
   private isAnchorOrLabelFocused = false;
   private blurOrUnfocusTimeout: number|null = null;
+  /**
+   * The event listener for the document scroll event, bound to this element.
+   */
+  private onDocumentScrollBound: EventListener|null = null;
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.onDocumentScrollBound = this.onDocumentScroll.bind(this);
+  }
 
   override firstUpdated() {
     // Adds needed popover properties to cros-tooltip.
@@ -162,6 +179,9 @@ export class Tooltip extends LitElement {
           'mouseout', this.anchorOrLabelBlurred);
       this.anchorElement.addEventListener(
           'focusout', this.anchorOrLabelBlurred);
+      if (this.onDocumentScrollBound) {
+        document.addEventListener('scroll', this.onDocumentScrollBound);
+      }
     }
   }
 
@@ -174,6 +194,9 @@ export class Tooltip extends LitElement {
       this.anchorElement.removeEventListener(
           'mouseout', this.anchorOrLabelBlurred);
       this.anchorElement.removeEventListener('blur', this.anchorOrLabelBlurred);
+    }
+    if (this.onDocumentScrollBound) {
+      document.removeEventListener('scroll', this.onDocumentScrollBound);
     }
     super.disconnectedCallback();
   }
@@ -292,6 +315,12 @@ export class Tooltip extends LitElement {
         label.setAttribute(ATTR_SHIFT_INLINE_END, '');
       }
     });
+  }
+
+  private onDocumentScroll() {
+    if (this.followAnchorOnScroll) {
+      this.updateAnchorPosition();
+    }
   }
 
   override render() {
