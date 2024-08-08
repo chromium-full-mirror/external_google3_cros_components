@@ -162,7 +162,6 @@ export class IconDropdown extends LitElement {
       --md-filled-tonal-icon-button-pressed-icon-color: var(--_button-icon-pressed-color);
       --md-filled-tonal-icon-button-pressed-state-layer-color: var(--_button-container-pressed-color);;
       --md-filled-tonal-icon-button-pressed-state-layer-opacity: 1;
-
     }
 
     md-icon-button {
@@ -185,6 +184,7 @@ export class IconDropdown extends LitElement {
     md-filled-tonal-icon-button::part(focus-ring),
     md-icon-button::part(focus-ring) {
       --md-focus-ring-color: var(--_button-focus-ring-color);
+      --md-focus-ring-duration: 0s; /* disabled animation */
       --md-focus-ring-width: var(--_button-focus-ring-width);
     }
     :host([surface="prominent"]) md-filled-tonal-icon-button::part(focus-ring),
