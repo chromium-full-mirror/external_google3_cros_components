@@ -171,7 +171,6 @@ export class Tooltip extends LitElement {
 
     // Sets anchor to this element's ID & adds listeners on hover.
     if (this.anchorElement) {
-      this.anchorElement.setAttribute('popovertarget', 'tooltip');
       this.anchorElement.addEventListener(
           'mouseover', this.anchorOrLabelFocused);
       this.anchorElement.addEventListener('focusin', this.anchorOrLabelFocused);
