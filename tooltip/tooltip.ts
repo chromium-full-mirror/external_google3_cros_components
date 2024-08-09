@@ -80,6 +80,7 @@ export class Tooltip extends LitElement {
       position-anchor: ${ANCHOR_NAME};
       position: fixed;
       text-align: center;
+      text-wrap: wrap;
     }
 
     #label[${ATTR_SHIFT_INLINE_END_CSS}] {
