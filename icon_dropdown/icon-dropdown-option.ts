@@ -18,6 +18,11 @@ export type OptionTriggeredEvent = CustomEvent<{menuItem: IconDropdownOption}>;
 /** A chromeOS compliant option to be used in cros-icon-dropdown. */
 export class IconDropdownOption extends MenuItem implements SelectOption {
   /** @nocollapse */
+  static override shadowRootOptions = {
+    ...MenuItem.shadowRootOptions,
+  };
+
+  /** @nocollapse */
   static override styles = [
     MenuItem.styles, css`
       md-menu-item {
