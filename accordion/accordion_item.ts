@@ -175,10 +175,16 @@ export class AccordionItem extends LitElement {
       --md-focus-ring-shape: 12px;
       --md-focus-ring-width: 2px;
     }
+
+    :host([disabled]) {
+      opacity: var(--cros-disabled-opacity);
+      pointer-events: none;
+    }
   `;
 
   /** @nocollapse */
   static override properties = {
+    disabled: {type: Boolean, reflect: true},
     expanded: {type: Boolean, reflect: true},
     quick: {type: Boolean, reflect: true},
     variant: {type: String, reflect: true}
@@ -189,6 +195,12 @@ export class AccordionItem extends LitElement {
     /** Triggers when an accordion item is expanded. */
     ACCORDION_ITEM_EXPANDED: 'cros-accordion-item-expanded',
   } as const;
+
+  /**
+   * Whether or not the accordion item is disabled.
+   * @export
+   */
+  disabled: boolean;
 
   /**
    * Whether or not the accordion content is visible.
@@ -213,6 +225,7 @@ export class AccordionItem extends LitElement {
 
   constructor() {
     super();
+    this.disabled = false;
     this.expanded = false;
     this.quick = false;
     this.variant = 'default';
@@ -257,7 +270,7 @@ export class AccordionItem extends LitElement {
               role="button"
               @click=${this.onRowClick}
               @keydown=${this.onRowKeyDown}
-              tabindex="0">
+              tabindex=${this.disabled ? -1 : 0}>
             ${this.renderLeading()}
             <section
                 aria-hidden="true"
@@ -387,6 +400,10 @@ export class AccordionItem extends LitElement {
   }
 
   private toggleExpanded() {
+    if (this.disabled) {
+      return;
+    }
+
     this.expanded = !this.expanded;
   }
 }
