@@ -96,7 +96,7 @@ export class Accordion extends LitElement {
 
   override render() {
     return html`
-      <cros-card cardStyle=${this.cardStyle}>
+      <cros-card cardStyle=${this.cardStyle} part="card">
         <slot></slot>
       </cros-card>
     `;
