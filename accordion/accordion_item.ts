@@ -19,6 +19,13 @@ export type AccordionItemExpandedEvent = CustomEvent<{
 }>;
 
 /**
+ * Fired when an accordion item is collapsed.
+ */
+export type AccordionItemCollapsedEvent = CustomEvent<{
+  accordionItem: AccordionItem,
+}>;
+
+/**
  * Variants control how the accordion-item should be styled.
  */
 export type AccordionItemVariant = 'default'|'compact'|'title-only';
@@ -194,6 +201,8 @@ export class AccordionItem extends LitElement {
   static events = {
     /** Triggers when an accordion item is expanded. */
     ACCORDION_ITEM_EXPANDED: 'cros-accordion-item-expanded',
+    /** Triggers when an accordion item is collapsed. */
+    ACCORDION_ITEM_COLLAPSED: 'cros-accordion-item-collapsed',
   } as const;
 
   /**
@@ -237,11 +246,12 @@ export class AccordionItem extends LitElement {
     if (changedProperties.has('expanded')) {
       this.setTransitioning(true);
 
-      if (this.expanded) {
-        this.dispatchEvent(new CustomEvent(
-            AccordionItem.events.ACCORDION_ITEM_EXPANDED,
-            {bubbles: true, composed: true, detail: {accordionItem: this}}));
-      }
+      const eventName = this.expanded ?
+          AccordionItem.events.ACCORDION_ITEM_EXPANDED :
+          AccordionItem.events.ACCORDION_ITEM_COLLAPSED;
+      this.dispatchEvent(new CustomEvent(
+          eventName,
+          {bubbles: true, composed: true, detail: {accordionItem: this}}));
     }
   }
 
@@ -413,6 +423,8 @@ customElements.define('cros-accordion-item', AccordionItem);
 declare global {
   interface HTMLElementEventMap {
     [AccordionItem.events.ACCORDION_ITEM_EXPANDED]: AccordionItemExpandedEvent;
+    [AccordionItem.events.ACCORDION_ITEM_COLLAPSED]:
+        AccordionItemCollapsedEvent;
   }
   interface HTMLElementTagNameMap {
     'cros-accordion-item': AccordionItem;
