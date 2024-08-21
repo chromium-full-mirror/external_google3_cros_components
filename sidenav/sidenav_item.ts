@@ -824,6 +824,12 @@ export class SidenavItem extends LitElement {
   }
 
   private onRenameInputBlur() {
+    // Renaming is already false then the rename input element is not available
+    // and castExists will throw an error. This can occur in tests which
+    // programmatically call blur() on the input element.
+    if (!this.renaming) {
+      return;
+    }
     this.renaming = false;
     if (this.shouldRenameOnBlur) {
       this.commitRename(this.renameInputElement?.value || '');
