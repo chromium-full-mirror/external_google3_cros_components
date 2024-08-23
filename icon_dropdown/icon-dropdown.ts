@@ -8,7 +8,7 @@ import '@material/web/iconbutton/filled-tonal-icon-button.js';
 import '@material/web/iconbutton/icon-button.js';
 import '../menu/menu';
 
-import {FocusState} from '@material/web/menu/menu.js';
+import {Corner, FocusState} from '@material/web/menu/menu.js';
 import {SelectOption} from '@material/web/select/select-option.js';
 import {css, CSSResultGroup, html, LitElement, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
@@ -200,6 +200,7 @@ export class IconDropdown extends LitElement {
 
   /** @nocollapse */
   static override properties = {
+    anchorCorner: {type: String, attribute: 'anchor-corner'},
     ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
     value: {type: String},
     shape: {type: String, reflect: true},
@@ -218,6 +219,13 @@ export class IconDropdown extends LitElement {
     MENU_OPENED: 'opened',
     MENU_CLOSED: 'closed'
   } as const;
+
+  /**
+   * The corner of the anchor element that the menu will be anchored
+   * to.
+   * @export
+   */
+  anchorCorner: Corner;
 
   /**
    * The value of the first checked option in the dropdown or an empty string
@@ -275,6 +283,7 @@ export class IconDropdown extends LitElement {
   constructor() {
     super();
 
+    this.anchorCorner = Corner.END_START;
     this.value = '';
     this.shape = 'square';
     this.size = 'default';
@@ -436,6 +445,7 @@ export class IconDropdown extends LitElement {
         id="icon-dropdown-menu"
         anchor="button"
         ${ref(this.menuRef)}
+        .anchorCorner=${this.anchorCorner}
         .open=${this.menuOpen}
         .type=${this.menuType}
         @opened=${this.onMenuOpened}
