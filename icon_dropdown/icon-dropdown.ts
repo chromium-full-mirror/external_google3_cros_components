@@ -208,6 +208,7 @@ export class IconDropdown extends LitElement {
     buttonStyle: {type: String},
     surface: {type: String, reflect: true},
     disabled: {type: Boolean},
+    menuCorner: {type: String, attribute: 'menu-corner'},
     menuType: {type: String, attribute: 'menu-type'},
     // Not intended to be set by markup. Reactive only for updating arrow icon.
     menuOpen: {type: Boolean, attribute: false},
@@ -265,6 +266,12 @@ export class IconDropdown extends LitElement {
   disabled: boolean;
 
   /**
+   * The corner of the menu that will be anchored to the anchor element.
+   * @export
+   */
+  menuCorner: Corner;
+
+  /**
    * The type of menu to use. Used to ensure correct aria-role is set.
    * @export
    */
@@ -290,6 +297,7 @@ export class IconDropdown extends LitElement {
     this.buttonStyle = 'filled';
     this.surface = 'base';
     this.disabled = false;
+    this.menuCorner = Corner.START_START;
     this.menuOpen = false;
     this.menuType = 'listbox';
   }
@@ -446,6 +454,7 @@ export class IconDropdown extends LitElement {
         anchor="button"
         ${ref(this.menuRef)}
         .anchorCorner=${this.anchorCorner}
+        .menuCorner=${this.menuCorner}
         .open=${this.menuOpen}
         .type=${this.menuType}
         @opened=${this.onMenuOpened}
