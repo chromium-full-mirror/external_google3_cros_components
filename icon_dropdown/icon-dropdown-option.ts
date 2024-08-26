@@ -94,6 +94,19 @@ export class IconDropdownOption extends MenuItem implements SelectOption {
     }
   }
 
+  override get typeaheadText() {
+    return this.renderRoot?.querySelector('md-menu-item')?.typeaheadText ?? '';
+  }
+
+  override set typeaheadText(text: string) {
+    const item = this.renderRoot?.querySelector('md-menu-item');
+    if (!item) {
+      this.missedPropertySets.typeaheadText = text;
+    } else {
+      item.typeaheadText = text;
+    }
+  }
+
   // SelectOption implementation:
   get displayText() {
     return this.headline;
