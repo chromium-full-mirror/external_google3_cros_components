@@ -76,6 +76,7 @@ export class Card extends LitElement {
       position: relative;
       text-align: start;
       width: 100%;
+      isolation: isolate;
     }
 
     #content {
