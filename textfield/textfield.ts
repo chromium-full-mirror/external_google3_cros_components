@@ -9,7 +9,6 @@ import '@material/web/textfield/outlined-text-field.js';
 import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
-import {StyleInfo, styleMap} from 'lit/directives/style-map';
 
 /**
  * Textfields have two variants that differ only by the container background,
@@ -130,13 +129,8 @@ export class Textfield extends LitElement {
       --md-outlined-text-field-input-text-weight: var(--cros-textfield-font-weight, var(--cros-body-2-font-weight));
       --md-outlined-text-field-outline-width: 0px;
       --md-outlined-text-field-supporting-text-font: var(--cros-label-2-font-family);
-      /**
-       * Set a default for these supporting text variables (equal to their
-       * computed value) to avoid a scuba issue where the ChromeOS variables are
-       * not found at the first render.
-       */
-      --md-outlined-text-field-supporting-text-size: var(--cros-label-2-font-size, 10px);
-      --md-outlined-text-field-supporting-text-line-height: var(--cros-label-2-line-height, 10px);
+      --md-outlined-text-field-supporting-text-size: var(--cros-label-2-font-size);
+      --md-outlined-text-field-supporting-text-line-height: var(--cros-label-2-line-height);
       --md-outlined-text-field-supporting-text-weight: var(--cros-label-2-font-weight);
       --md-outlined-text-field-top-space: 8px;
       --md-outlined-field-bottom-space: ${MD_FIELD_TOP_BOTTOM_SPACE_PX};
@@ -207,14 +201,10 @@ export class Textfield extends LitElement {
       background-color: ${TEXTFIELD_CONTAINER_ON_BASE};
       border-radius: 8px;
       left: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
+      min-height: 36px;
       position:absolute;
       right: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
       top: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
-    }
-
-    #textfield-background {
-      height: calc(100% - var(--_cros-textfield-supporting-text-computed-height)
-                        - (2 * ${MD_TEXTFIELD_OUTLINE_WIDTH}px));
     }
 
     :host([shaded]) #textfield-background {
@@ -275,7 +265,6 @@ export class Textfield extends LitElement {
     autofix: {type: String, attribute: true},
     required: {type: Boolean, attribute: true},
     noSpinner: {type: Boolean, attribute: true},
-    supportingTextComputedHeight: {state: true},
   };
 
   /** @nocollapse */
@@ -439,13 +428,6 @@ export class Textfield extends LitElement {
    */
   private lastValidValue = '';
 
-  /**
-   * The computed height of md-outlined-field's supporting-text. Used to
-   * calculate the size of the #textfield-background element. This is primarily
-   * useful when type=textarea.
-   */
-  private supportingTextComputedHeight = 0;
-
   constructor() {
     super();
     this.type = 'text';
@@ -490,33 +472,15 @@ export class Textfield extends LitElement {
     super.update(changedProperties);
   }
 
-  override async updated() {
-    // After an update, update the computed height of the supporting text once
-    // the md-outlined-text-field has finished updating.
-    const textField = this.renderRoot.querySelector('md-outlined-text-field');
-    await textField?.updateComplete;
-    this.supportingTextComputedHeight =
-        textField?.shadowRoot?.querySelector('md-outlined-field')
-            ?.shadowRoot?.querySelector('.supporting-text')
-            ?.clientHeight ??
-        0;
-  }
-
   override render() {
     const ariaLabel = this.ariaLabel || this.label;
     const errorTextOrUndef =
         this.error && this.errorMessage ? this.errorMessage : undefined;
     const mdType = this.type === 'integer' ? 'number' : this.type;
-    // The background element uses the height of the supporting text to
-    // calculate its own height.
-    const backgroundStyle: StyleInfo = {
-      '--_cros-textfield-supporting-text-computed-height':
-          `${this.supportingTextComputedHeight}px`
-    };
     return html`
       ${this.maybeRenderLabel()}
       <div id="main-container">
-        <div id="textfield-background" style=${styleMap(backgroundStyle)}></div>
+        <div id="textfield-background"></div>
         <md-outlined-text-field
             ?disabled=${this.disabled}
             type=${mdType}
