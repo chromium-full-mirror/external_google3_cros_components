@@ -224,7 +224,14 @@ export class Tooltip extends LitElement {
     tooltip.hidePopover();
   }
 
-  private anchorOrLabelFocused() {
+  private anchorOrLabelFocused(e: MouseEvent|FocusEvent) {
+    // Touch events should not trigger tooltips. Note: Sometimes, touch long
+    // presses can have `sourceCapabilities` set as undefined.
+    const {sourceCapabilities} =
+        e as unknown as {sourceCapabilities?: {firesTouchEvents?: boolean}};
+    if (!sourceCapabilities || sourceCapabilities.firesTouchEvents) {
+      return;
+    }
     this.isAnchorOrLabelFocused = true;
     this.openPopover();
   }
