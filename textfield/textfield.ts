@@ -200,9 +200,11 @@ export class Textfield extends LitElement {
     #textfield-background {
       background-color: ${TEXTFIELD_CONTAINER_ON_BASE};
       border-radius: 8px;
-      inset: 2px;
-      height: calc(100% - (2 * ${MD_TEXTFIELD_OUTLINE_WIDTH}px));
-      position: absolute;
+      left: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
+      min-height: 36px;
+      position:absolute;
+      right: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
+      top: ${MD_TEXTFIELD_OUTLINE_WIDTH}px;
     }
 
     :host([shaded]) #textfield-background {
@@ -478,6 +480,7 @@ export class Textfield extends LitElement {
     return html`
       ${this.maybeRenderLabel()}
       <div id="main-container">
+        <div id="textfield-background"></div>
         <md-outlined-text-field
             ?disabled=${this.disabled}
             type=${mdType}
@@ -505,7 +508,6 @@ export class Textfield extends LitElement {
               name="trailing"
               @slotchange=${this.handleIconChange}>
           </slot>
-          <div slot="container" id="textfield-background"></div>
         </md-outlined-text-field>
       </div>
     `;
