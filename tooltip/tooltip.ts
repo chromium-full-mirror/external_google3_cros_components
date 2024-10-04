@@ -297,10 +297,15 @@ export class Tooltip extends LitElement {
       const label = this.labelElement;
 
       // Move the label back to its normal position, centered under the anchor
-      // element, and get its width.
+      // element, and get its width + check if it's offscreen.
       label.removeAttribute(ATTR_SHIFT_INLINE_START);
       label.removeAttribute(ATTR_SHIFT_INLINE_END);
-      const widthWhenInCenter = label.getBoundingClientRect().width;
+      const boundingClientRectWhenCentered = label.getBoundingClientRect();
+      const widthWhenInCenter = boundingClientRectWhenCentered.width;
+      const isOffscreenWhenInCenter =
+          boundingClientRectWhenCentered.x + widthWhenInCenter >
+              document.body.clientWidth ||
+          boundingClientRectWhenCentered.x < 0;
 
       // Shift the label to the inline-end (i.e. right for ltr languages), and
       // get its width.
@@ -318,7 +323,8 @@ export class Tooltip extends LitElement {
       label.removeAttribute(ATTR_SHIFT_INLINE_END);
       label.removeAttribute(ATTR_SHIFT_INLINE_START);
 
-      if (widthWhenInCenter >= widthWhenShiftedToStart &&
+      if (!isOffscreenWhenInCenter &&
+          widthWhenInCenter >= widthWhenShiftedToStart &&
           widthWhenInCenter >= widthWhenShiftedToEnd) {
         // Keep the element in the center.
         label.removeAttribute(ATTR_SHIFT_INLINE_START);
