@@ -9,6 +9,7 @@ import '@material/web/textfield/outlined-text-field.js';
 import {MdOutlinedTextField, TextFieldType} from '@material/web/textfield/outlined-text-field.js';
 import {css, CSSResultGroup, html, LitElement, nothing, PropertyValues} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined';
+import {classMap} from 'lit/directives/class-map';
 
 /**
  * Textfields have two variants that differ only by the container background,
@@ -79,6 +80,12 @@ const NON_INTEGER_REGEX = /\D/g;
 const MWC_SELECTION_STYLES = css`
   ::selection {
     background-color: var(--cros-sys-highlight_text);
+  }
+`;
+
+const TEXT_ELLISION_STYLES = css`
+  :host(.use-ellipsis) .input-wrapper > input {
+    text-overflow: ellipsis;
   }
 `;
 
@@ -263,6 +270,7 @@ export class Textfield extends LitElement {
     autofix: {type: String, attribute: true},
     required: {type: Boolean, attribute: true},
     noSpinner: {type: Boolean, attribute: true},
+    useEllipsis: {type: Boolean, attribute: true},
   };
 
   /** @nocollapse */
@@ -406,8 +414,17 @@ export class Textfield extends LitElement {
 
   /**
    * When true, hide the spinner for `type="number"` text fields.
+   * @export
    */
   noSpinner: boolean;
+
+  /**
+   * When true, adds an ellipsis to the end of the input text if it is
+   * overflowing the available width. Only applies when the cursor is not
+   * currently in the textfield input.
+   * @export
+   */
+  useEllipsis: boolean;
 
   get mdTextfield(): MdOutlinedTextField|undefined {
     return this.renderRoot?.querySelector('md-outlined-text-field') ||
@@ -445,6 +462,7 @@ export class Textfield extends LitElement {
     this.autofix = 'preserve';
     this.required = false;
     this.noSpinner = false;
+    this.useEllipsis = false;
   }
 
   override async firstUpdated() {
@@ -453,11 +471,11 @@ export class Textfield extends LitElement {
     // icon slots.
     this.handleIconChange();
 
-    // DO NOT MODIFY THIS BLOCK
-    // Added by MWC team to be removed in b/278960272.
     this.mdTextfield!.shadowRoot!.adoptedStyleSheets = [
       ...this.mdTextfield!.shadowRoot!.adoptedStyleSheets,
-      MWC_SELECTION_STYLES.styleSheet!
+      // Added by MWC team to be removed in b/278960272.
+      MWC_SELECTION_STYLES.styleSheet!,
+      TEXT_ELLISION_STYLES.styleSheet!
     ];
   }
 
@@ -475,10 +493,12 @@ export class Textfield extends LitElement {
     const errorTextOrUndef =
         this.error && this.errorMessage ? this.errorMessage : undefined;
     const mdType = this.type === 'integer' ? 'number' : this.type;
+    const classList = {'use-ellipsis': this.useEllipsis};
     return html`
       ${this.maybeRenderLabel()}
       <div id="main-container">
         <md-outlined-text-field
+            class=${classMap(classList)}
             ?disabled=${this.disabled}
             type=${mdType}
             aria-label=${ariaLabel}
