@@ -73,31 +73,22 @@ export class Tooltip extends LitElement {
       border-radius: 6px;
       color: var(--cros-sys-surface);
       font: var(--cros-annotation-1-font);
-      /* TODO(b/368057249): Remove inset-area property when position-area is
-       * supported in the default Chrome Linux version used in tests. */
-      inset-area: block-end span-all;
-      position-area: block-end span-all;
       inset-block-start: var(--cros-tooltip-vertical-offset, 4px);
       max-width: 296px;
       padding: 5px 8px;
       position-anchor: ${ANCHOR_NAME};
+      position-area: block-end span-all;
       position: fixed;
       text-align: center;
       text-wrap: wrap;
     }
 
     #label[${ATTR_SHIFT_INLINE_END_CSS}] {
-      /* TODO(b/368057249): Remove inset-area property when position-area is
-       * supported in the default Chrome Linux version used in tests. */
-      inset-area: block-end span-inline-end;
       position-area: block-end span-inline-end;
       text-align: start;
     }
 
     #label[${ATTR_SHIFT_INLINE_START_CSS}] {
-      /* TODO(b/368057249): Remove inset-area property when position-area is
-       * supported in the default Chrome Linux version used in tests. */
-      inset-area: block-end span-inline-start;
       position-area: block-end span-inline-start;
       text-align: start;
     }
