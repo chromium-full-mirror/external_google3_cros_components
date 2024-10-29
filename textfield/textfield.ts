@@ -471,6 +471,9 @@ export class Textfield extends LitElement {
     // icon slots.
     this.handleIconChange();
 
+    // Ensure md-text-field has finished rendering before adding our custom
+    // styles.
+    await this.mdTextfield!.updateComplete;
     this.mdTextfield!.shadowRoot!.adoptedStyleSheets = [
       ...this.mdTextfield!.shadowRoot!.adoptedStyleSheets,
       // Added by MWC team to be removed in b/278960272.
