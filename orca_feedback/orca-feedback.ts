@@ -274,7 +274,6 @@ export class OrcaFeedback extends LitElement {
 
   constructor() {
     super();
-    document.title = this.stringSource?.MSG_FEEDBACK_TITLE ?? '';
   }
 
   override firstUpdated() {
@@ -297,7 +296,10 @@ export class OrcaFeedback extends LitElement {
   private privacyLinkClickListener: ((e: Event) => void)|null = null;
   private termsOfServiceLinkClickListener: ((e: Event) => void)|null = null;
 
-  override updated() {
+  override updated(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has('stringSource')) {
+      document.title = this.stringSource?.MSG_FEEDBACK_TITLE ?? '';
+    }
     const privacyPolicyLink = this.shadowRoot?.querySelector('#privacy-policy');
     if (privacyPolicyLink) {
       if (this.privacyLinkClickListener) {
