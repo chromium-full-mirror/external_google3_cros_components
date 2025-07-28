@@ -219,31 +219,31 @@ export class OrcaFeedback extends LitElement {
     },
   };
   /** @export */
-  extraInfoCallback = async () => '';
+  declare extraInfoCallback: () => Promise<string>;
   /**
    * Optional, extra image URL to be displayed in the feedback form.
    * @export
    */
-  extraImage = '';
+  declare extraImage: string;
   /** @export */
-  revertToPreviousScreen = () => {};
+  declare revertToPreviousScreen: () => void;
   /** @export */
-  disableScrollingForTesting = false;
+  declare disableScrollingForTesting: boolean;
   /** @export */
-  resizingEnabled = false;
+  declare resizingEnabled: boolean;
   private readonly extraInfoTask = new Task(this, {
     task: async ([callback]: [() => Promise<string>]) => await callback(),
     args: () => [this.extraInfoCallback] as const as [() => Promise<string>],
   });
   /** @export */
-  submitFeedback: (userDescription: string) => void = () => {};
+  declare submitFeedback: (userDescription: string) => void;
   /** @export */
-  openUrl: (url: string) => void = () => {};
+  declare openUrl: (url: string) => void;
   /**
    * Must be set, to ensure nice user facing strings
    * @export
    **/
-  stringSource: StringSource|null = null;
+  declare stringSource: StringSource|null;
   get userDescription(): HTMLTextAreaElement | undefined {
     return this.shadowRoot!.querySelector('#userDescription') as
       | HTMLTextAreaElement
@@ -274,6 +274,14 @@ export class OrcaFeedback extends LitElement {
 
   constructor() {
     super();
+    this.extraInfoCallback = async () => '';
+    this.extraImage = '';
+    this.revertToPreviousScreen = () => {};
+    this.disableScrollingForTesting = false;
+    this.resizingEnabled = false;
+    this.submitFeedback = () => {};
+    this.openUrl = () => {};
+    this.stringSource = null;
   }
 
   override firstUpdated() {
