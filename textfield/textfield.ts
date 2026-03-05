@@ -648,7 +648,7 @@ customElements.define('cros-textfield', Textfield);
 declare global {
   interface HTMLElementEventMap {
     [Textfield.events.CHANGE]: Event;
-    [Textfield.events.INPUT]: Event;
+    [Textfield.events.INPUT]: InputEvent;
     [Textfield.events.INVALID]: Event;
   }
 
