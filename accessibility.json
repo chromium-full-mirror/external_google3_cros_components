@@ -1,0 +1,18 @@
+{
+  "extension": {
+    "accessibilityCheck": {
+      "disabledViolations": [
+        {
+          "id": "aria-allowed-attr",
+          "htmlCssSelectors": [
+            "ul"
+          ],
+          "paths": [
+            "//third_party/javascript/cros_components/sidenav:unit_test_chrome-linux",
+            "//third_party/javascript/cros_components/sidenav:unit_test_closure_chrome-linux"
+          ]
+        }
+      ]
+    }
+  }
+}
