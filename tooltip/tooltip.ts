@@ -38,11 +38,17 @@ const BLUR_OR_UNFOCUS_TIMEOUT_DURATION = 200;
 export class Tooltip extends LitElement {
   /** @nocollapse */
   static override styles: CSSResultGroup = css`
-    /* Remove default CSS Popover API styles. */
     :host {
+      /* Remove default CSS Popover API styles. */
       border: 0;
       margin: 0;
       padding: 0;
+      /*
+       * user-select is inherited (including through shadow DOM), so the label
+       * is unselectable if an ancestor disables text selection. Clients can
+       * override that by setting --cros-tooltip-user-select (e.g. to text).
+       */
+      user-select: var(--cros-tooltip-user-select, inherit);
     }
 
     :host(:not(:popover-open)) {
@@ -163,6 +169,12 @@ export class Tooltip extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     this.onDocumentScrollBound = this.onDocumentScroll.bind(this);
+    // Clear any text selected in the tooltip whenever it opens or closes, so
+    // that it never reappears with a stale selection. `beforetoggle` fires
+    // synchronously, before the popover is hidden or shown (unlike `toggle`,
+    // which fires asynchronously afterwards), for both `closePopover()` and
+    // light dismiss.
+    this.addEventListener('beforetoggle', this.clearSelectionInTooltip);
   }
 
   override firstUpdated() {
@@ -198,6 +210,7 @@ export class Tooltip extends LitElement {
     if (this.onDocumentScrollBound) {
       document.removeEventListener('scroll', this.onDocumentScrollBound);
     }
+    this.removeEventListener('beforetoggle', this.clearSelectionInTooltip);
     super.disconnectedCallback();
   }
 
@@ -222,6 +235,34 @@ export class Tooltip extends LitElement {
   closePopover() {
     const tooltip = this as unknown as HTMLElementWithPopoverAPI;
     tooltip.hidePopover();
+  }
+
+  /** Clears the document selection if it starts or ends in this tooltip. */
+  private readonly clearSelectionInTooltip = () => {
+    const selection = document.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    if (this.selectionTouchesTooltip(selection)) {
+      selection.removeAllRanges();
+    }
+  };
+
+  private selectionTouchesTooltip(selection: Selection): boolean {
+    // Use `getComposedRanges()` rather than `anchorNode` and `focusNode` (or
+    // `getRangeAt()`), which are retargeted outside of the tooltip when it's
+    // itself in a shadow root. `getComposedRanges()` returns the actual nodes
+    // within the given shadow roots.
+    const {getComposedRanges} = selection as unknown as {
+      getComposedRanges?: (options: object) => StaticRange[],
+    };
+    if (!getComposedRanges || !this.shadowRoot) return false;
+    const isInTooltip = (node: Node) => node === this || this.contains(node) ||
+        this.shadowRoot!.contains(node);
+    // Quote the option name so that it's not renamed by JSCompiler.
+    const ranges = getComposedRanges.call(
+        selection, {'shadowRoots': [this.shadowRoot]});
+    return ranges.some(
+        (range) => isInTooltip(range.startContainer) ||
+            isInTooltip(range.endContainer));
   }
 
   private anchorOrLabelFocused(e: MouseEvent|FocusEvent) {
